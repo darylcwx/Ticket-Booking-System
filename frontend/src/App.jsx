@@ -39,6 +39,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <div className="text-[64px]">hello test</div>
     </>
   );
 }
