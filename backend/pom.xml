@@ -43,9 +43,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>g2t5.model.TicketBookingSystemApplication</mainClass>
-				</configuration>
 			</plugin>
 			
 		</plugins>
