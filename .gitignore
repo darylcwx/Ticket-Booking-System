@@ -36,6 +36,7 @@
 /backend/*.iml
 /backend/.idea/
 /backend/.vscode/
+/backend/.DS_Store
 
 # Logs
 /backend/logs/

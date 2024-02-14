@@ -1,4 +1,4 @@
-package g2t5;
+package g2t5.model;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
