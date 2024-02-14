@@ -22,7 +22,6 @@
 /frontend/.vscode/*
 /frontend/!.vscode/extensions.json
 /frontend/.idea
-/frontend/DS_Store
 /frontend/*.suo
 /frontend/*.ntvs*
 /frontend/*.njsproj
@@ -36,7 +35,6 @@
 /backend/*.iml
 /backend/.idea/
 /backend/.vscode/
-/backend/.DS_Store
 
 # Logs
 /backend/logs/
