@@ -11,13 +11,25 @@
 - [Development](#development)
 
 ## Description
- To develop a system that manages the booking of tickets for various events, such as music concerts, theatre shows, and seminars.
 
- ## Getting Started
+To develop a system that manages the booking of tickets for various events, such as music concerts, theatre shows, and seminars.
+
+### Built with
+
+- [Vite](https://vitejs.dev/)
+- [React] (https://react.dev/)
+- [Material UI](https://mui.com/material-ui/)
+- [Springboot on Maven](https://spring.io/projects/spring-boot)
+- [MongoDB](https://www.mongodb.com/)
+- [EmailJS](https://www.emailjs.com/)
+
+## Getting Started
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en/) (v18.x)
+- [npm](https://www.npmjs.com/get-npm) (v9.6.x)
+- [Apache Maven](https://maven.apache.org/download.cgi) (v3.9.x)
 
 ### Frontend
 
@@ -29,13 +41,17 @@ cd frontend
 npm install
 
 ```
-
 ### Backend
 
-Spring boot on Maven is used for the backend, alongside MongoDB. No API keys are required for this application.
+No setup required for the backend.
+
+## Development
 
 ```bash
 # In root directory
-cd backend
+cd frontend
+npm run dev
+
+cd ../backend
 mvn spring-boot:run
 ```
