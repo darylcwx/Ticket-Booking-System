@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Description](#description)
+- [Description](##description)
   - [Built with](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -17,9 +17,9 @@ To develop a system that manages the booking of tickets for various events, such
 ### Built with
 
 - [Vite](https://vitejs.dev/)
-- [React] (https://react.dev/)
+- [React](https://react.dev/)
 - [Material UI](https://mui.com/material-ui/)
-- [Springboot on Maven](https://spring.io/projects/spring-boot)
+- [Spring boot on Maven](https://spring.io/projects/spring-boot)
 - [MongoDB](https://www.mongodb.com/)
 - [EmailJS](https://www.emailjs.com/)
 
@@ -33,7 +33,16 @@ To develop a system that manages the booking of tickets for various events, such
 
 ### Frontend
 
-For the frontend, simply run the commands below.
+In frontend directory, add a file called .env with the following:
+
+```properties
+EMAILJS_PUBLIC_KEY=<EmailJS public key>
+EMAILJS_PRIVATE_KEY=<EmailJS private key>
+EMAILJS_SERVICE_ID=<EmailJS service id>
+
+```
+
+Then run the commands below.
 
 ```bash
 # In root directory
@@ -41,9 +50,16 @@ cd frontend
 npm install
 
 ```
+
 ### Backend
 
-No setup required for the backend.
+In backend/src/main/resources, add a file called application.properties with the following:
+
+```properties
+spring.data.mongodb.uri=<mongodb uri>
+spring.data.mongodb.database=<mongodb database name>
+
+```
 
 ## Development
 
@@ -54,4 +70,20 @@ npm run dev
 
 cd ../backend
 mvn spring-boot:run
+```
+
+If you face a java.lang.IllegalStateException, insert the code commented out into your backend/pom.xml
+
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+      <!-- <configuration>
+        <mainClass>g2t5.TicketBookingSystemApplication</mainClass>
+      </configuration> -->
+    </plugin>
+  </plugins>
+</build>
 ```
