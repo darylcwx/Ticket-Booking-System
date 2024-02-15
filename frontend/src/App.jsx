@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import emailjs from "@emailjs/browser";
 import "./App.css";
 
 function App() {
@@ -18,40 +19,28 @@ function App() {
     res();
   }, []);
 
-  const handleSendEmail = async () => {
-    try {
-      const toEmail = "daryl.chua.2021@scis.smu.edu.sg";
-      const toName = "Daryl";
-      const ticketId = 123;
-      const message = "Successfully booked. here are details.";
-      const data = {
-        service_id: import.meta.env.VITE_EMAILJS_D_SERVICE_ID,
-        template_id: import.meta.env.VITE_EMAILJS_D_TEMPLATE_ID,
-        user_id: import.meta.env.VITE_EMAILJS_D_PUBLIC_KEY,
-        template_params: {
-          toEmail: toEmail,
-          toName: toName,
-          ticketId: ticketId,
-          message: message,
-        },
-      };
-      const url = "https://api.emailjs.com/api/v1.0/email/send";
-      const options = {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const result = await fetch(url, options);
-      console.log(result);
-      if (result.ok) {
-        console.log("email sent");
+  const handleSendEmail = (e) => {
+    e.preventDefault();
+    const toEmail = "daryl.chua.2021@scis.smu.edu.sg";
+    const toName = "Daryl";
+    const ticketId = 123;
+    const message = "Successfully booked. here are details.";
+    const service_id = import.meta.env.VITE_EMAILJS_D_SERVICE_ID;
+    const template_id = import.meta.env.VITE_EMAILJS_D_TEMPLATE_ID;
+    const template_params = {
+      toEmail: toEmail,
+      toName: toName,
+      ticketId: ticketId,
+      message: message,
+    };
+    emailjs.send(service_id, template_id, template_params).then(
+      (response) => {
+        console.log("SUCCESS", response);
+      },
+      (error) => {
+        console.error("FAILED", error);
       }
-    } catch (e) {
-      console.error(JSON.stringify(e));
-      console.log("Something went wrong.");
-    }
+    );
   };
   return (
     <>
