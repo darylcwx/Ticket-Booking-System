@@ -10,21 +10,25 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   @Autowired
-  private UserRepository repository;
+  private UserRepository userRepository;
+
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   public void saveUser(User user) {
-    repository.save(user);
+    userRepository.save(user);
   }
 
   public User getUser(String emailAddress) {
-    return repository.findByEmailAddress(emailAddress);
+    return userRepository.findByEmailAddress(emailAddress);
   }
 
   public List<User> getAllUsers() {
-    return repository.findAll();
+    return userRepository.findAll();
   }
 
   public void deleteUser(String id) {
-    repository.deleteById(id);
+    userRepository.deleteById(id);
   }
 }

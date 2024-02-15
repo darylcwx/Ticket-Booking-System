@@ -3,6 +3,7 @@ package g2t5.controller;
 import g2t5.database.entity.*;
 import g2t5.service.UserService;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class Controller {
 
-  UserService userService = new UserService();
+  private final UserService userService;
+
+  @Autowired
+  public Controller(UserService userService) {
+    this.userService = userService;
+  }
 
   @GetMapping("/hello")
   public Map<String, String> hello() {
