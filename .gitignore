@@ -16,7 +16,10 @@
 
 # env
 /frontend/.env
-/backend/.env
+/backend/src/main/resources/application.properties
+
+# pom
+/backend/pom.xml
 
 # Editor directories and files
 /frontend/.vscode/*
