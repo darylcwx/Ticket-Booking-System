@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Navbar from "../components/Navbar";
 
 export default function Login() {
+    //NOTE -  state variables
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const navigate = useNavigate();
 
+    //NOTE - onClick function
     const handleLogin = () => {
         setUsernameError(false);
         setPasswordError(false);
@@ -23,12 +25,16 @@ export default function Login() {
         if (password === "") {
             setPasswordError("Password is required");
         }
-
-        // verify with db
+        // verify with db, store role and permissions
+        // if (user){
+        //     navigate("/dashboard");
+        // }
+        if (username === "q" && password === "q") {
+            navigate("/dashboard");
+        }
     };
     return (
         <div className="bg-main w-screen h-screen">
-            <Navbar />
             <div className="h-screen flex justify-center items-center">
                 <div className="bg-modal p-10 rounded-md">
                     <div className="text-3xl font-bold  max-w-sm">

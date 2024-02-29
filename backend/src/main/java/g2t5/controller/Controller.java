@@ -1,6 +1,7 @@
 package g2t5.controller;
 
 import g2t5.database.entity.*;
+import g2t5.service.EventService;
 import g2t5.service.UserService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
   private final UserService userService;
+  private final EventService eventService;
 
   @Autowired
-  public Controller(UserService userService) {
+  public Controller(UserService userService, EventService eventService) {
     this.userService = userService;
+    this.eventService = eventService;
   }
 
   @GetMapping("/hello")
@@ -48,5 +51,10 @@ public class Controller {
   @GetMapping("/users")
   public List<User> getAllUsers() {
     return userService.getAllUsers();
+  }
+
+  @GetMapping("/events")
+  public List<Event> getAllEvents() {
+    return eventService.getAllEvents();
   }
 }

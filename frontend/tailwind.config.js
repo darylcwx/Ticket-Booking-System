@@ -7,6 +7,7 @@ export default {
                 main: "#1A1B1E",
                 modal: "#f2f2f2",
                 navbar: "#f2f2f2",
+                ticketDivider: "#1A1B1E",
             },
         },
     },

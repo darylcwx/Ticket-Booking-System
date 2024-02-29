@@ -1,7 +1,7 @@
 package g2t5.service;
 
-import g2t5.database.entity.*;
-import g2t5.database.repository.*;
+import g2t5.database.entity.User;
+import g2t5.database.repository.UserRepository;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
