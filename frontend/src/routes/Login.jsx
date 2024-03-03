@@ -7,15 +7,14 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function Login() {
-    //NOTE -  state variables
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
-    const navigate = useNavigate();
 
-    //NOTE - onClick function
     const handleLogin = () => {
         setUsernameError(false);
         setPasswordError(false);
@@ -29,9 +28,28 @@ export default function Login() {
         // if (user){
         //     navigate("/dashboard");
         // }
-        if (username === "q" && password === "q") {
-            navigate("/dashboard");
-        }
+        // use username = 'q' and password = 'q'
+        const loginUser = async (username, password) => {
+            try {
+                const response = await fetch(`http://localhost:8080/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await response.json();
+                console.log(data);
+                if (response.ok) {
+                    localStorage.setItem("username", username);
+                    navigate("/dashboard");
+                } else {
+                    setUsernameError("Invalid username");
+                    setPasswordError("Invalid password");
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        loginUser(username, password);
     };
     return (
         <div className="bg-main w-screen h-screen">
@@ -45,7 +63,7 @@ export default function Login() {
                         <TextField
                             className="w-full"
                             label="Username"
-                            error={usernameError}
+                            error={usernameError ? true : false}
                             helperText={usernameError}
                             onChange={(e) => setUsername(e.target.value)}
                         />
@@ -58,7 +76,7 @@ export default function Login() {
                             className="w-full"
                             label="Password"
                             type={showPassword ? "text" : "password"}
-                            error={passwordError}
+                            error={passwordError ? true : false}
                             helperText={passwordError}
                             onChange={(e) => setPassword(e.target.value)}
                             InputProps={{

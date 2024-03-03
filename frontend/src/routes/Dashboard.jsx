@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -6,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import { eventImageHeightAndWidth } from "../constants/globalVars";
 import TicketDivider from "../components/TicketDivider";
 export default function Dashboard() {
+    const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [search, setSearch] = useState("");
 
@@ -26,6 +28,9 @@ export default function Dashboard() {
         fetchEvents();
     }, []);
 
+    const handleRedirect = (eventId) => {
+        //navigate(`/event/${eventId}`);
+    };
     useEffect(() => {
         // perform search here
         // store events in localStorage?
@@ -50,7 +55,7 @@ export default function Dashboard() {
                             <img
                                 className=""
                                 width={eventImageHeightAndWidth}
-                                src={`events/${event.image}`}
+                                src={`../events/${event.image}`}
                             />
                         </div>
                         <TicketDivider />
@@ -83,7 +88,14 @@ export default function Dashboard() {
                                 </div>
 
                                 <div className="flex justify-end">
-                                    <Button variant="contained">Buy</Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => {
+                                            handleRedirect(event.id);
+                                        }}
+                                    >
+                                        Buy
+                                    </Button>
                                 </div>
                             </div>
                         </div>

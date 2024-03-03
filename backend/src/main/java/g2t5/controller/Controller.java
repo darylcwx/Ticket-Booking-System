@@ -1,12 +1,18 @@
 package g2t5.controller;
 
 import g2t5.database.entity.*;
+import g2t5.model.LoginRequest;
 import g2t5.service.EventService;
 import g2t5.service.UserService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,12 +55,51 @@ public class Controller {
   }
 
   @GetMapping("/users")
-  public List<User> getAllUsers() {
-    return userService.getAllUsers();
+  public ResponseEntity<List<User>> getAllUsers() {
+    List<User> users = userService.getAllUsers();
+    return users == null
+      ? ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(Collections.emptyList())
+      : ResponseEntity.ok(users);
+  }
+
+  @GetMapping("/user/{username}")
+  public ResponseEntity<Object> getUserByUsername(
+    @PathVariable String username
+  ) {
+    User user = userService.getUserByUsername(username);
+    return user == null
+      ? ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("{\"message\": \"User not found\"}")
+      : ResponseEntity.ok(user);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+    String username = loginRequest.getUsername();
+    String password = loginRequest.getPassword();
+    return userService.authenticateUser(username, password);
   }
 
   @GetMapping("/events")
-  public List<Event> getAllEvents() {
-    return eventService.getAllEvents();
+  public ResponseEntity<List<Event>> getAllEvents() {
+    List<Event> events = eventService.getAllEvents();
+    return events == null
+      ? ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(Collections.emptyList())
+      : ResponseEntity.ok(events);
+  }
+
+  @GetMapping("/event/{id}")
+  public ResponseEntity<Object> getEventById(@PathVariable String id) {
+    Event event = eventService.getEventById(id);
+    return event == null
+      ? ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("{\"message\": \"Event not found\"}")
+      : ResponseEntity.ok(event);
   }
 }

@@ -20,8 +20,8 @@ public class EventService {
     eventRepository.save(event);
   }
 
-  public Event getEvent(String name) {
-    return eventRepository.findByName(name);
+  public Event getEventById(String id) {
+    return eventRepository.findById(id).orElse(null);
   }
 
   public List<Event> getAllEvents() {
