@@ -11,6 +11,18 @@ export default function Dashboard() {
     const [events, setEvents] = useState([]);
     const [search, setSearch] = useState("");
 
+    const formatDatetime = (datetime) => {
+        const date = new Date(datetime);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true, // To use 24-hour format
+        };
+        return date.toLocaleString("en-US", options);
+    };
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -21,6 +33,7 @@ export default function Dashboard() {
 
                 const data = await response.json();
                 setEvents(data);
+                console.log(data);
             } catch (e) {
                 console.log(e);
             }
@@ -29,11 +42,12 @@ export default function Dashboard() {
     }, []);
 
     const handleRedirect = (eventId) => {
-        //navigate(`/event/${eventId}`);
+        navigate(`/event/${eventId}`);
     };
     useEffect(() => {
         // perform search here
         // store events in localStorage?
+        console.log(typeof events[0]?.datetime);
     }, [search]);
     return (
         <div className="bg-main w-screen h-screen">
@@ -62,31 +76,36 @@ export default function Dashboard() {
                         <div className="p-4 pl-0 flex flex-col justify-between">
                             <div className="">
                                 <div className="flex justify-between">
-                                    <div className="text-2xl font-semibold">
+                                    <div className="text-3xl font-semibold">
                                         {event.name}
                                     </div>
-                                    <div className="text-3xl">
-                                        ${event.ticketPrice}
+                                    <div className="flex items-center">
+                                        {formatDatetime(event.datetime)}
                                     </div>
                                 </div>
                                 <div className="pt-2">{event.description}</div>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="">
                                 <div className="">
                                     <div className="flex items-center">
                                         Guests allowed:
-                                        <span className="font-semibold text-xl pl-2">
+                                        <span className="font-semibold text-lg pl-2">
                                             {event.guestsAllowed}
                                         </span>
                                     </div>
                                     <div className="flex items-center">
                                         Tickets left:
-                                        <span className="text-red-600 font-semibold text-xl pl-2">
+                                        <span className="text-red-600 font-semibold text-lg pl-2">
                                             {event.ticketsAvailable}
                                         </span>
                                     </div>
+                                    <div className="flex items-center">
+                                        Price:
+                                        <span className="text-green-600 font-semibold text-lg pl-2">
+                                            {event.ticketPrice}
+                                        </span>
+                                    </div>
                                 </div>
-
                                 <div className="flex justify-end">
                                     <Button
                                         variant="contained"

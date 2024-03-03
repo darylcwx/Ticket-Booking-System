@@ -4,7 +4,8 @@ import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-export default function Ticket() {
+import { addToCart } from "../utils/cart";
+export default function Event() {
     const [event, setEvent] = useState({});
     const location = useLocation();
     useEffect(() => {
@@ -27,6 +28,11 @@ export default function Ticket() {
         };
         fetchEvent(eventId);
     }, []);
+
+    const handleAddToCart = async (eventId) => {
+        const username = localStorage.getItem("username");
+        addToCart(username, eventId, 1);
+    };
     return (
         <div className="bg-main w-screen h-screen">
             <Navbar />
@@ -41,29 +47,39 @@ export default function Ticket() {
                     </div>
                     <div className="p-4">
                         <div className="">
-                            <div className="text-2xl font-semibold">
+                            <div className="text-3xl font-semibold">
                                 {event.name}
                             </div>
                             <div className="pt-2">{event.description}</div>
                             <div className="flex items-center pt-6">
                                 Guests allowed:
-                                <span className="font-semibold text-xl pl-2">
+                                <span className="font-semibold text-lg pl-2">
                                     {event.guestsAllowed}
                                 </span>
                             </div>
                             <div className="flex items-center">
                                 Tickets left:
-                                <span className="text-red-600 font-semibold text-xl pl-2">
+                                <span className="text-red-600 font-semibold text-lg pl-2">
                                     {event.ticketsAvailable}
                                 </span>
                             </div>
                         </div>
-                        <div className="text-3xl pt-6">
-                            ${event.ticketPrice}
+                        <div className="pt-6 flex justify-between">
+                            <div className="">
+                                Price:
+                                <span className="text-green-600 font-semibold text-lg pl-2">
+                                    {event.ticketPrice}
+                                </span>
+                            </div>
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    handleAddToCart(event.id);
+                                }}
+                            >
+                                Add to Cart
+                            </Button>
                         </div>
-                        <Button variant="contained" onClick="">
-                            Add to Cart
-                        </Button>
                     </div>
                 </div>
             </Container>

@@ -1,6 +1,7 @@
 package g2t5.database.entity;
 
 import java.util.ArrayList;
+import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,9 @@ public class User {
 
   private String username;
   private String password;
-  private ArrayList<Object> cart;
+
+  private ArrayList<Map<String, Integer>> cart;
+
   private String role;
 
   public String getId() {
@@ -43,11 +46,11 @@ public class User {
     this.role = role;
   }
 
-  public ArrayList<Object> getCart() {
+  public ArrayList<Map<String, Integer>> getCart() {
     return cart;
   }
 
-  public void setCart(ArrayList<Object> cart) {
+  public void setCart(ArrayList<Map<String, Integer>> cart) {
     this.cart = cart;
   }
 }

@@ -34,7 +34,7 @@ export default function Navbar() {
             }
         };
         getUser();
-    }, []);
+    }, [user]);
     return (
         <div className="navbar absolute">
             <div className="">
@@ -43,20 +43,25 @@ export default function Navbar() {
                         <Link to="/dashboard">
                             <img width="121" src="/logo.png" />
                         </Link>
-                        <div className="flex gap-2 pr-8 flex items-center">
+                        <div className="flex gap-2 pr-4 flex items-center">
+                            {user?.role === "event manager" && (
+                                <Link to="/createEvent">Create Event</Link>
+                            )}
                             <IconButton size="small">
                                 <Link to="/profile">
                                     <AccountCircleIcon fontSize="large"></AccountCircleIcon>
                                 </Link>
                             </IconButton>
-                            <IconButton size="small" className="relative">
-                                <Link to="/cart">
-                                    <ShoppingCartIcon fontSize="large" />
-                                    <div className="absolute bottom-0 right-0 bg-red-500 rounded-full h-5 w-5 flex justify-center items-center text-xs text-black">
-                                        {cartCount}
-                                    </div>
-                                </Link>
-                            </IconButton>
+                            {user?.role === "customer" && (
+                                <IconButton size="small" className="relative">
+                                    <Link to="/cart">
+                                        <ShoppingCartIcon fontSize="large" />
+                                        <div className="absolute bottom-0 right-0 bg-red-500 rounded-full h-5 w-5 flex justify-center items-center text-xs text-black">
+                                            {cartCount}
+                                        </div>
+                                    </Link>
+                                </IconButton>
+                            )}
                         </div>
                     </div>
                 </div>

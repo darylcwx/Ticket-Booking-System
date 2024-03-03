@@ -24,11 +24,6 @@ export default function Login() {
         if (password === "") {
             setPasswordError("Password is required");
         }
-        // verify with db, store role and permissions
-        // if (user){
-        //     navigate("/dashboard");
-        // }
-        // use username = 'q' and password = 'q'
         const loginUser = async (username, password) => {
             try {
                 const response = await fetch(`http://localhost:8080/login`, {

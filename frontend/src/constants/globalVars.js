@@ -1,3 +1,3 @@
-const eventImageHeightAndWidth = 300;
+const eventImageHeightAndWidth = 400;
 
 export { eventImageHeightAndWidth };

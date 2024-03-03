@@ -34,6 +34,41 @@ public class UserService {
     userRepository.deleteById(id);
   }
 
+  public ResponseEntity<Object> addToCart(
+    String username,
+    String eventId,
+    int quantity
+  ) {
+    try {
+      User user = getUserByUsername(username);
+      ArrayList<Map<String, Integer>> cart = user.getCart();
+      boolean eventExists = false;
+      for (Map<String, Integer> item : cart) {
+        if (item.containsKey(eventId)) {
+          // If the event exists, update the quantity
+          int currentQuantity = item.get(eventId);
+          item.put(eventId, currentQuantity + quantity);
+          eventExists = true;
+          break;
+        }
+      }
+      if (!eventExists) {
+        Map<String, Integer> newItem = new HashMap<>();
+        newItem.put(eventId, quantity);
+        cart.add(newItem);
+      }
+      user.setCart(cart);
+      userRepository.save(user);
+      return ResponseEntity.ok(
+        "{\"message\": \"Added to cart\", \"status\": 200}"
+      );
+    } catch (Exception e) {
+      return ResponseEntity
+        .badRequest()
+        .body("{\"message\": \"Couldn't add to cart\", \"status\": 400}");
+    }
+  }
+
   public ResponseEntity<Object> authenticateUser(
     String username,
     String password
@@ -59,7 +94,9 @@ public class UserService {
         }
       } catch (Exception e) {
         e.printStackTrace();
-        return null;
+        return ResponseEntity
+          .badRequest()
+          .body("{\"message\": \"Password wrong\", \"status\": 400}");
       }
     } catch (Exception e) {
       e.printStackTrace();

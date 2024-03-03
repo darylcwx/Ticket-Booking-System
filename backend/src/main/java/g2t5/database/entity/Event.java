@@ -13,7 +13,7 @@ public class Event {
 
   private String name;
   private String description;
-  private Date datetime;
+  private Date datetime = new Date();
   private double ticketPrice;
   private int ticketsAvailable;
   private String status;

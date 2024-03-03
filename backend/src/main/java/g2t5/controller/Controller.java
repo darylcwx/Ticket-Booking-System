@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,6 +39,9 @@ public class Controller {
     this.eventService = eventService;
   }
 
+  //=================================================================================================================
+  //SECTION - GET
+  //=================================================================================================================
   @GetMapping("/hello")
   public Map<String, String> hello() {
     Map<String, String> response = new HashMap<>();
@@ -76,13 +80,6 @@ public class Controller {
       : ResponseEntity.ok(user);
   }
 
-  @PostMapping("/login")
-  public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
-    String username = loginRequest.getUsername();
-    String password = loginRequest.getPassword();
-    return userService.authenticateUser(username, password);
-  }
-
   @GetMapping("/events")
   public ResponseEntity<List<Event>> getAllEvents() {
     List<Event> events = eventService.getAllEvents();
@@ -101,5 +98,26 @@ public class Controller {
         .status(HttpStatus.NOT_FOUND)
         .body("{\"message\": \"Event not found\"}")
       : ResponseEntity.ok(event);
+  }
+
+  //=================================================================================================================
+  //SECTION - POST
+  //=================================================================================================================
+  @PostMapping("/login")
+  public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+    String username = loginRequest.getUsername();
+    String password = loginRequest.getPassword();
+    return userService.authenticateUser(username, password);
+  }
+
+  @PostMapping("/cart/add")
+  public ResponseEntity<Object> addToCart(
+    @RequestBody Map<String, Object> request
+  ) {
+    String username = (String) request.get("username");
+    String eventId = (String) request.get("eventId");
+    int quantity = (int) request.get("quantity");
+
+    return userService.addToCart(username, eventId, quantity);
   }
 }
