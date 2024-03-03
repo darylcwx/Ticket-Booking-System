@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Dashboard from "./routes/Dashboard";
+import CreateEvent from "./routes/CreateEvent";
 import ForgotPassword from "./routes/ForgotPassword";
 import App from "./App.jsx";
 import initEmailJS from "./utils/initEmailJS";
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     { path: "/forgot", element: <ForgotPassword /> },
     { path: "/register", element: <Register /> },
     { path: "/dashboard", element: <Dashboard /> },
+    { path: "/createEvent", element: <CreateEvent /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
