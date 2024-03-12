@@ -16,6 +16,7 @@ public class Event {
   private Date datetime = new Date();
   private double ticketPrice;
   private int ticketsAvailable;
+  private int ticketsSold;
   private String status;
   private ArrayList<String> bookingList;
   private double cancellationFee;
@@ -100,5 +101,17 @@ public class Event {
 
   public String getImage() {
     return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  public int getTicketsSold() {
+    return this.ticketsSold;
+  }
+
+  public void setTicketsSold(int ticketsSold){
+    this.ticketsSold = ticketsSold;
   }
 }
