@@ -31,16 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 public class ReportController {
-    private final UserService userService;
-    private final EventService eventService;
     private final EventManagerService eventManagerService;
     private final ReportService reportService;
 
     @Autowired
-    public ReportController(UserService userService, EventService eventService,
+    public ReportController(
             EventManagerService eventManagerService, ReportService reportService) {
-        this.userService = userService;
-        this.eventService = eventService;
         this.eventManagerService = eventManagerService;
         this.reportService = reportService;
     }
@@ -68,7 +64,7 @@ public class ReportController {
         }
     }
 
-     @GetMapping("/export-report")
+    @GetMapping("/export-report")
     public void exportReport(HttpServletResponse response) {
         // Set response headers
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

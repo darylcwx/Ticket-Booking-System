@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import g2t5.database.entity.Event;
 import g2t5.database.repository.EventRepository;
-import g2t5.database.repository.TicketingManagerRepository;
+//import g2t5.database.repository.TicketingManagerRepository;
 import g2t5.database.repository.UserRepository;
 
 @Service
