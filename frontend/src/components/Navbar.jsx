@@ -44,9 +44,15 @@ export default function Navbar() {
             <div className="">
                 <div className="bg-navbar w-screen h-[65px]">
                     <div className="flex justify-between items-center">
-                        <Link to="/dashboard">
-                            <img width="121" src="/logo.png" />
-                        </Link>
+                        {user?.role === "event manager" ? (
+                            <Link to="/managerDashboard">
+                                <img width="121" src="/logo.png" />
+                            </Link>
+                        ) : (
+                            <Link to="/dashboard">
+                                <img width="121" src="/logo.png" />
+                            </Link>
+                        )}
                         <div className="flex gap-2 pr-4 flex items-center">
                             {user?.role === "event manager" && (
                                 <Link to="/createEvent">Create Event</Link>

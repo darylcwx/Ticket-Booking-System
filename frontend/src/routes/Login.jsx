@@ -35,7 +35,12 @@ export default function Login() {
                 console.log(data);
                 if (response.ok) {
                     localStorage.setItem("username", username);
-                    navigate("/dashboard");
+                    //TODO: Add check for user role
+                    {username == 'em' ? (
+                        navigate("/managerDashboard")
+                    ) : (
+                        navigate("/dashboard")
+                    )}
                 } else {
                     setUsernameError("Invalid username");
                     setPasswordError("Invalid password");

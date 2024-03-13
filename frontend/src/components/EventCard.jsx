@@ -5,6 +5,7 @@ import TicketDividerHorizontal from "./TicketDividerHorizontal";
 import QuantitySelector from "./QuantitySelector";
 import { eventImageHeightAndWidth } from "../constants/globalVars";
 import formatDatetime from "../utils/formatDatetime";
+import EditIcon from '@mui/icons-material/Edit';
 
 import Button from "@mui/material/Button";
 
@@ -29,9 +30,16 @@ export default function EventCard({ event, page }) {
             <div className="pt-0 md:pt-4 p-4 md:pl-0 flex flex-col justify-between">
                 <div className="">
                     <div className="block sm:flex md:block lg:flex justify-between ">
-                        <div className="text-3xl font-semibold hover:text-hover">
-                            <Link to={`/event/${event.id}`}>{event.name}</Link>
-                        </div>
+                        {page == "managerDashboard" ? (
+                            <div className="text-3xl font-semibold hover:text-hover flex justify-between items-center">
+                                <Link to={`/event/${event.id}`}>{event.name}</Link>
+                                <Link to={`/editEvent/${event.id}`}><EditIcon /></Link>
+                            </div>
+                        ) : (
+                            <div className="text-3xl font-semibold hover:text-hover">
+                                <Link to={`/event/${event.id}`}>{event.name}</Link>
+                            </div>
+                        )}
                         <div className="flex items-center">
                             {formatDatetime(event.datetime)}
                         </div>
@@ -57,7 +65,7 @@ export default function EventCard({ event, page }) {
                             {event.ticketPrice}
                         </span>
                     </div>
-                    {page == "dashboard" ? (
+                    {page == "dashboard" || page == "managerDashboard" ? (
                         <div className="flex justify-end">
                             <Button
                                 variant="contained"
