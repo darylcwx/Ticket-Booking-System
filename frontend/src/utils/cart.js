@@ -1,3 +1,17 @@
+const getCart = async (username) => {
+    try {
+        const response = await fetch(`http://localhost:8080/cart/${username}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 const addToCart = async (username, eventId, quantity) => {
     try {
         const response = await fetch(`http://localhost:8080/cart/add`, {
@@ -15,4 +29,5 @@ const addToCart = async (username, eventId, quantity) => {
         console.log(e);
     }
 };
-export { addToCart };
+
+export { getCart, addToCart };

@@ -109,15 +109,4 @@ public class Controller {
     String password = loginRequest.getPassword();
     return userService.authenticateUser(username, password);
   }
-
-  @PostMapping("/cart/add")
-  public ResponseEntity<Object> addToCart(
-    @RequestBody Map<String, Object> request
-  ) {
-    String username = (String) request.get("username");
-    String eventId = (String) request.get("eventId");
-    int quantity = (int) request.get("quantity");
-
-    return userService.addToCart(username, eventId, quantity);
-  }
 }

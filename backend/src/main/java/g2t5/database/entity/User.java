@@ -13,9 +13,6 @@ public class User {
 
   private String username;
   private String password;
-
-  private ArrayList<Map<String, Integer>> cart;
-
   private String role;
 
   public String getId() {
@@ -46,11 +43,15 @@ public class User {
     this.role = role;
   }
 
-  public ArrayList<Map<String, Integer>> getCart() {
-    return cart;
-  }
-
-  public void setCart(ArrayList<Map<String, Integer>> cart) {
-    this.cart = cart;
+  public String toString() {
+    return (
+      "User: [username: " +
+      username +
+      ", password: " +
+      password +
+      ", role: " +
+      role +
+      "]"
+    );
   }
 }

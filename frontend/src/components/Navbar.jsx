@@ -3,10 +3,13 @@ import { useNavigate, Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { getCart } from "../utils/cart";
 export default function Navbar() {
     const navigate = useNavigate();
     const [user, setUser] = useState();
     const [cartCount, setCartCount] = useState(0);
+
+    //TODO - re-render on add to cart
     useEffect(() => {
         const getUser = async () => {
             const username = localStorage.getItem("username");
@@ -23,18 +26,19 @@ export default function Navbar() {
                     navigate("/");
                 }
                 setUser(data);
-
                 let total = 0;
-                data.cart.forEach((item) => {
-                    total += parseInt(Object.values(item));
-                });
+                if (data.cart.length != 0) {
+                    data.cart.forEach((item) => {
+                        total += parseInt(Object.values(item));
+                    });
+                }
                 setCartCount(total);
             } catch (e) {
                 console.log(e);
             }
         };
         getUser();
-    }, [user]);
+    }, []);
     return (
         <div className="navbar absolute">
             <div className="">
