@@ -60,4 +60,20 @@ public class CustomerService {
     customer.setCart(cart);
     customerRepository.save(customer);
   }
+
+  public void removeFromCart(String username, String eventId)
+    throws Exception {
+    Customer customer = customerRepository.findByUsername(username);
+    ArrayList<Map<String, Object>> cart = customer.getCart();
+    if (cart.size() != 0) {
+      for (Map<String, Object> cartItem : cart) {
+        if (cartItem.get("id").equals(eventId)) {
+          cart.remove(cartItem);
+          break;
+        }
+      }
+    }
+    customer.setCart(cart);
+    customerRepository.save(customer);
+  }
 }

@@ -2,6 +2,9 @@ package g2t5.controller;
 
 import g2t5.database.entity.*;
 import g2t5.model.AddToCartRequest;
+import g2t5.model.RemoveFromCartRequest;
+// import g2t5.model.CreateBookingRequest;
+// import g2t5.model.CancelBookingRequest;
 import g2t5.model.LoginRequest;
 import g2t5.service.CustomerService;
 import g2t5.service.EventManagerService;
@@ -79,4 +82,46 @@ public class CustomerController {
         .body("{\"message\": \"Something went wrong\"}");
     }
   }
+
+  @PostMapping("/cart/remove")
+  public ResponseEntity<String> removeFromCart(
+    @RequestBody RemoveFromCartRequest request
+  ) {
+    String username = request.getUsername();
+    String eventId = request.getEventId();
+    try {
+      customerService.removeFromCart(username, eventId);
+      return ResponseEntity.ok("{\"message\": \"Removed from cart successfully\"}");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body("{\"message\": \"Something went wrong\"}");
+    }
+  }
+
+  // @PostMapping("/bookingHistory/get")
+  // public ResponseEntity<String> getBookingHistory() {
+  //   try {
+  //     ArrayList<String> bookingHistory = customerService.getBookingHistory();
+  //     return ResponseEntity.ok("{\"message\": \"Retrieved booking history successfully\"}");
+  //   } catch (Exception e) {
+  //     System.out.println(e.getMessage());
+  //     return ResponseEntity
+  //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
+  //       .body("{\"message\": \"Something went wrong\"}");
+  //   }
+  // }
+
+  // @PostMapping("/booking/create")
+  // public ResponseEntity<String> createBooking(
+  //   @RequestBody CreateBookingRequest request
+  // ) {
+  // }
+
+  // @PostMapping("/booking/cancel")
+  // public ResponseEntity<String> cancelBooking(
+  //   @RequestBody CancelBookingRequest request
+  // ) {
+  // }
 }
