@@ -29,7 +29,7 @@ export default function Navbar() {
                 let total = 0;
                 if (data.cart.length != 0) {
                     data.cart.forEach((item) => {
-                        total += parseInt(Object.values(item));
+                        total += parseInt(item.quantity);
                     });
                 }
                 setCartCount(total);

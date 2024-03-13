@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class Customer extends User {
 
-  private ArrayList<Map<String, Integer>> cart;
+  private ArrayList<Map<String, Object>> cart;
 
-  public ArrayList<Map<String, Integer>> getCart() {
+  public ArrayList<Map<String, Object>> getCart() {
     return cart;
   }
 
-  public void setCart(ArrayList<Map<String, Integer>> cart) {
+  public void setCart(ArrayList<Map<String, Object>> cart) {
     this.cart = cart;
   }
 

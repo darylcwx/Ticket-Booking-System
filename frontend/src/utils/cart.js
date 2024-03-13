@@ -5,7 +5,6 @@ const getCart = async (username) => {
             headers: { "Content-Type": "application/json" },
         });
         const data = await response.json();
-        console.log(data);
         return data;
     } catch (e) {
         console.log(e);
@@ -24,7 +23,6 @@ const addToCart = async (username, eventId, quantity) => {
             }),
         });
         const data = await response.json();
-        console.log(data);
     } catch (e) {
         console.log(e);
     }

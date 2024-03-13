@@ -53,7 +53,7 @@ public class CustomerController {
     @PathVariable String username
   ) {
     try {
-      ArrayList<Map<String, Integer>> cart = customerService.getCart(username);
+      ArrayList<Map<String, Object>> cart = customerService.getCart(username);
       return ResponseEntity.ok(cart);
     } catch (Exception e) {
       return ResponseEntity

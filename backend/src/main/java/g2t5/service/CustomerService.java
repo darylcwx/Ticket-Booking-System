@@ -20,38 +20,40 @@ public class CustomerService {
     return customerRepository.findByUsername(username);
   }
 
-  public ArrayList<Map<String, Integer>> getCart(String username)
+  public ArrayList<Map<String, Object>> getCart(String username)
     throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     if (customer == null) {
       throw new Exception("User not found");
     }
-    ArrayList<Map<String, Integer>> cart = customer.getCart();
+    ArrayList<Map<String, Object>> cart = customer.getCart();
     return cart;
   }
 
-  public void addToCart(String username, String eventId, Integer quantity)
+  public void addToCart(String username, String eventId, int quantity)
     throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    ArrayList<Map<String, Integer>> cart = customer.getCart();
+    ArrayList<Map<String, Object>> cart = customer.getCart();
     boolean eventInCart = false;
     if (cart.size() == 0) {
       System.out.println(eventId + quantity);
-      Map<String, Integer> newItem = new HashMap<>();
-      newItem.put(eventId, quantity);
+      Map<String, Object> newItem = new HashMap<>();
+      newItem.put("id", eventId);
+      newItem.put("quantity", quantity);
       cart.add(newItem);
     } else {
-      for (Map<String, Integer> eachEvent : cart) {
-        if (eachEvent.containsKey(eventId)) {
-          int currentQuantity = eachEvent.get(eventId);
-          eachEvent.put(eventId, currentQuantity + quantity);
+      for (Map<String, Object> cartItem : cart) {
+        if (cartItem.get("id").equals(eventId)) {
+          int currentQuantity = (int) cartItem.get("quantity");
+          cartItem.put("quantity", currentQuantity + quantity);
           eventInCart = true;
           break;
         }
       }
       if (!eventInCart) {
-        Map<String, Integer> newItem = new HashMap<>();
-        newItem.put(eventId, quantity);
+        Map<String, Object> newItem = new HashMap<>();
+        newItem.put("id", eventId);
+        newItem.put("quantity", quantity);
         cart.add(newItem);
       }
     }
