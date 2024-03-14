@@ -27,7 +27,7 @@ export default function QuantitySelector({ event, onQuantityChange }) {
         }
     };
     return (
-        <div className="flex">
+        <div className={`flex ${quantityMax ? "pb-5" : ""}`}>
             <div className="relative pr-4">
                 <Button
                     variant="contained"
@@ -62,18 +62,22 @@ export default function QuantitySelector({ event, onQuantityChange }) {
                 >
                     <AddIcon fontSize="small" />
                 </Button>
-                <div
-                    className="absolute text-red-500 w-[168px] flex justify-center"
-                    style={{
-                        fontFamily: "Roboto, sans-serif",
-                        fontWeight: 400,
-                        fontSize: "0.75rem",
-                        lineHeight: 1.66,
-                        letterSpacing: "0.03333em",
-                    }}
-                >
-                    {quantityMax ? "Max quantity reached" : ""}
-                </div>
+                {quantityMax ? (
+                    <div
+                        className="absolute text-red-500 w-[168px] flex justify-center"
+                        style={{
+                            fontFamily: "Roboto, sans-serif",
+                            fontWeight: 400,
+                            fontSize: "0.75rem",
+                            lineHeight: 1.66,
+                            letterSpacing: "0.03333em",
+                        }}
+                    >
+                        Max quantity reached
+                    </div>
+                ) : (
+                    <></>
+                )}
             </div>
         </div>
     );

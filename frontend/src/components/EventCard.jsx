@@ -5,7 +5,7 @@ import TicketDividerHorizontal from "./TicketDividerHorizontal";
 import QuantitySelector from "./QuantitySelector";
 import { eventImageHeightAndWidth } from "../constants/globalVars";
 import formatDatetime from "../utils/formatDatetime";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 
 import Button from "@mui/material/Button";
 
@@ -32,12 +32,18 @@ export default function EventCard({ event, page }) {
                     <div className="block sm:flex md:block lg:flex justify-between ">
                         {page == "managerDashboard" ? (
                             <div className="text-3xl font-semibold hover:text-hover flex justify-between items-center">
-                                <Link to={`/event/${event.id}`}>{event.name}</Link>
-                                <Link to={`/editEvent/${event.id}`}><EditIcon /></Link>
+                                <Link to={`/event/${event.id}`}>
+                                    {event.name}
+                                </Link>
+                                <Link to={`/editEvent/${event.id}`}>
+                                    <EditIcon />
+                                </Link>
                             </div>
                         ) : (
                             <div className="text-3xl font-semibold hover:text-hover">
-                                <Link to={`/event/${event.id}`}>{event.name}</Link>
+                                <Link to={`/event/${event.id}`}>
+                                    {event.name}
+                                </Link>
                             </div>
                         )}
                         <div className="flex items-center">
@@ -47,13 +53,13 @@ export default function EventCard({ event, page }) {
                     <div className="pt-2">{event.description}</div>
                 </div>
                 <div className="">
-                    <div className="pt-4 sm:pt-0 flex items-center">
+                    {/* <div className="pt-4 sm:pt-0 flex items-center">
                         Guests allowed:
                         <span className="font-semibold text-lg pl-2">
                             {event.guestsAllowed}
                         </span>
-                    </div>
-                    <div className="flex items-center">
+                    </div> */}
+                    <div className="flex items-center pt-6 sm:pt-0">
                         Tickets left:
                         <span className="text-red-600 font-semibold text-lg pl-2">
                             {event.ticketsAvailable}
