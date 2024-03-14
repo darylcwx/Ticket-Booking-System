@@ -14,7 +14,8 @@ public class Ticket {
         this.ticketType = ticketType;
     }
 
-    public boolean verifyValidity(){
+    public boolean verifyValidity(Ticket ticket){
+        //get ticket from db
         return false;
     }
 }
