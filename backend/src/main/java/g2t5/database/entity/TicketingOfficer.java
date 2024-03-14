@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 public class TicketingOfficer extends User{
     public void createTicket(String type) {
-        Ticket ticket = new Ticket(type);
+        //
     }
     
       public void verifyTicketValidity (Ticket ticket) {

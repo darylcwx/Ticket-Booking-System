@@ -10,10 +10,22 @@ import org.springframework.stereotype.Service;
 public class TicketService {
 
     @Autowired
-    private TicketRepository ticketRepo;
+    private TicketRepository ticketRepository;
 
-    public TicketService(TicketRepository ticketRepo) {
-        this.ticketRepo = ticketRepo;
-      }
-      
+    @Autowired
+    public TicketService(TicketRepository ticketRepository) {
+      this.ticketRepository = ticketRepository;
+    }
+
+    public void createTicket(Ticket ticket) {
+      ticketRepository.save(ticket);
+    }
+
+    public List<Ticket> getAllTicket() {
+       return ticketRepository.findAll();
+    }
+
+/*     public Ticket buyTicket(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    } */
 }

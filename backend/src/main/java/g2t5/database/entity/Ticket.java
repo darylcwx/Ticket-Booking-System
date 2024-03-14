@@ -7,15 +7,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ticket {
     @Id
     private String ticketId;
-
+    
     private String ticketType;
 
-    public Ticket(String ticketType){
+    public Ticket() {}
+
+    public Ticket(String ticketType) {
         this.ticketType = ticketType;
     }
 
-    public boolean verifyValidity(Ticket ticket){
-        //get ticket from db
-        return false;
+    public String getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public String getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
     }
 }
