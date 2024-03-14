@@ -3,7 +3,7 @@ package g2t5.controller;
 import g2t5.database.entity.*;
 import g2t5.model.AddToCartRequest;
 import g2t5.model.RemoveFromCartRequest;
-// import g2t5.model.CreateBookingRequest;
+import g2t5.model.CreateBookingRequest;
 // import g2t5.model.CancelBookingRequest;
 import g2t5.model.LoginRequest;
 import g2t5.service.CustomerService;
@@ -100,23 +100,37 @@ public class CustomerController {
     }
   }
 
-  // @PostMapping("/bookingHistory/get")
-  // public ResponseEntity<String> getBookingHistory() {
+  @PostMapping("/bookings/{username}")
+  public ResponseEntity<Object> getBookings(
+    @PathVariable String username
+  ) {
+    try {
+      ArrayList<Map<String, Object>> bookings = customerService.getBookings(username);
+      return ResponseEntity.ok(bookings);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body("{\"message\": \"User not found\"}");
+    }
+  }
+
+  // @PostMapping("/booking/create")
+  // public ResponseEntity<String> createBooking(
+  //   @RequestBody CreateBookingRequest request
+  // ) {
+  //   String username = request.getUsername();
+  //   String eventId = request.getEventId();
+  //   int numberOfTickets = request.getNumberOfTickets();
   //   try {
-  //     ArrayList<String> bookingHistory = customerService.getBookingHistory();
-  //     return ResponseEntity.ok("{\"message\": \"Retrieved booking history successfully\"}");
+  //     customerService.createBooking(username, eventId, numberOfTickets);
+  //     return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
   //   } catch (Exception e) {
   //     System.out.println(e.getMessage());
   //     return ResponseEntity
   //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
   //       .body("{\"message\": \"Something went wrong\"}");
   //   }
-  // }
-
-  // @PostMapping("/booking/create")
-  // public ResponseEntity<String> createBooking(
-  //   @RequestBody CreateBookingRequest request
-  // ) {
   // }
 
   // @PostMapping("/booking/cancel")

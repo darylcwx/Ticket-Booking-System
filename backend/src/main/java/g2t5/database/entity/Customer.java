@@ -7,7 +7,7 @@ public class Customer extends User {
 
   private ArrayList<Map<String, Object>> cart;
   private double accountBalance;
-  private ArrayList<String> bookingHistory; // store booking IDs
+  private ArrayList<Map<String, Object>> bookings; 
 
   public double getAccountBalance() {
     return accountBalance;
@@ -25,15 +25,15 @@ public class Customer extends User {
     this.cart = cart;
   }
 
-  public ArrayList<String> getBookingHistory() {
-    return bookingHistory;
+  public ArrayList<Map<String, Object>> getBookings() {
+    return bookings;
   }
 
-  public void setBookingHistory(ArrayList<String> bookingHistory) {
-    this.bookingHistory = bookingHistory;
+  public void setBookings(ArrayList<Map<String, Object>> bookings) {
+    this.bookings = bookings;
   }
 
   public String toString() {
-    return super.toString() + " Account Balance: [" + accountBalance + "]" + " Cart: [" + cart + "]" + " Booking History: [" + bookingHistory + "]";
+    return super.toString() + " Account Balance: [" + accountBalance + "]" + " Cart: [" + cart + "]" + " Bookings: [" + bookings + "]";
   }
 }

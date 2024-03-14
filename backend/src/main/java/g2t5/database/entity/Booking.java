@@ -6,7 +6,7 @@ import java.util.Map;
 public class Booking {
     private String bookingId;
     private String eventId;
-    // private ArrayList<Ticket> ticketIds;
+    private ArrayList<Map<String, Object>> tickets;
     private String status; 
     // payment details?
 
@@ -34,19 +34,15 @@ public class Booking {
         this.status = status;
     }
 
-    // public int getNumberOfTickets() {
-    //     return ticketIds.size();
-    // }
+    public ArrayList<Map<String, Object>> getTickets() {
+        return tickets;
+    }
 
-    // public ArrayList<Ticket> getTicketIds() {
-    //     return ticketIds;
-    // }
+    public void setTickets(ArrayList<Map<String, Object>> tickets){
+        this.tickets = tickets;
+    }
 
-    // public void setTicketIds(ArrayList<Ticket> ticketIds){
-    //     this.ticketIds = ticketIds;
-    // }
-
-    // public String toString() {
-    //     return "Booking ID: [" + bookingId + "]" + " Event ID: [" + eventId + "]" + " Number of tickets: [" + getNumberOfTickets() + "]" + " Status: [" + status + "]";
-    // }
+    public String toString() {
+        return "Booking ID: [" + bookingId + "]" + " Event ID: [" + eventId + "]" + " Tickets: [" + tickets + "]" + " Status: [" + status + "]";
+    }
 }

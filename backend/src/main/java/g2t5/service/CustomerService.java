@@ -3,6 +3,7 @@ package g2t5.service;
 import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
 import g2t5.database.repository.CustomerRepository;
+import g2t5.database.repository.EventRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class CustomerService {
 
   @Autowired
   private CustomerRepository customerRepository;
+  private EventRepository eventRepository;
 
   public Customer getCustomerByUsername(String username) {
     return customerRepository.findByUsername(username);
@@ -76,4 +78,59 @@ public class CustomerService {
     customer.setCart(cart);
     customerRepository.save(customer);
   }
+
+  public ArrayList<Map<String, Object>> getBookings(String username) 
+    throws Exception {
+    Customer customer = customerRepository.findByUsername(username);
+    if (customer == null){
+      throw new Exception("User not found");
+    } 
+    return customer.getBookings();
+
+  }
+
+  // public ArrayList<Map<String, Object>> createBooking(String username, String eventId, int numberOfTickets) 
+  //   throws Exception {
+  //   Customer customer = customerRepository.findByUsername(username);
+  //   ArrayList<Map<String, Object>> bookings = customer.getBookings();
+  //   Event event = eventRepository.findbyId(eventId);
+  //   int guestsAllowed = event.getGuestsAllowed();
+  //   boolean bookingExist = false;
+
+  //   if (event.getTicketsAvailable() >= numberOfTickets && numberOfTickets <= guestsAllowed){
+  //     for (int i = 0; i < bookings.size(); i++){
+  //       Map<String, Object> booking = bookings.get(i);
+  //       int numTix = (booking.get("tickets")).size();
+  //       if (booking.get("eventId") == eventId && numberOfTickets <= guestsAllowed - numTix){
+  //         // booking.put("bookingId", bookingId); // how to generate IDs?
+  //         booking.put("eventId", eventId);
+  //         ArrayList<Map<String, Object>> tickets = new ArrayList<>();
+  //         // for (int i = 0; i < numberOfTickets; i++){
+  //         //   // add new ticket
+  //         // }
+  //         booking.put("tickets", tickets);
+  //         booking.put("status", "processing"); // what are the diff status?
+  //         bookings.add(booking);
+  //         bookingExist = true;
+  //         break;
+  //       }
+  //     }
+
+  //     if (!bookingExist || bookings.size() == 0){
+  //         Map<String, Object> booking = new HashMap<>();
+  //         // booking.put("bookingId", bookingId); // how to generate IDs?
+  //         booking.put("eventId", eventId);
+  //         ArrayList<Map<String, Object>> tickets = new ArrayList<>();
+  //         // for (int i = 0; i < numberOfTickets; i++){
+  //         //   // add new ticket
+  //         // }
+  //         booking.put("tickets", tickets);
+  //         booking.put("status", "processing"); // what are the diff status?
+  //         bookings.add(booking);
+  //     }
+
+  //     customer.setBookings(bookings);
+  //     customerRepository.save(customer);
+  //   }  
+  // }
 }
