@@ -5,6 +5,7 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Dashboard from "./routes/Dashboard";
 import ManagerDashboard from "./routes/ManagerDashboard";
+import TicketingOfficerDashboard from "./routes/TicketingOfficerDashboard";
 import CreateEvent from "./routes/CreateEvent";
 import EditEvent from "./routes/EditEvent"
 import ForgotPassword from "./routes/ForgotPassword";
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
     { path: "/event/:id", element: <Event /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },
+    { path: "/ticketingOfficerDashboard", element: <TicketingOfficerDashboard />},
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
