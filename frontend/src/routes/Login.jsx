@@ -36,11 +36,24 @@ export default function Login() {
                 if (response.ok) {
                     localStorage.setItem("username", username);
                     //TODO: Add check for user role
-                    {username == 'em' ? (
-                        navigate("/managerDashboard")
-                    ) : (
-                        navigate("/dashboard")
-                    )}
+                    switch (username) {
+                        case 'em':
+                            navigate("/managerDashboard")
+                            break;
+                        case 'c':
+                            navigate("/dashboard")
+                            break;
+                        case 'to':
+                            navigate("/ticketingOfficerDashboard")
+                            break;
+                        // default:
+                        //     break;
+                    }
+                    // {username == 'em' ? (
+                    //     navigate("/managerDashboard")
+                    // ) : username == 'c' ? (
+                    //     navigate("/dashboard")
+                    // ) : navigate("/ticketingOfficerDashboard")}
                 } else {
                     setUsernameError("Invalid username");
                     setPasswordError("Invalid password");
