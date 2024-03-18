@@ -23,6 +23,7 @@ const addToCart = async (username, eventId, quantity) => {
             }),
         });
         const data = await response.json();
+        return data;
     } catch (e) {
         console.log(e);
     }

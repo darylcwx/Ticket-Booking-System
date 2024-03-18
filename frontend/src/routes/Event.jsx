@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import QuantitySelector from "../components/QuantitySelector";
 import { addToCart } from "../utils/cart";
 import formatDatetime from "../utils/formatDatetime";
+import Notification from "../components/Notification";
 
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -16,6 +17,7 @@ export default function Event() {
     const [event, setEvent] = useState({});
     const [quantity, setQuantity] = useState(0);
     const [quantityMax, setQuantityMax] = useState(false);
+    const [notification, setNotification] = useState("");
     const location = useLocation();
 
     useEffect(() => {
@@ -30,7 +32,6 @@ export default function Event() {
                     }
                 );
                 const data = await response.json();
-                console.log(data);
                 setEvent(data);
             } catch (e) {
                 console.log(e);
@@ -40,12 +41,18 @@ export default function Event() {
     }, []);
 
     const handleAddToCart = async (eventId) => {
+        setNotification(false);
         const username = localStorage.getItem("username");
         console.log(username);
-        addToCart(username, eventId, quantity);
+        const response = await addToCart(username, eventId, quantity);
+        if (response.message === "Added to cart successfully") {
+            setNotification("success");
+        } else {
+            setNotification("error");
+        }
     };
 
-    const handleQuantityChange = (quantity) => {
+    const handleQuantityChange = (change, quantity) => {
         console.log(quantity);
         setQuantity(quantity);
     };
@@ -89,7 +96,6 @@ export default function Event() {
                         <div className="flex justify-end pt-4">
                             <QuantitySelector
                                 event={event}
-                                page="event"
                                 onQuantityChange={handleQuantityChange}
                             />
                             <Button
@@ -100,6 +106,20 @@ export default function Event() {
                             >
                                 Add to Cart
                             </Button>
+                            {notification && (
+                                <Notification
+                                    type={
+                                        notification === "success"
+                                            ? "success"
+                                            : "error"
+                                    }
+                                    message={
+                                        notification === "success"
+                                            ? "Added to cart successfully"
+                                            : "Something went wrong"
+                                    }
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

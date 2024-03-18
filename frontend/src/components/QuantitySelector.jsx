@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 export default function QuantitySelector({ event, onQuantityChange }) {
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(event?.quantity || 0);
     const [quantityMax, setQuantityMax] = useState(false);
 
     const handleChangeQuantity = (change) => {
@@ -17,12 +17,12 @@ export default function QuantitySelector({ event, onQuantityChange }) {
                 setQuantityMax(true);
             } else {
                 setQuantity(quantity + 1);
-                onQuantityChange(quantity + 1);
+                onQuantityChange(change, quantity + 1);
             }
         } else {
             if (quantity > 0) {
                 setQuantity(quantity - 1);
-                onQuantityChange(quantity - 1);
+                onQuantityChange(change, quantity - 1);
             }
         }
     };

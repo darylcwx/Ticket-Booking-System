@@ -145,7 +145,11 @@ export default function Dashboard() {
                     </>
                 ) : (
                     filteredEvents.map((event) => (
-                        <EventCard event={event} page="dashboard" />
+                        <EventCard
+                            key={event.id}
+                            event={event}
+                            page="dashboard"
+                        />
                     ))
                 )}
             </Container>

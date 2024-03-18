@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import TicketDividerVertical from "./TicketDividerVertical";
@@ -11,25 +12,39 @@ import Button from "@mui/material/Button";
 
 export default function EventCard({ event, page }) {
     const navigate = useNavigate();
+    const [quantity, setQuantity] = useState(0);
+    const handleQuantityChange = (change, quantity) => {
+        console.log(quantity);
+        setQuantity(quantity);
+
+        // call add to cart or remove from cart
+        if (change === "add") {
+        } else {
+        }
+    };
     return (
         <div
             key={event.id}
-            className="bg-modal mt-4 md:flex md:flex-row flex flex-col mx-auto"
+            className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto"
         >
             <div className="">
                 <Link to={`/event/${event.id}`}>
                     <img
-                        className="shrink md:max-w-[300px] lg:max-w-[400px]"
+                        className="shrink  md:max-w-[300px] lg:max-w-[400px]"
                         // width={eventImageHeightAndWidth}
                         src={`../events/${event.image}`}
                     />
                 </Link>
             </div>
+
+            {/* //SECTION - ticket divider */}
             <TicketDividerVertical className="hidden md:flex" />
             <TicketDividerHorizontal className="flex md:hidden" />
+
+            {/* //SECTION - event details */}
             <div className="pt-0 md:pt-4 p-4 md:pl-0 flex flex-col justify-between">
                 <div className="">
-                    <div className="block sm:flex md:block lg:flex justify-between ">
+                    <div className="sm:flex md:block lg:flex block  justify-between">
                         {page == "managerDashboard" ? (
                             <div className="text-3xl font-semibold hover:text-hover flex justify-between items-center">
                                 <Link to={`/event/${event.id}`}>
@@ -50,7 +65,11 @@ export default function EventCard({ event, page }) {
                             {formatDatetime(event.datetime)}
                         </div>
                     </div>
-                    <div className="pt-2">{event.description}</div>
+                    {page === "cart" ? (
+                        <></>
+                    ) : (
+                        <div className="pt-2">{event.description}</div>
+                    )}
                 </div>
                 <div className="">
                     {/* <div className="pt-4 sm:pt-0 flex items-center">
@@ -65,13 +84,15 @@ export default function EventCard({ event, page }) {
                             {event.ticketsAvailable}
                         </span>
                     </div>
+
                     <div className="flex items-center">
                         Price:
                         <span className="text-green-600 font-semibold text-lg pl-2">
                             {event.ticketPrice}
                         </span>
                     </div>
-                    {page == "dashboard" || page == "managerDashboard" ? (
+
+                    {page === "dashboard" || page === "managerDashboard" ? (
                         <div className="flex justify-end">
                             <Button
                                 variant="contained"
@@ -83,9 +104,7 @@ export default function EventCard({ event, page }) {
                             </Button>
                         </div>
                     ) : (
-                        <div className="flex justify-end">
-                            <QuantitySelector event={event} />
-                        </div>
+                        <></>
                     )}
                 </div>
             </div>

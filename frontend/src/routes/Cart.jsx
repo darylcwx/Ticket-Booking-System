@@ -3,8 +3,9 @@ import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import { getCart } from "../utils/cart";
-import EventCard from "../components/EventCard";
-export default function Profile() {
+import CartItem from "../components/CartItem";
+import { Link } from "react-router-dom";
+export default function Cart() {
     const [cart, setCart] = useState([]);
     const [events, setEvents] = useState([]);
     const [updatedCart, setUpdatedCart] = useState([]);
@@ -60,8 +61,13 @@ export default function Profile() {
             <Navbar />
             <Container className="pt-[65px] pb-6">
                 {updatedCart.map((event) => (
-                    <EventCard event={event} page="cart" />
+                    <CartItem key={event.id} event={event} />
                 ))}
+                <div className="flex justify-end mt-4">
+                    <Link to={`/checkout`}>
+                        <Button variant="contained">Proceed to Checkout</Button>{" "}
+                    </Link>
+                </div>
             </Container>
         </div>
     );
