@@ -9,14 +9,18 @@ import g2t5.database.entity.Event;
 import g2t5.database.repository.EventRepository;
 //import g2t5.database.repository.TicketingManagerRepository;
 import g2t5.database.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class EventManagerService {
-    // @Autowired
-    // private TicketingManagerRepository ticketingManagerRepository;
+    //@Autowired
+    //private TicketingManagerRepository ticketingManagerRepository;
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private ReportService reportService;
 
     public void addEvent(Event event) {
         eventRepository.save(event);
@@ -60,10 +64,10 @@ public class EventManagerService {
     }
 
     //void addTicketingOfficer(TicketingManager ticketingManager) {
-    //ticketingManagerRepository.save(ticketingManager);
+    //    ticketingManagerRepository.save(ticketingManager);
     // }
 
-    // void getStatistics() {
-    //
-    // }
+    public void getStatistics(HttpServletResponse response) {
+        reportService.exportReport(response);
+    }
 }

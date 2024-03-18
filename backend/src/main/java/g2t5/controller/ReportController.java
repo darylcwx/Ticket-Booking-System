@@ -1,11 +1,8 @@
 package g2t5.controller;
 
 import g2t5.database.entity.*;
-import g2t5.model.LoginRequest;
 import g2t5.service.EventManagerService;
-import g2t5.service.EventService;
 import g2t5.service.ReportService;
-import g2t5.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.*;
@@ -14,12 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
