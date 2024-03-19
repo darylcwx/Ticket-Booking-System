@@ -1,60 +1,101 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import TicketDividerVertical from "./TicketDividerVertical";
 import QuantitySelector from "./QuantitySelector";
-import { eventImageHeightAndWidth } from "../constants/globalVars";
 import formatDatetime from "../utils/formatDatetime";
-import EditIcon from "@mui/icons-material/Edit";
-import Button from "@mui/material/Button";
+import { getCart, addToCart, removeFromCart } from "../utils/cart";
+import Checkbox from "@mui/material/Checkbox";
 
-export default function CartItem({ event }) {
-    const navigate = useNavigate();
+export default function CartItem({
+    event,
+    onToggleCheck,
+    onChangeQuantity,
+    page,
+}) {
     const [quantity, setQuantity] = useState(0);
+    const [checked, setChecked] = useState(event.checked);
 
-    const handleQuantityChange = (change, quantity) => {
-        console.log(quantity);
+    const handleChangeQuantity = async (change, quantity) => {
+        const username = localStorage.getItem("username");
+        onChangeQuantity(event.id, quantity);
         setQuantity(quantity);
-
-        // call add to cart or remove from cart
         if (change === "add") {
+            const response = await addToCart(username, event.id, 1);
+            console.log(response);
         } else {
+            const response = await removeFromCart(username, event.id);
+            console.log(response);
         }
     };
+
+    const handleCheck = (checked) => {
+        setChecked(checked);
+        onToggleCheck(checked);
+    };
+
     return (
-        <div key={event.id} className="flex bg-modal mt-4">
-            <div className="">
-                <Link to={`/event/${event.id}`}>
-                    <img
-                        className="!max-w-40 !w-40"
-                        // width={eventImageHeightAndWidth}
-                        src={`../events/${event.image}`}
+        <div className="flex">
+            {page === "checkout" ? (
+                <></>
+            ) : (
+                <div className="flex justify-center items-center w-[60px] shrink-0">
+                    <Checkbox
+                        checked={checked}
+                        onChange={(event) => {
+                            handleCheck(event.target.checked);
+                        }}
                     />
-                </Link>
-            </div>
+                </div>
+            )}
 
-            {/* //SECTION - ticket divider */}
-            <TicketDividerVertical className="flex" />
-
-            {/* //SECTION - event details */}
-            <div className="pl-0 pt-4 flex flex-col justify-between grow">
+            <div key={event.id} className="flex bg-modal mt-4">
                 <div className="">
-                    <div className="block justify-between">
-                        <div className="text-3xl font-semibold hover:text-hover">
-                            <Link to={`/event/${event.id}`}>{event.name}</Link>
-                        </div>
+                    <Link to={`/event/${event.id}`}>
+                        <img
+                            className="!max-w-40 !w-40"
+                            // width={eventImageHeightAndWidth}
+                            src={`../events/${event.image}`}
+                        />
+                    </Link>
+                </div>
 
-                        <div className="flex items-center">
-                            {formatDatetime(event.datetime)}
+                {/* //SECTION - ticket divider */}
+                <TicketDividerVertical className="flex" />
+
+                {/* //SECTION - event details */}
+                <div className="pl-0 pr-4 py-4 flex">
+                    <div className="flex flex-col justify-between">
+                        <div className="flex flex-col">
+                            <div className="text-2xl font-semibold hover:text-hover w-[400px]">
+                                <Link to={`/event/${event.id}`}>
+                                    {event.name}
+                                </Link>
+                            </div>
+                            <div className="">
+                                {formatDatetime(event.datetime)}
+                            </div>
+                        </div>
+                        <div className="max-w-[380px] truncate shrink-0 pt-4">
+                            {event.description}
                         </div>
                     </div>
-                </div>
-                <div className="">
-                    <div className="flex justify-end pb-4">
-                        <QuantitySelector
-                            event={event}
-                            onQuantityChange={handleQuantityChange}
-                        />
+
+                    <div className="flex justify-center items-center w-[100px]  shrink-0">
+                        ${Number(event.ticketPrice).toFixed(2)}
+                    </div>
+                    <div className="flex justify-center items-center w-[150px]  shrink-0">
+                        {page === "checkout" ? (
+                            <div className="">{event.quantity}</div>
+                        ) : (
+                            <QuantitySelector
+                                event={event}
+                                onChangeQuantity={handleChangeQuantity}
+                            />
+                        )}
+                    </div>
+                    <div className="flex justify-center items-center w-[150px]  shrink-0">
+                        ${(event.ticketPrice * event.quantity).toFixed(2)}
                     </div>
                 </div>
             </div>

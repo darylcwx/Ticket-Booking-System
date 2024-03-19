@@ -3,8 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 
 import TicketDividerVertical from "./TicketDividerVertical";
 import TicketDividerHorizontal from "./TicketDividerHorizontal";
-import QuantitySelector from "./QuantitySelector";
-import { eventImageHeightAndWidth } from "../constants/globalVars";
 import formatDatetime from "../utils/formatDatetime";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -12,16 +10,6 @@ import Button from "@mui/material/Button";
 
 export default function EventCard({ event, page }) {
     const navigate = useNavigate();
-    const [quantity, setQuantity] = useState(0);
-    const handleQuantityChange = (change, quantity) => {
-        console.log(quantity);
-        setQuantity(quantity);
-
-        // call add to cart or remove from cart
-        if (change === "add") {
-        } else {
-        }
-    };
     return (
         <div
             key={event.id}
@@ -30,7 +18,7 @@ export default function EventCard({ event, page }) {
             <div className="">
                 <Link to={`/event/${event.id}`}>
                     <img
-                        className="shrink  md:max-w-[300px] lg:max-w-[400px]"
+                        className="shrink md:max-w-[300px] lg:max-w-[400px]"
                         // width={eventImageHeightAndWidth}
                         src={`../events/${event.image}`}
                     />
@@ -65,11 +53,7 @@ export default function EventCard({ event, page }) {
                             {formatDatetime(event.datetime)}
                         </div>
                     </div>
-                    {page === "cart" ? (
-                        <></>
-                    ) : (
-                        <div className="pt-2">{event.description}</div>
-                    )}
+                    <div className="pt-2">{event.description}</div>
                 </div>
                 <div className="">
                     {/* <div className="pt-4 sm:pt-0 flex items-center">

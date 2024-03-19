@@ -43,7 +43,6 @@ export default function Event() {
     const handleAddToCart = async (eventId) => {
         setNotification(false);
         const username = localStorage.getItem("username");
-        console.log(username);
         const response = await addToCart(username, eventId, quantity);
         if (response.message === "Added to cart successfully") {
             setNotification("success");
@@ -52,8 +51,7 @@ export default function Event() {
         }
     };
 
-    const handleQuantityChange = (change, quantity) => {
-        console.log(quantity);
+    const handleChangeQuantity = (change, quantity) => {
         setQuantity(quantity);
     };
     return (
@@ -94,10 +92,12 @@ export default function Event() {
                             </div>
                         </div>
                         <div className="flex justify-end pt-4">
-                            <QuantitySelector
-                                event={event}
-                                onQuantityChange={handleQuantityChange}
-                            />
+                            <div className="pr-4">
+                                <QuantitySelector
+                                    event={event}
+                                    onChangeQuantity={handleChangeQuantity}
+                                />
+                            </div>
                             <Button
                                 variant="contained"
                                 onClick={() => {

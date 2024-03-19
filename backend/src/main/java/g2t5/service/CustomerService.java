@@ -16,6 +16,7 @@ public class CustomerService {
 
   @Autowired
   private CustomerRepository customerRepository;
+
   private EventRepository eventRepository;
 
   public Customer getCustomerByUsername(String username) {
@@ -37,13 +38,7 @@ public class CustomerService {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
     boolean eventInCart = false;
-    if (cart.size() == 0) {
-      System.out.println(eventId + quantity);
-      Map<String, Object> newItem = new HashMap<>();
-      newItem.put("id", eventId);
-      newItem.put("quantity", quantity);
-      cart.add(newItem);
-    } else {
+    if (cart.isEmpty() == false) {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
           int currentQuantity = (int) cartItem.get("quantity");
@@ -52,25 +47,29 @@ public class CustomerService {
           break;
         }
       }
-      if (!eventInCart) {
-        Map<String, Object> newItem = new HashMap<>();
-        newItem.put("id", eventId);
-        newItem.put("quantity", quantity);
-        cart.add(newItem);
-      }
+    }
+    if (!eventInCart) {
+      Map<String, Object> newItem = new HashMap<>();
+      newItem.put("id", eventId);
+      newItem.put("quantity", quantity);
+      cart.add(newItem);
     }
     customer.setCart(cart);
     customerRepository.save(customer);
   }
 
-  public void removeFromCart(String username, String eventId)
-    throws Exception {
+  public void removeFromCart(String username, String eventId) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
     if (cart.size() != 0) {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
-          cart.remove(cartItem);
+          int currentQuantity = (int) cartItem.get("quantity");
+          if (currentQuantity == 1) {
+            cart.remove(cartItem);
+          } else {
+            cartItem.put("quantity", currentQuantity - 1);
+          }
           break;
         }
       }
@@ -79,17 +78,15 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
-  public ArrayList<Map<String, Object>> getBookings(String username) 
+  public ArrayList<Map<String, Object>> getBookings(String username)
     throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    if (customer == null){
+    if (customer == null) {
       throw new Exception("User not found");
-    } 
+    }
     return customer.getBookings();
-
   }
-
-  // public ArrayList<Map<String, Object>> createBooking(String username, String eventId, int numberOfTickets) 
+  // public ArrayList<Map<String, Object>> createBooking(String username, String eventId, int numberOfTickets)
   //   throws Exception {
   //   Customer customer = customerRepository.findByUsername(username);
   //   ArrayList<Map<String, Object>> bookings = customer.getBookings();
@@ -131,6 +128,6 @@ public class CustomerService {
 
   //     customer.setBookings(bookings);
   //     customerRepository.save(customer);
-  //   }  
+  //   }
   // }
 }

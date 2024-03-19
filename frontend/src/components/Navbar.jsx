@@ -40,7 +40,7 @@ export default function Navbar() {
         getUser();
     }, []);
     return (
-        <div className="navbar absolute">
+        <div className="navbar fixed z-50">
             <div className="">
                 <div className="bg-navbar w-screen h-[65px]">
                     <div className="flex justify-between items-center">

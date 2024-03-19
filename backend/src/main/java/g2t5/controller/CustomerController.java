@@ -2,10 +2,10 @@ package g2t5.controller;
 
 import g2t5.database.entity.*;
 import g2t5.model.AddToCartRequest;
-import g2t5.model.RemoveFromCartRequest;
 import g2t5.model.CreateBookingRequest;
 // import g2t5.model.CancelBookingRequest;
 import g2t5.model.LoginRequest;
+import g2t5.model.RemoveFromCartRequest;
 import g2t5.service.CustomerService;
 import g2t5.service.EventManagerService;
 import g2t5.service.EventService;
@@ -91,7 +91,9 @@ public class CustomerController {
     String eventId = request.getEventId();
     try {
       customerService.removeFromCart(username, eventId);
-      return ResponseEntity.ok("{\"message\": \"Removed from cart successfully\"}");
+      return ResponseEntity.ok(
+        "{\"message\": \"Removed from cart successfully\"}"
+      );
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
@@ -101,11 +103,11 @@ public class CustomerController {
   }
 
   @PostMapping("/bookings/{username}")
-  public ResponseEntity<Object> getBookings(
-    @PathVariable String username
-  ) {
+  public ResponseEntity<Object> getBookings(@PathVariable String username) {
     try {
-      ArrayList<Map<String, Object>> bookings = customerService.getBookings(username);
+      ArrayList<Map<String, Object>> bookings = customerService.getBookings(
+        username
+      );
       return ResponseEntity.ok(bookings);
     } catch (Exception e) {
       System.out.println(e.getMessage());
@@ -114,7 +116,6 @@ public class CustomerController {
         .body("{\"message\": \"User not found\"}");
     }
   }
-
   // @PostMapping("/booking/create")
   // public ResponseEntity<String> createBooking(
   //   @RequestBody CreateBookingRequest request

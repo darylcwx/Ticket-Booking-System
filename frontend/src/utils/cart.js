@@ -29,4 +29,20 @@ const addToCart = async (username, eventId, quantity) => {
     }
 };
 
-export { getCart, addToCart };
+const removeFromCart = async (username, eventId) => {
+    try {
+        const response = await fetch(`http://localhost:8080/cart/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: username,
+                eventId: eventId,
+            }),
+        });
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        console.log(e);
+    }
+};
+export { getCart, addToCart, removeFromCart };
