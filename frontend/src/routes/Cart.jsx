@@ -14,9 +14,12 @@ export default function Cart() {
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
     const [events, setEvents] = useState([]);
-    const [notification, setNotfication] = useState("");
+    const [notification, setNotification] = useState(false);
+    const [change, setChange] = useState("");
     const [updatedCart, setUpdatedCart] = useState([]);
     const [total, setTotal] = useState(0);
+
+    // Get user's cart and all events
     useEffect(() => {
         const getUserCart = async () => {
             const username = localStorage.getItem("username");
@@ -40,6 +43,7 @@ export default function Cart() {
         getAllEvents();
     }, []);
 
+    // Update cart with event details
     useEffect(() => {
         if (cart != []) {
             const updatedCart = cart.map((cartItem) => {
@@ -52,7 +56,6 @@ export default function Cart() {
                     checked: true,
                 };
             });
-            console.log(updatedCart);
             const totalAmount = updatedCart.reduce((total, cartItem) => {
                 if (cartItem.checked) {
                     return total + cartItem.ticketPrice * cartItem.quantity;
@@ -74,14 +77,25 @@ export default function Cart() {
         setUpdatedCart(updated);
     };
 
-    const handleQuantityChange = (eventId, quantity) => {
+    const handleQuantityChange = (eventId, change, quantity, code) => {
+        setChange("");
+        setNotification(false);
         const updated = updatedCart.map((cartItem) =>
             cartItem.id === eventId
                 ? { ...cartItem, quantity: quantity }
                 : cartItem
         );
+
+        setChange(change);
+        if (code === 200) {
+            setNotification("success");
+        } else {
+            setNotification("error");
+        }
         setUpdatedCart(updated);
     };
+
+    // Update total amount
     useEffect(() => {
         const totalAmount = updatedCart.reduce((total, cartItem) => {
             if (cartItem.checked) {
@@ -115,16 +129,14 @@ export default function Cart() {
                     <div className="w-[160px] text-center shrink-0">
                         Event Image
                     </div>
-                    <div className="ml-4 w-[400px]  shrink-0">
-                        Event Details
-                    </div>
-                    <div className="w-[100px] text-center  shrink-0">
+                    <div className="ml-4 w-[400px] shrink-0">Event Details</div>
+                    <div className="w-[100px] text-center shrink-0">
                         Unit Price
                     </div>
-                    <div className="w-[150px] text-center  shrink-0">
+                    <div className="w-[150px] text-center shrink-0">
                         Quantity
                     </div>
-                    <div className="w-[150px] text-center  shrink-0">
+                    <div className="w-[150px] text-center shrink-0">
                         Item Subtotal
                     </div>
                 </div>
@@ -136,14 +148,21 @@ export default function Cart() {
                         onChangeQuantity={handleQuantityChange}
                     />
                 ))}
-                <div className="flex justify-end text-modal pt-4">
-                    <div className="flex">Total:&nbsp;</div>
-                    <div className="text-blue-500">${total}</div>
+                <div className="flex text-modal pt-4 items-center">
+                    <div className="w-[886px] text-end shrink-0">
+                        Total:&nbsp;
+                    </div>
+                    <div className="w-[150px] text-center shrink-0 text-blue-500">
+                        ${total.toFixed(2)}
+                    </div>
                 </div>
-                <div className="flex justify-end pt-4">
-                    <Button variant="contained" onClick={handleCheckout}>
-                        Proceed to Checkout
-                    </Button>
+                <div className="flex text-modal pt-4 items-center">
+                    <div className="w-[886px] text-end shrink-0"></div>
+                    <div className="w-[150px] flex justify-center">
+                        <Button variant="contained" onClick={handleCheckout}>
+                            Proceed to Checkout
+                        </Button>
+                    </div>
                 </div>
             </Container>
             {notification && (
@@ -151,7 +170,9 @@ export default function Cart() {
                     type={notification === "success" ? "success" : "error"}
                     message={
                         notification === "success"
-                            ? "Added to cart successfully"
+                            ? change === "add"
+                                ? "Added to cart successfully"
+                                : "Removed from cart successfully"
                             : "Something went wrong"
                     }
                 />

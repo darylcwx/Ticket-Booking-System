@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
+import Notification from "../components/Notification";
+
 export default function QuantitySelector({ event, onChangeQuantity }) {
     const [quantity, setQuantity] = useState(event?.quantity || 0);
     const [quantityMax, setQuantityMax] = useState(false);
@@ -28,7 +30,7 @@ export default function QuantitySelector({ event, onChangeQuantity }) {
         }
     };
     return (
-        <div className={`flex ${quantityMax ? "pb-5" : ""}`}>
+        <div className="flex">
             <div className="relative">
                 <Button
                     variant="contained"
@@ -63,23 +65,10 @@ export default function QuantitySelector({ event, onChangeQuantity }) {
                 >
                     <AddIcon fontSize="small" />
                 </Button>
-                {quantityMax ? (
-                    <div
-                        className="absolute text-red-500 w-[112px] flex justify-center text-nowrap"
-                        style={{
-                            fontFamily: "Roboto, sans-serif",
-                            fontWeight: 400,
-                            fontSize: "0.75rem",
-                            lineHeight: 1.66,
-                            letterSpacing: "0.03333em",
-                        }}
-                    >
-                        Max quantity reached
-                    </div>
-                ) : (
-                    <></>
-                )}
             </div>
+            {quantityMax && (
+                <Notification type="error" message="Max quantity reached" />
+            )}
         </div>
     );
 }

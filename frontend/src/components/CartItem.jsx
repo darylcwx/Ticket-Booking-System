@@ -18,15 +18,24 @@ export default function CartItem({
 
     const handleChangeQuantity = async (change, quantity) => {
         const username = localStorage.getItem("username");
-        onChangeQuantity(event.id, quantity);
+
         setQuantity(quantity);
         if (change === "add") {
             const response = await addToCart(username, event.id, 1);
             console.log(response);
+            if (response.message === "Added to cart successfully") {
+                onChangeQuantity(event.id, change, quantity, 200);
+                return;
+            }
         } else {
             const response = await removeFromCart(username, event.id);
             console.log(response);
+            if (response.message === "Removed from cart successfully") {
+                onChangeQuantity(event.id, change, quantity, 200);
+                return;
+            }
         }
+        onChangeQuantity(event.id, change, quantity, 500);
     };
 
     const handleCheck = (checked) => {

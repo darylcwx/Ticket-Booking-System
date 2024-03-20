@@ -7,21 +7,45 @@ import Button from "@mui/material/Button";
 
 import Navbar from "../components/Navbar";
 import CartItem from "../components/CartItem";
+import sendEmail from "../utils/sendEmail";
+
 export default function Checkout() {
     const location = useLocation();
     const cart = location.state.updatedCart;
     const checkout = cart.filter((event) => event.checked === true);
     const [total, setTotal] = useState(0);
+    const [user, setUser] = useState();
     useEffect(() => {
         const totalAmount = checkout.reduce((total, cartItem) => {
             return total + cartItem.ticketPrice * cartItem.quantity;
         }, 0);
-        console.log(totalAmount);
         setTotal(totalAmount);
     }, []);
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = (e) => {
         alert("noice");
+        const getUser = async () => {
+            const username = localStorage.getItem("username");
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/user/${username}`,
+                    {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                const data = await response.json();
+                if (!response.ok) {
+                    navigate("/");
+                }
+                setUser(data);
+                console.log(data);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        getUser();
+        //sendEmail(e, "darylchua@hotmail.sg", events);
     };
     return (
         <div className="bg-main min-h-screen min-w-max w-screen">
@@ -37,7 +61,7 @@ export default function Checkout() {
                     <div className="w-[100px] text-center  shrink-0">
                         Unit Price
                     </div>
-                    <div className="w-[200px] text-center  shrink-0">
+                    <div className="w-[150px] text-center  shrink-0">
                         Quantity
                     </div>
                     <div className="w-[150px] text-center  shrink-0">
@@ -55,14 +79,24 @@ export default function Checkout() {
                         ></CartItem>
                     );
                 })}
-                <div className="flex justify-end pt-4">
-                    <div className="text-modal">Total Amount:&nbsp;</div>
-                    <div className="text-blue-500">${total.toFixed(2)}</div>
+                <div className="flex text-modal pt-4 items-center">
+                    <div className="w-[826px] text-end shrink-0">
+                        Total:&nbsp;
+                    </div>
+                    <div className="w-[150px] text-center shrink-0 text-blue-500">
+                        ${total.toFixed(2)}
+                    </div>
                 </div>
-                <div className="flex justify-end pt-4">
-                    <Button variant="contained" onClick={handlePlaceOrder}>
-                        Place Order
-                    </Button>
+                <div className="flex text-modal pt-4 items-center">
+                    <div className="w-[826px] text-end shrink-0"></div>
+                    <div className="w-[150px] flex justify-center">
+                        <Button
+                            variant="contained"
+                            onClick={(e) => handlePlaceOrder(e)}
+                        >
+                            Place Order
+                        </Button>
+                    </div>
                 </div>
             </Container>
         </div>
