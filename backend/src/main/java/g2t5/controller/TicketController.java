@@ -59,4 +59,15 @@ public class TicketController {
         List<Ticket> tickets = ticketService.getAllTicket();
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
+
+    @PostMapping("/verify-ticket")
+    public ResponseEntity<Boolean> verifyTicket(@RequestBody Ticket ticket) {
+        Ticket ticket_new = ticketService.getTicket(ticket);
+        if (ticket_new != null) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+    }
 }

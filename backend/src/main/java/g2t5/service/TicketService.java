@@ -25,6 +25,10 @@ public class TicketService {
        return ticketRepository.findAll();
     }
 
+    public Ticket getTicket(Ticket ticket) {
+      return ticketRepository.findById(ticket.getTicketId()).get();
+   }
+
 /*     public Ticket buyTicket(Ticket ticket) {
         return ticketRepository.save(ticket);
     } */

@@ -31,4 +31,6 @@ public class Ticket {
     public void setTicketType(String ticketType) {
         this.ticketType = ticketType;
     }
+
+    
 }

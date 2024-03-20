@@ -13,6 +13,6 @@ public class TicketingOfficer extends User{
     }
     
       public void verifyTicketValidity (Ticket ticket) {
-        // ticket.verifyValidity(ticket);
+        //
     }
 }
