@@ -55,7 +55,10 @@ export default function Navbar() {
                         )}
                         <div className="flex gap-2 pr-4 flex items-center">
                             {user?.role === "event manager" && (
-                                <Link to="/createEvent">Create Event</Link>
+                                <div className="flex gap-x-5">
+                                    <Link to="/report">Report</Link>
+                                    <Link to="/createEvent">Create Event</Link>
+                                </div>
                             )}
                             <IconButton size="small">
                                 <Link to="/profile">

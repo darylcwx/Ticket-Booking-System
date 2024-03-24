@@ -8,6 +8,7 @@ import ManagerDashboard from "./routes/ManagerDashboard";
 import TicketingOfficerDashboard from "./routes/TicketingOfficerDashboard";
 import CreateEvent from "./routes/CreateEvent";
 import EditEvent from "./routes/EditEvent";
+import Report from "./routes/Report";
 import ForgotPassword from "./routes/ForgotPassword";
 import Event from "./routes/Event.jsx";
 import Profile from "./routes/Profile";
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     { path: "/managerDashboard", element: <ManagerDashboard /> },
     { path: "/createEvent", element: <CreateEvent /> },
     { path: "/editEvent/:id", element: <EditEvent /> },
+    { path: "/report", element: <Report /> },
     { path: "/event/:id", element: <Event /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },
