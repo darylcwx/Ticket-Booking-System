@@ -5,10 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import g2t5.database.entity.Event;
-import g2t5.database.repository.EventRepository;
-//import g2t5.database.repository.TicketingManagerRepository;
-import g2t5.database.repository.UserRepository;
+import g2t5.database.entity.*;
+import g2t5.database.repository.*;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
@@ -21,6 +19,9 @@ public class EventManagerService {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private TicketingOfficerRepository ticketingOfficerRepository;
 
     public void addEvent(Event event) {
         eventRepository.save(event);
@@ -63,9 +64,9 @@ public class EventManagerService {
 
     }
 
-    //void addTicketingOfficer(TicketingManager ticketingManager) {
-    //    ticketingManagerRepository.save(ticketingManager);
-    // }
+    public void addTicketingOfficer(TicketingOfficer ticketingOfficer) {
+        ticketingOfficerRepository.save(ticketingOfficer);
+    }
 
     public void getStatistics(HttpServletResponse response) {
         reportService.exportReport(response);

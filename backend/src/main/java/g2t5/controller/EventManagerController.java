@@ -85,14 +85,14 @@ public class EventManagerController {
         }
     }
 
-   // @PostMapping("/add-ticketing-manager")
-   // public ResponseEntity<String> addTicketingManager(@RequestBody TicketingManager ticketingManager) {
-   //     try {
-   //         eventManagerService.addTicketingManager(ticketingManager);
-   //         return ResponseEntity.ok("ticketing manager added successfully");
-   //     } catch (Exception e) {
-   //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-   //                 .body("Error adding ticketing manager: " + e.getMessage());
-   //     }
-   // }
+    @PostMapping("/add-ticketing-officer")
+    public ResponseEntity<String> addTicketingOfficer(@RequestBody TicketingOfficer ticketingOfficer) {
+        try {
+            eventManagerService.addTicketingOfficer(ticketingOfficer);
+            return ResponseEntity.ok("ticketing manager added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error adding ticketing manager: " + e.getMessage());
+        }
+    }
 }
