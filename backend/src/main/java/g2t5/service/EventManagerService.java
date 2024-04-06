@@ -1,7 +1,9 @@
 package g2t5.service;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class EventManagerService {
-    //@Autowired
-    //private TicketingManagerRepository ticketingManagerRepository;
+    // @Autowired
+    // private TicketingManagerRepository ticketingManagerRepository;
 
     @Autowired
     private EventRepository eventRepository;
@@ -42,6 +44,7 @@ public class EventManagerService {
             event.setCancellationFee(updatedEvent.getCancellationFee());
             event.setGuestsAllowed(updatedEvent.getGuestsAllowed());
             event.setImage(updatedEvent.getImage());
+            event.setVenue(updatedEvent.getVenue());
 
             eventRepository.save(event);
         } else {
@@ -65,10 +68,45 @@ public class EventManagerService {
     }
 
     public void addTicketingOfficer(TicketingOfficer ticketingOfficer) {
+        String password = ticketingOfficer.getPassword();
+        String username = ticketingOfficer.getUsername();
+        String hashPassword = DigestUtils.sha256Hex(username + password);
+        ticketingOfficer.setPassword(hashPassword);
         ticketingOfficerRepository.save(ticketingOfficer);
     }
 
     public void getStatistics(HttpServletResponse response) {
         reportService.exportReport(response);
+    }
+
+    public List<TicketingOfficer> getAllTicketingOfficers() {
+        return ticketingOfficerRepository.findAll();
+    }
+
+    public void editTicketingOfficer(TicketingOfficer updatedTicketingOfficer) throws Exception {
+
+        Optional<TicketingOfficer> optionalTicketingOfficer = ticketingOfficerRepository
+                .findById(updatedTicketingOfficer.getId());
+        if (optionalTicketingOfficer.isPresent()) {
+            TicketingOfficer ticketingOfficer = optionalTicketingOfficer.get();
+            String password = ticketingOfficer.getPassword();
+            String username = ticketingOfficer.getUsername();
+            String hashPassword = DigestUtils.sha256Hex(username + password);
+            ticketingOfficer.setUsername(updatedTicketingOfficer.getUsername());
+            ticketingOfficer.setPassword(hashPassword);
+
+            ticketingOfficerRepository.save(ticketingOfficer);
+        } else {
+            throw new Exception("Error updating ticketing officer");
+        }
+    }
+
+    public void deleteTicketingOfficer(String id) throws Exception {
+        Optional<TicketingOfficer> optionalTicketingOfficer = ticketingOfficerRepository.findById(id);
+        if (optionalTicketingOfficer.isPresent()) {
+            ticketingOfficerRepository.deleteById(id);
+        } else {
+            throw new Exception("Ticketing officer with ID " + id + " not found");
+        }
     }
 }

@@ -9,8 +9,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,10 +61,10 @@ public class EventManagerController {
     public ResponseEntity<String> editEvent(@RequestBody Event event) {
         try {
             eventManagerService.editEvent(event);
-            return ResponseEntity.ok("Event added successfully");
+            return ResponseEntity.ok("Event edited successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error adding event: " + e.getMessage());
+                    .body("Error editing event: " + e.getMessage());
         }
     }
 
@@ -67,7 +75,7 @@ public class EventManagerController {
             return ResponseEntity.ok("Event cancelled successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error adding event: " + e.getMessage());
+                    .body("Error cancelling event: " + e.getMessage());
         }
     }
 
@@ -93,6 +101,45 @@ public class EventManagerController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error adding ticketing manager: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-all-ticketing-officers")
+    public ResponseEntity<List<TicketingOfficer>> getAllTicketingOfficers() {
+        List<TicketingOfficer> ticketingOfficers = eventManagerService.getAllTicketingOfficers();
+        Iterator<TicketingOfficer> iterator = ticketingOfficers.iterator();
+        while (iterator.hasNext()) {
+            TicketingOfficer ticketingOfficer = iterator.next();
+            if (ticketingOfficer.getRole() == null || !ticketingOfficer.getRole().equals("ticketing officer")) {
+                iterator.remove();
+            }
+        }
+        return ticketingOfficers == null
+                ? ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(Collections.emptyList())
+                : ResponseEntity.ok(ticketingOfficers);
+    }
+
+    @PutMapping("/edit-ticketing-officer")
+    public ResponseEntity<String> editTicketingOfficer(@RequestBody TicketingOfficer ticketingOfficer) {
+        try {
+            eventManagerService.editTicketingOfficer(ticketingOfficer);
+            return ResponseEntity.ok("ticketing officer edited successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error editing ticketing officer: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete-ticketing-officer/{id}")
+    public ResponseEntity<?> deleteTicketingOfficerById(@PathVariable("id") String id) {
+        try {
+            eventManagerService.deleteTicketingOfficer(id);
+            return ResponseEntity.ok().body("Ticketing officer deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error deleting ticketing officer: " + e.getMessage());
         }
     }
 }

@@ -22,6 +22,7 @@ public class Event {
   private double cancellationFee;
   private int guestsAllowed;
   private String image;
+  private String venue;
 
   public String getId() {
     return id;
@@ -113,5 +114,13 @@ public class Event {
 
   public void setTicketsSold(int ticketsSold){
     this.ticketsSold = ticketsSold;
+  }
+
+  public String getVenue(){
+    return this.venue;
+  }
+
+  public void setVenue(String venue){
+    this.venue = venue;
   }
 }
