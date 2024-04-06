@@ -9,6 +9,7 @@ import TicketingOfficerDashboard from "./routes/TicketingOfficerDashboard";
 import CreateEvent from "./routes/CreateEvent";
 import EditEvent from "./routes/EditEvent";
 import Report from "./routes/Report";
+import ManageTicketingOfficers from "./routes/ManageTicketingOfficers";
 import ForgotPassword from "./routes/ForgotPassword";
 import Event from "./routes/Event.jsx";
 import Profile from "./routes/Profile";
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
     { path: "/createEvent", element: <CreateEvent /> },
     { path: "/editEvent/:id", element: <EditEvent /> },
     { path: "/report", element: <Report /> },
+    { path: "/manageTicketingOfficers", element: <ManageTicketingOfficers /> },
     { path: "/event/:id", element: <Event /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },

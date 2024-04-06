@@ -3,6 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "proxy": "http://localhost:8080",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -11,11 +12,11 @@
     },
     "dependencies": {
         "@emailjs/browser": "^4.1.0",
-        "@emotion/react": "^11.11.3",
+        "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.0",
-        "@mui/icons-material": "^5.15.11",
-        "@mui/material": "^5.15.10",
-        "@mui/x-date-pickers": "^6.19.6",
+        "@mui/icons-material": "^5.15.14",
+        "@mui/material": "^5.15.14",
+        "@mui/x-date-pickers": "^6.19.7",
         "dayjs": "^1.11.10",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

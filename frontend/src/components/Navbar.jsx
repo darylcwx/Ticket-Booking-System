@@ -57,6 +57,7 @@ export default function Navbar() {
                             {user?.role === "event manager" && (
                                 <div className="flex gap-x-5">
                                     <Link to="/report">Report</Link>
+                                    <Link to="/manageTicketingOfficers">Manage Ticketing Officers</Link>
                                     <Link to="/createEvent">Create Event</Link>
                                 </div>
                             )}

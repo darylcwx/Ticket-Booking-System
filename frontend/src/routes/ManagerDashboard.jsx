@@ -138,16 +138,16 @@ export default function Dashboard() {
                         />
                     </div>
                 </div>
-                {filteredEvents.length == 0 ? (
-                    <>
-                        <div className="pt-4 text-white text-center">
-                            No events found.
-                        </div>
-                    </>
+                {filteredEvents.length === 0 ? (
+                    <div className="pt-4 text-white text-center">
+                        No events found.
+                    </div>
                 ) : (
-                    filteredEvents.map((event) => (
-                        <EventCard event={event} page="managerDashboard" />
-                    ))
+                    filteredEvents
+                        .filter(event => event.status !== 'cancelled')
+                        .map(event => (
+                            <EventCard key={event.id} event={event} page="managerDashboard" />
+                        ))
                 )}
             </Container>
         </div>

@@ -10,19 +10,29 @@ import Button from "@mui/material/Button";
 
 export default function EventCard({ event, page }) {
     const navigate = useNavigate();
+    // const storedImage = localStorage.getItem(${event.image});
     return (
         <div
             key={event.id}
             className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto"
         >
             <div className="">
-                <Link to={`/event/${event.id}`}>
+                {page == "managerDashboard" ? (
                     <img
                         className="shrink md:max-w-[300px] lg:max-w-[400px]"
                         // width={eventImageHeightAndWidth}
                         src={`../events/${event.image}`}
                     />
-                </Link>
+                ) : (
+                    <Link to={`/event/${event.id}`}>
+                        <img
+                            className="shrink md:max-w-[300px] lg:max-w-[400px]"
+                            // width={eventImageHeightAndWidth}
+                            src={`../events/${event.image}`}
+                        />
+                    </Link>
+                )}
+                
             </div>
 
             {/* //SECTION - ticket divider */}
@@ -35,10 +45,8 @@ export default function EventCard({ event, page }) {
                     <div className="sm:flex md:block lg:flex block  justify-between">
                         {page == "managerDashboard" ? (
                             <div className="text-3xl font-semibold hover:text-hover flex justify-between items-center">
-                                <Link to={`/event/${event.id}`}>
-                                    {event.name}
-                                </Link>
                                 <Link to={`/editEvent/${event.id}`}>
+                                    {event.name}
                                     <EditIcon />
                                 </Link>
                             </div>
@@ -76,7 +84,7 @@ export default function EventCard({ event, page }) {
                         </span>
                     </div>
 
-                    {page === "dashboard" || page === "managerDashboard" ? (
+                    {page === "dashboard" ? (
                         <div className="flex justify-end">
                             <Button
                                 variant="contained"

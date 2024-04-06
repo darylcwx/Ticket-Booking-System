@@ -14,7 +14,6 @@ import dayjs from 'dayjs';
 export default function EditEvent() {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [discountAvailable, setDiscountAvailable] = useState(false);
     const [event, setEvent] = useState({});
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
@@ -23,9 +22,8 @@ export default function EditEvent() {
     const [maxGuestNum, setMaxGuestNum] = useState();
     const [ticketPrice, setTicketPrice] = useState();
     const [cancellationFee, setCancellationFee] = useState();
-    const [discountMinTix, setDiscountMinTix] = useState();
-    const [discountPercentage, setDiscountPercentage] = useState();
     const [showAlert, setShowAlert] = useState(false);
+    const [showAlert2, setShowAlert2] = useState(false);
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
         const fetchEvent = async (eventId) => {
@@ -48,8 +46,6 @@ export default function EditEvent() {
                 setMaxGuestNum(data.guestsAllowed);
                 setTicketPrice(data.ticketPrice);
                 setCancellationFee(data.cancellationFee);
-                // setDiscountMinTix();
-                // setDiscountPercentage();
             } catch (e) {
                 console.log(e);
             }
@@ -78,8 +74,8 @@ export default function EditEvent() {
             setShowAlert(true); 
             setTimeout(() => {
                 setShowAlert(false); 
-                navigate(`/event/${event.id}`); 
-            }, 5000);
+                navigate(`/managerDashboard`); 
+            }, 2000);
         } catch (error) {
             console.error('Error creating event:', error.message);
         }
@@ -87,8 +83,11 @@ export default function EditEvent() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const eventId = location.pathname.split("/")[2];
+        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, '') + ".jpg";
+        // Construct the event object
         const event = {
+            id: eventId,
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
@@ -96,7 +95,8 @@ export default function EditEvent() {
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
-            cancellationFee: cancellationFee
+            cancellationFee: cancellationFee,
+            image: imagePath
         };
 
         try {
@@ -111,6 +111,11 @@ export default function EditEvent() {
                 throw new Error('Failed to edit event');
             }
             console.log('Event edited successfully');
+            setShowAlert2(true); 
+            setTimeout(() => {
+                setShowAlert2(false); 
+                navigate(`/managerDashboard`); 
+            }, 2000);
         } catch (error) {
             console.error('Error editing event:', error.message);
         }
@@ -256,52 +261,6 @@ export default function EditEvent() {
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap -mx-3 mb-3">
-                            
-                            {/* DISCOUNT TOGGLE BTN */}
-                            <div className="w-full md:w-1/3 px-3 mb-6 sm:mb-0">
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="hasDiscount">
-                                    Discount
-                                </label>
-                                <label className="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" className="sr-only peer"
-                                        checked={discountAvailable}
-                                        onChange={() => setDiscountAvailable(!discountAvailable)}
-                                        id="hasDiscount"
-                                    />
-                                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                    <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Applicable</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        {/* DISCOUNT INPUTS */}
-                        {discountAvailable && (
-                            <>
-                                <div className="flex flex-wrap -mx-3 mb-6">
-
-                                    {/* MINIMUM TICKET PURCHASE */}
-                                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="discountMinTix">
-                                            Minimum Ticket Purchase
-                                        </label>
-                                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="discountMinTix" type="number" placeholder="123"/>
-                                    </div>
-
-                                    {/* DISCOUNT PERCENTAGE */}
-                                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="discountPercentage">
-                                            Discount
-                                        </label>
-                                        <div className="flex items-center">
-                                            <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="discountPercentage" type="number" placeholder="123"/>
-                                            <span className="ml-2">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )}
-
                         {/* SUBMIT BUTTON */}
                         <div className="flex justify-end gap-3">
                             {event?.status !== "cancelled" && (
@@ -313,18 +272,23 @@ export default function EditEvent() {
                                 // />
                                 <Button variant="contained" color="error" onClick={handleCancel}>Cancel Event</Button>
                             )}
-                            {/* TODO: Add a method to remove cancelled status */}
-                            {event?.status == "cancelled" && (
+                            
+                            {/* {event?.status == "cancelled" && (
                                 <Button variant="contained" color="success">Reschedule Event</Button>
-                            )}
+                            )} */}
                             <Button variant="contained" onClick={handleSubmit}>Save Event</Button>
                         </div>
                     </form>
                 </Container>
             </Container>
             {showAlert && (
+                <Alert severity="success" color="warning" className="fixed top-16 right-0 m-5">
+                    Event cancelled successfully! Redirecting...
+                </Alert>
+            )}
+            {showAlert2 && (
                 <Alert severity="success" className="fixed top-16 right-0 m-5">
-                    Event cancelled successfully! Redirecting in 5 seconds.
+                    Event saved! Redirecting...
                 </Alert>
             )}
         </div>
