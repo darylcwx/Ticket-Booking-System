@@ -46,26 +46,27 @@ export default function Navbar() {
                     <div className="flex justify-between items-center">
                         {user?.role === "event manager" ? (
                             <Link to="/managerDashboard">
-                                <img width="121" src="/logo.png" />
+                                <img width="140" src="/logo.png" />
+                            </Link>
+                        ) : user?.role === "ticketing officer" ? (
+                            <Link to="/ticketingOfficerDashboard">
+                                <img width="140" src="/logo.png" />
                             </Link>
                         ) : (
                             <Link to="/dashboard">
-                                <img width="121" src="/logo.png" />
+                                <img width="140" src="/logo.png" />
                             </Link>
                         )}
                         <div className="flex gap-2 pr-4 flex items-center">
                             {user?.role === "event manager" && (
                                 <div className="flex gap-x-5">
                                     <Link to="/report">Report</Link>
-                                    <Link to="/manageTicketingOfficers">Manage Ticketing Officers</Link>
+                                    <Link to="/manageTicketingOfficers">
+                                        Manage Ticketing Officers
+                                    </Link>
                                     <Link to="/createEvent">Create Event</Link>
                                 </div>
                             )}
-                            <IconButton size="small">
-                                <Link to="/profile">
-                                    <AccountCircleIcon fontSize="large"></AccountCircleIcon>
-                                </Link>
-                            </IconButton>
                             {user?.role === "customer" && (
                                 <IconButton size="small" className="relative">
                                     <Link to="/cart">
@@ -76,6 +77,14 @@ export default function Navbar() {
                                     </Link>
                                 </IconButton>
                             )}
+                            {user?.role === "ticketing officer" && (
+                                <div></div>
+                            )}
+                            <IconButton size="small">
+                                <Link to="/profile">
+                                    <AccountCircleIcon fontSize="large"></AccountCircleIcon>
+                                </Link>
+                            </IconButton>
                         </div>
                     </div>
                 </div>
