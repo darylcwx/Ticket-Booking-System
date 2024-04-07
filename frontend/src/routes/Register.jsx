@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
+
 import crypto from "crypto";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
@@ -9,6 +11,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function Register() {
+    DocumentTitle("Register");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);

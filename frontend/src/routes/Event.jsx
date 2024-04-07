@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
 import QuantitySelector from "../components/QuantitySelector";
 import { addToCart } from "../utils/cart";
@@ -54,11 +55,12 @@ export default function Event() {
     const handleChangeQuantity = (change, quantity) => {
         setQuantity(quantity);
     };
+    DocumentTitle(event.name);
     return (
         <div className="bg-main w-screen h-screen">
             <Navbar />
             <Container className="pt-[65px]">
-                <div className="lg:flex text-white p-4">
+                <div className="text-white p-4">
                     <div className="flex justify-center">
                         <img
                             className=""

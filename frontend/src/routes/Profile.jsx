@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import DocumentTitle from "../components/DocumentTitle";
+
 import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -6,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Alert from '@mui/material/Alert';
 
 export default function Profile() {
+    DocumentTitle("Profile");
     const [user, setUser] = useState();
     const navigate = useNavigate();
     const [showLogOutAlert, setShowLogOutAlert] = useState(false);

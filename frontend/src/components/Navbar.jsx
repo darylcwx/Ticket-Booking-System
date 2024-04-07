@@ -45,23 +45,26 @@ export default function Navbar() {
 
     // GET STATISTICS FUNCTION - FOR EVENT MANAGER
     const getStatistics = async (e) => {
-        fetch('http://localhost:8080/get-statistics', {
-            method: 'GET',
+        fetch("http://localhost:8080/get-statistics", {
+            method: "GET",
             headers: {
-                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            }
+                "Content-Type":
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            },
         })
-        .then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(new Blob([blob]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'EventReport.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => console.error('Error downloading report:', error));
+            .then((response) => response.blob())
+            .then((blob) => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", "EventReport.xlsx");
+                document.body.appendChild(link);
+                link.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) =>
+                console.error("Error downloading report:", error)
+            );
     };
 
     return (
@@ -71,29 +74,38 @@ export default function Navbar() {
                     <div className="flex justify-between items-center">
                         {user?.role === "event manager" ? (
                             <Link to="/managerDashboard">
-                                <img width="140" src="/logo.png" />
+                                <img width="135" src="/logo.png" />
                             </Link>
                         ) : user?.role === "ticketing officer" ? (
                             <Link to="/ticketingOfficerDashboard">
-                                <img width="140" src="/logo.png" />
+                                <img width="135" src="/logo.png" />
                             </Link>
                         ) : (
                             <Link to="/dashboard">
-                                <img width="140" src="/logo.png" />
+                                <img width="135" src="/logo.png" />
                             </Link>
                         )}
                         <div className="flex gap-2 pr-4 flex items-center">
                             {user?.role === "event manager" && (
                                 <div className="flex gap-x-5">
-                                    <Link onClick={getStatistics} className="flex items-center gap-2">
+                                    <Link
+                                        onClick={getStatistics}
+                                        className="flex items-center gap-2"
+                                    >
                                         <GetReportIcon />
                                         <span>Report</span>
                                     </Link>
-                                    <Link to="/manageTicketingOfficers" className="flex items-center gap-2">
+                                    <Link
+                                        to="/manageTicketingOfficers"
+                                        className="flex items-center gap-2"
+                                    >
                                         <ManageTicketingOfficersIcon />
                                         <span>Ticketing Officers</span>
                                     </Link>
-                                    <Link to="/createEvent" className="flex items-center gap-2">
+                                    <Link
+                                        to="/createEvent"
+                                        className="flex items-center gap-2"
+                                    >
                                         <CreateEventIcon />
                                         <span>Event</span>
                                     </Link>

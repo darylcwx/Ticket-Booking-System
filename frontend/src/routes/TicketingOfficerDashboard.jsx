@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 
 import Navbar from "../components/Navbar";
 import EventCard from "../components/EventCard";
@@ -13,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 export default function Dashboard() {
+    Documenttitle("Dashboard");
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -80,7 +82,7 @@ export default function Dashboard() {
         <div className="bg-main min-h-screen">
             <Navbar />
             <Container className="pt-[65px] pb-6">
-            <div className="text-white pt-4 md:flex justify-between">
+                <div className="text-white pt-4 md:flex justify-between">
                     <div className="flex">
                         <div className="min-w-12 items-center">
                             <TextField
@@ -143,9 +145,13 @@ export default function Dashboard() {
                     </div>
                 ) : (
                     filteredEvents
-                        .filter(event => event.status !== 'cancelled')
-                        .map(event => (
-                            <EventCard key={event.id} event={event} page="managerDashboard" />
+                        .filter((event) => event.status !== "cancelled")
+                        .map((event) => (
+                            <EventCard
+                                key={event.id}
+                                event={event}
+                                page="managerDashboard"
+                            />
                         ))
                 )}
             </Container>

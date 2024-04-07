@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 
 import Container from "@mui/material/Container";
 import Checkbox from "@mui/material/Checkbox";
@@ -10,6 +11,7 @@ import CartItem from "../components/CartItem";
 import sendEmail from "../utils/sendEmail";
 
 export default function Checkout() {
+    DocumentTitle("Checkout");
     const location = useLocation();
     const cart = location.state.updatedCart;
     const checkout = cart.filter((event) => event.checked === true);

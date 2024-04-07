@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 
 import Navbar from "../components/Navbar";
 import EventCard from "../components/EventCard";
@@ -12,6 +13,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 export default function Dashboard() {
+    DocumentTitle("Dashboard");
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -29,6 +31,7 @@ export default function Dashboard() {
                 });
 
                 const data = await response.json();
+                data.sort((a, b) => a.date - b.date);
                 setEvents(data);
                 setFilteredEvents(data);
                 console.log(data);

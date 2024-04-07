@@ -1,5 +1,5 @@
-const formatDatetime = (datetime) => {
-    const date = new Date(datetime);
+function formatDatetime(datetimeString) {
+    const datetime = new Date(datetimeString);
     const options = {
         year: "numeric",
         month: "long",
@@ -7,8 +7,9 @@ const formatDatetime = (datetime) => {
         hour: "numeric",
         minute: "2-digit",
         hour12: true,
+        timeZone: "UTC",
     };
-    return date.toLocaleString("en-US", options);
-};
+    return datetime.toLocaleString("en-US", options);
+}
 
 export default formatDatetime;

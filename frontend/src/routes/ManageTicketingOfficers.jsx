@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import DocumentTitle from "../components/DocumentTitle";
+
 import Container from "@mui/material/Container";
 import Alert from '@mui/material/Alert';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Checkbox, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
@@ -10,6 +12,7 @@ import EditTicketingOfficer from "../components/EditTicketingOfficer";
 
 
 export default function Dashboard() {
+    DocumentTitle("Manage Ticketing Officers");
     const [ticketingOfficers, setTicketingOfficers] = useState([]);
     const [showCreateAlert, setShowCreateAlert] = useState(false);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);

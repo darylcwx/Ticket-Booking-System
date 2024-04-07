@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -7,6 +8,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function Login() {
+    DocumentTitle("Login");
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
@@ -37,14 +39,14 @@ export default function Login() {
                     localStorage.setItem("username", username);
                     //TODO: Add check for user role
                     switch (username) {
-                        case 'em':
-                            navigate("/managerDashboard")
+                        case "em":
+                            navigate("/managerDashboard");
                             break;
-                        case 'c':
-                            navigate("/dashboard")
+                        case "c":
+                            navigate("/dashboard");
                             break;
-                        case 'to':
-                            navigate("/ticketingOfficerDashboard")
+                        case "to":
+                            navigate("/ticketingOfficerDashboard");
                             break;
                         // default:
                         //     break;

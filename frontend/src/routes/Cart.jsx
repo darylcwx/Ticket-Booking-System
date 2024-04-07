@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DocumentTitle from "../components/DocumentTitle";
 
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -11,6 +12,7 @@ import Notification from "../components/Notification";
 import { getCart, addToCart, removeFromCart } from "../utils/cart";
 
 export default function Cart() {
+    DocumentTitle("Cart")
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
     const [events, setEvents] = useState([]);
