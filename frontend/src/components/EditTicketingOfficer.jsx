@@ -6,13 +6,15 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 export default function CreateTicketingOfficer(props) {
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState(props.ticketingOfficer.username || "");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState({});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const ticketingOfficerId = props.ticketingOfficer.id;
 
         if (!username || !password || !confirmPassword) {
             setErrors({ message: "Please fill in all fields." });
@@ -26,26 +28,26 @@ export default function CreateTicketingOfficer(props) {
 
         // Construct the event object
         const ticketingOfficer = {
+            id: ticketingOfficerId,
             username: username,
-            password: password,
-            role: "ticketing officer"
+            password: password
         };
 
         try {
-            const response = await fetch('http://localhost:8080/add-ticketing-officer', {
-                method: 'POST',
+            const response = await fetch('http://localhost:8080/edit-ticketing-officer', {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(ticketingOfficer)
             });
             if (!response.ok) {
-                throw new Error('Failed to create ticketing officer');
+                throw new Error('Failed to edit ticketing officer');
             }
-            console.log('Ticketing officer created successfully');
-            props.handleSuccessfulCreation();
+            console.log('Ticketing officer edited successfully');
+            props.handleSuccessfulEdit();
         } catch (error) {
-            console.error('Error creating ticketing officer:', error.message);
+            console.error('Error editing ticketing officer:', error.message);
         }
     };
 
@@ -91,7 +93,7 @@ export default function CreateTicketingOfficer(props) {
 
             {/* SUBMIT BUTTON */}
             <div className="flex justify-end">
-                <Button type="submit" variant="contained">Create Ticketing Officer</Button>
+                <Button type="submit" variant="contained">Edit Ticketing Officer</Button>
             </div>
         </form>
     );
