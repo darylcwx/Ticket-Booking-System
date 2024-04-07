@@ -53,17 +53,12 @@ export default function Navbar() {
         })
         .then(response => response.blob())
         .then(blob => {
-            // Create a URL for the blob
             const url = window.URL.createObjectURL(new Blob([blob]));
-            // Create a link element
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', 'EventReport.xlsx');
-            // Append the link to the body
             document.body.appendChild(link);
-            // Click the link to start the download
             link.click();
-            // Cleanup
             window.URL.revokeObjectURL(url);
         })
         .catch(error => console.error('Error downloading report:', error));
