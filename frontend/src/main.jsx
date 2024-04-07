@@ -15,6 +15,7 @@ import Event from "./routes/Event.jsx";
 import Profile from "./routes/Profile";
 import Cart from "./routes/Cart";
 import Checkout from "./routes/Checkout";
+import VerifyTicket from "./routes/VerifyTicket";
 import App from "./App.jsx";
 import initEmailJS from "./utils/initEmailJS";
 import "./index.css";
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
         element: <TicketingOfficerDashboard />,
     },
     { path: "/checkout", element: <Checkout /> },
+    { path: "/verifyTicket", element: <VerifyTicket /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

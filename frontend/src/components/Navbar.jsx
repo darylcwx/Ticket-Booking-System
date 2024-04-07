@@ -76,7 +76,9 @@ export default function Navbar() {
                                 </IconButton>
                             )}
                             {user?.role === "ticketing officer" && (
-                                <div></div>
+                                <div>
+                                    <Link to="/verifyTicket">Verify Ticket</Link>
+                                </div>
                             )}
                             <IconButton size="small">
                                 <Link to="/profile">
