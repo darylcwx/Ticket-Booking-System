@@ -2,8 +2,13 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+
 export default function Profile() {
     const [user, setUser] = useState();
+    const navigate = useNavigate();
+    const [showLogOutAlert, setShowLogOutAlert] = useState(false);
     useEffect(() => {
         const getUser = async () => {
             const username = localStorage.getItem("username");
@@ -27,6 +32,14 @@ export default function Profile() {
         };
         getUser();
     }, []);
+
+    // HANDLE SUCCESSFUL LOGOUT
+    const handleSuccessfulLogOut = () => {
+        setShowLogOutAlert(true); 
+        setTimeout(() => {
+            navigate(`/`);
+        }, 1000);
+    };
     return (
         <div className="bg-main w-screen h-screen">
             <Navbar />
@@ -58,8 +71,21 @@ export default function Profile() {
                             <div className=""></div>
                         </>
                     )}
+
+                    <div className="flex justify-center pt-10"> 
+                        <Button onClick={handleSuccessfulLogOut} variant="contained" color="error">
+                            Log Out
+                        </Button>
+                    </div>
                 </div>
             </Container>
+
+            {/* SUCCESSFUL LOGOUT */}
+            {showLogOutAlert && (
+                <Alert severity="success" className="fixed top-16 right-0 m-5">
+                    Logging out...
+                </Alert>
+            )}
         </div>
     );
 }

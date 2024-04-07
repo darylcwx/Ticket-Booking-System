@@ -1,31 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Checkbox, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Checkbox, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CreateTicketingOfficer from "../components/CreateTicketingOfficer";
+import EditTicketingOfficer from "../components/EditTicketingOfficer";
 
 
 export default function Dashboard() {
     const [ticketingOfficers, setTicketingOfficers] = useState([]);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [errors, setErrors] = useState({});
-    const [showAlert, setShowAlert] = useState(false);
-    const [showAlert2, setShowAlert2] = useState(false);
+    const [showCreateAlert, setShowCreateAlert] = useState(false);
+    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+    const [showEditAlert, setShowEditAlert] = useState(false);
     const [selectedOfficers, setSelectedOfficers] = useState([]);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [selectedOfficerToEdit, setSelectedOfficerToEdit] = useState(null);
     const [showBulkDelete, setShowBulkDelete] = useState(false);
 
+    // FETCH ALL TICKETING OFFICERS
     useEffect(() => {
         const fetchTicketingOfficers = async () => {
             try {
@@ -44,47 +39,6 @@ export default function Dashboard() {
         fetchTicketingOfficers();
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!username || !password || !confirmPassword) {
-            setErrors({ message: "Please fill in all fields." });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            setErrors({ message: "Passwords do not match." });
-            return;
-        }
-
-        // Construct the event object
-        const ticketingOfficer = {
-            username: username,
-            password: password,
-            role: "ticketing officer"
-        };
-
-        try {
-            const response = await fetch('http://localhost:8080/add-ticketing-officer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(ticketingOfficer)
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create ticketing officer');
-            }
-            console.log('Ticketing officer created successfully');
-            setShowAlert(true); 
-            setTimeout(() => {
-                setShowAlert(false); 
-                navigate(`/event/${event.id}`); 
-            }, 5000);
-        } catch (error) {
-            console.error('Error creating ticketing officer:', error.message);
-        }
-    };
 
     // UPDATE SELECTED OFFICERS
     const handleCheckboxChange = (event, officerId) => {
@@ -93,47 +47,46 @@ export default function Dashboard() {
         // Update selected officers array
         setSelectedOfficers((prevSelected) => {
             if (isChecked) {
-                return [...prevSelected, officerId]; // Add officer ID to selected officers
+                return [...prevSelected, officerId];
             } else {
-                return prevSelected.filter((id) => id !== officerId); // Remove officer ID from selected officers
+                return prevSelected.filter((id) => id !== officerId);
             }
         });
     };
     useEffect(() => {
-        // Log selected officers and officer IDs after state update
-        console.log("Selected Officers:", selectedOfficers);
-        // Show delete button if there are selected officers
         setShowBulkDelete(selectedOfficers.length > 0);
     }, [selectedOfficers]); 
 
+
     // EDIT OFFICER DIAGLOG BOX HANDLING
     const handleEditClick = (officer) => {
+        console.log(officer);
         setSelectedOfficerToEdit(officer);
         setEditDialogOpen(true);
     };
-
     const handleEditDialogClose = () => {
         setEditDialogOpen(false);
         setSelectedOfficerToEdit(null);
     };
-
-    const handleSaveEdit = () => {
-        // Handle saving edited officer
-        handleEditDialogClose();
+    const handleSuccessfulEdit = () => {
+        handleEditDialogClose()
+        setShowEditAlert(true); 
+        setTimeout(() => {
+            window.location.reload(); 
+        }, 1000);
     };
+
 
     // CREATE OFFICER DIAGLOG BOX HANDLING
     const handleCreateClick = () => {
-        setSelectedOfficerToEdit();
         setCreateDialogOpen(true);
     };
     const handleCreateDialogClose = () => {
         setCreateDialogOpen(false);
-        setSelectedOfficerToEdit(null);
     };
     const handleSuccessfulCreation = () => {
         handleCreateDialogClose()
-        setShowAlert(true); 
+        setShowCreateAlert(true); 
         setTimeout(() => {
             window.location.reload(); 
         }, 1000);
@@ -152,7 +105,7 @@ export default function Dashboard() {
                 throw new Error('Failed to delete ticketing officer');
             }
             console.log(`Ticketing officer with ID ${officerId} deleted successfully`);
-            setShowAlert2(true); 
+            setShowDeleteAlert(true); 
             setTimeout(() => {
                 window.location.reload(); 
             }, 1000);
@@ -175,7 +128,7 @@ export default function Dashboard() {
                     throw new Error('Failed to delete ticketing officer');
                 }
                 console.log(`Ticketing officer with ID ${officerId} deleted successfully`);
-                setShowAlert2(true); 
+                setShowDeleteAlert(true); 
                 setTimeout(() => {
                     window.location.reload(); 
                 }, 1000);
@@ -187,13 +140,13 @@ export default function Dashboard() {
 
 
     return (
-        <div className="bg-main w-screen h-full">
+        <div className="bg-main w-screen min-h-screen h-full">
             <Navbar />
             <Container className="pt-[65px]">
                 <div className="flex justify-between items-end">
                     <h1 className="text-white text-3xl mt-[40px]">Manage Ticketing Officer(s)</h1>
-                    {/* SUBMIT BUTTON */}
                     <div className="flex gap-5">
+                        {/* BULK DELETE BUTTON */}
                         {showBulkDelete && (
                             <Button type="submit" color="error" variant="contained" 
                             onClick={() => handleBulkDeleteClick(selectedOfficers)}
@@ -201,9 +154,12 @@ export default function Dashboard() {
                                 Delete
                             </Button>
                         )}
+                        {/* CREATE TICKETING OFFICER BUTTON */}
                         <Button type="submit" variant="contained" onClick={() => handleCreateClick()}>Create Ticketing Officer</Button>
                     </div>
                 </div>
+
+                {/* DISPLAY TICKETING OFFICERS TABLE */}
                 <Container className="bg-gray-50 p-5 mt-[20px] mb-[60px] w-auto justify-center">
                     <TableContainer component={Paper}>
                         <Table>
@@ -247,34 +203,43 @@ export default function Dashboard() {
                         </Table>
                     </TableContainer>
 
-                    {/* Edit dialog */}
+                    {/* EDIT TICKETING OFFICER DIALOG */}
                     <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
                         <DialogTitle>Edit Ticketing Officer</DialogTitle>
                         <DialogContent>
-                            {/* Edit form */}
-                            {/* You can use a form here to edit the selected officer */}
+                            {selectedOfficerToEdit && (
+                                <EditTicketingOfficer ticketingOfficer={selectedOfficerToEdit} handleSuccessfulEdit={handleSuccessfulEdit} />
+                            )}
                         </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleEditDialogClose}>Cancel</Button>
-                            <Button onClick={handleSaveEdit}>Save</Button>
-                        </DialogActions>
                     </Dialog>
 
                     {/* CREATE NEW OFFICER DIALOG */}
                     <Dialog open={createDialogOpen} onClose={handleCreateDialogClose}>
                         <DialogTitle>Create Ticketing Officer</DialogTitle>
                         <DialogContent>
-                            <CreateTicketingOfficer handleSuccessfulCreation={handleSuccessfulCreation}/>
+                            <CreateTicketingOfficer 
+                            handleSuccessfulCreation={handleSuccessfulCreation}/>
                         </DialogContent>
                     </Dialog>
                 </Container>
             </Container>
-            {showAlert && (
+
+            {/* SUCCESSFUL CREATION OF TICKETING OFFICER */}
+            {showCreateAlert && (
                 <Alert severity="success" className="fixed top-16 right-0 m-5">
                     Ticketing officer created successfully
                 </Alert>
             )}
-            {showAlert2 && (
+
+            {/* SUCCESSFUL CREATION OF TICKETING OFFICER */}
+            {showEditAlert && (
+                <Alert severity="success" className="fixed top-16 right-0 m-5">
+                    Ticketing officer edited successfully
+                </Alert>
+            )}
+
+            {/* SUCCESSFUL DELETION OF TICKETING OFFICER */}
+            {showDeleteAlert && (
                 <Alert severity="success" color="warning" className="fixed top-16 right-0 m-5">
                     Ticketing officer deleted successfully
                 </Alert>

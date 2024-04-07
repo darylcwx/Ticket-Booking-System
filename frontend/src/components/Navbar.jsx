@@ -3,6 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import GetReportIcon from "@mui/icons-material/Description";
+import ManageTicketingOfficersIcon from "@mui/icons-material/People";
+import CreateEventIcon from "@mui/icons-material/Add";
 import { getCart } from "../utils/cart";
 export default function Navbar() {
     const navigate = useNavigate();
@@ -39,6 +42,28 @@ export default function Navbar() {
         };
         getUser();
     }, []);
+
+    // GET STATISTICS FUNCTION - FOR EVENT MANAGER
+    const getStatistics = async (e) => {
+        fetch('http://localhost:8080/get-statistics', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'EventReport.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error downloading report:', error));
+    };
+
     return (
         <div className="navbar fixed z-50">
             <div className="">
@@ -60,9 +85,18 @@ export default function Navbar() {
                         <div className="flex gap-2 pr-4 flex items-center">
                             {user?.role === "event manager" && (
                                 <div className="flex gap-x-5">
-                                    <Link to="/report">Report</Link>
-                                    <Link to="/manageTicketingOfficers">Manage Ticketing Officers</Link>
-                                    <Link to="/createEvent">Create Event</Link>
+                                    <Link onClick={getStatistics} className="flex items-center gap-2">
+                                        <GetReportIcon />
+                                        <span>Report</span>
+                                    </Link>
+                                    <Link to="/manageTicketingOfficers" className="flex items-center gap-2">
+                                        <ManageTicketingOfficersIcon />
+                                        <span>Ticketing Officers</span>
+                                    </Link>
+                                    <Link to="/createEvent" className="flex items-center gap-2">
+                                        <CreateEventIcon />
+                                        <span>Event</span>
+                                    </Link>
                                 </div>
                             )}
                             {user?.role === "customer" && (
