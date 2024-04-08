@@ -46,13 +46,15 @@ public class TicketController {
         //return ticketService.createTicket(ticket);
         try {
             ticketService.createTicket(ticket);
-            return ResponseEntity.ok("Ticket Created Successfully");
+            return ResponseEntity.ok(ticket.getTicketId());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error adding event: " + e.getMessage());
+                    .body("Error creating ticket" + e.getMessage());
         }
         
     }
+
+    
 
     @GetMapping("/tickets")
     public ResponseEntity<List<Ticket>> getAllTickets() {
