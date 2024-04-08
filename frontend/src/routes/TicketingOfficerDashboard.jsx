@@ -14,7 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 export default function Dashboard() {
-    Documenttitle("Dashboard");
+    DocumentTitle("Dashboard");
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);

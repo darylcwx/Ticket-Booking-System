@@ -5,3 +5,7 @@
 .MuiButton-contained {
     text-transform: none !important;
 }
+
+a {
+    color: #1565c0;
+}

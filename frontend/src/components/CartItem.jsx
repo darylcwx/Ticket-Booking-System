@@ -54,6 +54,14 @@ export default function CartItem({
                         onChange={(event) => {
                             handleCheck(event.target.checked);
                         }}
+                        sx={{
+                            "&.MuiCheckbox-root": {
+                                color: "#f2f2f2",
+                            },
+                            "&.Mui-checked": {
+                                color: "#1976d2",
+                            },
+                        }}
                     />
                 </div>
             )}
