@@ -14,12 +14,14 @@ import TextField from "@mui/material/TextField";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function Event() {
+export default function Event(props) {
     const [event, setEvent] = useState({});
     const [quantity, setQuantity] = useState(0);
     const [quantityMax, setQuantityMax] = useState(false);
     const [notification, setNotification] = useState("");
     const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const page = searchParams.get('page')
 
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
@@ -93,36 +95,40 @@ export default function Event() {
                                 </span>
                             </div>
                         </div>
-                        <div className="flex justify-end pt-4">
-                            <div className="pr-4">
-                                <QuantitySelector
-                                    event={event}
-                                    onChangeQuantity={handleChangeQuantity}
-                                />
+                        {page === "dashboard" ? (
+                            <div className="flex justify-end pt-4">
+                                <div className="pr-4">
+                                    <QuantitySelector
+                                        event={event}
+                                        onChangeQuantity={handleChangeQuantity}
+                                    />
+                                </div>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        handleAddToCart(event.id);
+                                    }}
+                                >
+                                    Add to Cart
+                                </Button>
+                                {notification && (
+                                    <Notification
+                                        type={
+                                            notification === "success"
+                                                ? "success"
+                                                : "error"
+                                        }
+                                        message={
+                                            notification === "success"
+                                                ? "Added to cart successfully"
+                                                : "Something went wrong"
+                                        }
+                                    />
+                                )}
                             </div>
-                            <Button
-                                variant="contained"
-                                onClick={() => {
-                                    handleAddToCart(event.id);
-                                }}
-                            >
-                                Add to Cart
-                            </Button>
-                            {notification && (
-                                <Notification
-                                    type={
-                                        notification === "success"
-                                            ? "success"
-                                            : "error"
-                                    }
-                                    message={
-                                        notification === "success"
-                                            ? "Added to cart successfully"
-                                            : "Something went wrong"
-                                    }
-                                />
-                            )}
-                        </div>
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </div>
             </Container>

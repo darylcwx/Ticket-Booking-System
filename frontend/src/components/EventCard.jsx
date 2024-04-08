@@ -17,7 +17,7 @@ export default function EventCard({ event, page }) {
             className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto"
         >
             <div className="">
-                {page == "managerDashboard" ? (
+                {/* {page == "managerDashboard" ? (
                     <img
                         className="shrink md:max-w-[300px] lg:max-w-[400px]"
                         // width={eventImageHeightAndWidth}
@@ -31,7 +31,14 @@ export default function EventCard({ event, page }) {
                             src={`../events/${event.image}`}
                         />
                     </Link>
-                )}
+                )} */}
+                {/* <Link to={`/event/${event.id}`}> */}
+                    <img
+                        className="shrink md:max-w-[300px] lg:max-w-[400px]"
+                        // width={eventImageHeightAndWidth}
+                        src={`../events/${event.image}`}
+                    />
+                {/* </Link> */}
                 
             </div>
 
@@ -52,7 +59,7 @@ export default function EventCard({ event, page }) {
                             </div>
                         ) : (
                             <div className="text-3xl font-semibold hover:text-hover">
-                                <Link to={`/event/${event.id}`}>
+                                <Link to={`/event/${event.id}?page=${page}`}>
                                     {event.name}
                                 </Link>
                             </div>
@@ -89,10 +96,21 @@ export default function EventCard({ event, page }) {
                             <Button
                                 variant="contained"
                                 onClick={() => {
-                                    navigate("/event/" + event.id);
+                                    navigate(`/event/${event.id}?page=${page}`);
                                 }}
                             >
                                 See More
+                            </Button>
+                        </div>
+                    ) : page === "toDashboard" ? (
+                        <div className="flex justify-end">
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    navigate("/createTicket");
+                                }}
+                            >
+                                Create Ticket
                             </Button>
                         </div>
                     ) : (

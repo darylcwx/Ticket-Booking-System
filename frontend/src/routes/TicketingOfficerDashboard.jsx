@@ -14,7 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 export default function Dashboard() {
-    DocumentTitle("Dashboard");
+    DocumentTitle("Ticketing Officer Dashboard");
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -150,7 +150,7 @@ export default function Dashboard() {
                             <EventCard
                                 key={event.id}
                                 event={event}
-                                page="managerDashboard"
+                                page="toDashboard"
                             />
                         ))
                 )}
