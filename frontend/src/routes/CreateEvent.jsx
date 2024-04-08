@@ -89,14 +89,14 @@ export default function CreateEvent() {
             return;
         }
 
-        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".jpg";
+        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".png";
 
         // Construct the event object
         const event = {
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            dateTime: dayjs(selectedDate).format(),
+            datetime: dayjs(selectedDate).format(),
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
@@ -104,6 +104,7 @@ export default function CreateEvent() {
             image: imagePath,
         };
 
+        // Create Event
         try {
             const response = await fetch("http://localhost:8080/add-event", {
                 method: "POST",
@@ -125,11 +126,7 @@ export default function CreateEvent() {
             console.error("Error creating event:", error.message);
         }
     };
-
-    useEffect(() => {
-        // perform search here
-        // store events in localStorage?
-    });
+    
     return (
         <div className="bg-main w-screen h-full">
             <Navbar />

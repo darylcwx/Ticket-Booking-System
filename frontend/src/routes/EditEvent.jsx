@@ -11,6 +11,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
+import sendEmail from "../utils/sendEmail";
 
 export default function EditEvent() {
     DocumentTitle("Edit Event");
@@ -26,6 +27,7 @@ export default function EditEvent() {
     const [cancellationFee, setCancellationFee] = useState();
     const [showAlert, setShowAlert] = useState(false);
     const [showAlert2, setShowAlert2] = useState(false);
+    const [users, setUsers] = useState({});
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
         const fetchEvent = async (eventId) => {
@@ -61,6 +63,28 @@ export default function EditEvent() {
 
     const handleCancel = async (e) => {
         e.preventDefault();
+        const eventId = location.pathname.split("/")[2];
+
+        // Get Users from Booking List
+        try {
+            const response = await fetch(
+                `http://localhost:8080/get-users-by-event-id/${eventId}`, 
+                {
+                    method: "GET",
+                    headers: {"Content-Type": "application/json"}
+                });
+            const userData = await response.json();
+            setUsers(userData);
+        } catch (error) {
+            console.error("Error retrieving booking list emails:", error.message);
+        }
+
+        // Send Email
+        for (const user of users) {
+            sendEmail(e, user, "cancellation", event, null);
+        }
+
+        // Cancel Event
         try {
             const response = await fetch("http://localhost:8080/cancel-event", {
                 method: "POST",
@@ -86,14 +110,14 @@ export default function EditEvent() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const eventId = location.pathname.split("/")[2];
-        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".jpg";
+        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".png";
         // Construct the event object
         const event = {
             id: eventId,
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            dateTime: dayjs(selectedDate).format(),
+            datetime: dayjs(selectedDate).format(),
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
@@ -101,6 +125,7 @@ export default function EditEvent() {
             image: imagePath,
         };
 
+        // Update Event
         try {
             const response = await fetch("http://localhost:8080/edit-event", {
                 method: "PUT",

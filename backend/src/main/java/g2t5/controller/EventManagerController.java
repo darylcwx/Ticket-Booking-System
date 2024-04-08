@@ -143,13 +143,13 @@ public class EventManagerController {
         }
     }
 
-    @GetMapping("/get-emails-by-event-id/{eventId}")
-    public ResponseEntity<List<String>> getEmailsByEventId(@PathVariable("eventId") String eventId) {
-        List<String> emailList = eventManagerService.getEmailsByEventId(eventId);
-        return emailList == null
+    @GetMapping("/get-users-by-event-id/{eventId}")
+    public ResponseEntity<List<User>> getUsersByEventId(@PathVariable("eventId") String eventId) {
+        List<User> userList = eventManagerService.getUsersByEventId(eventId);
+        return userList == null
                 ? ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body(Collections.emptyList())
-                : ResponseEntity.ok(emailList);
+                : ResponseEntity.ok(userList);
     }
 }

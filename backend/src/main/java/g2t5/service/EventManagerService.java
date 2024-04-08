@@ -115,15 +115,15 @@ public class EventManagerService {
         }
     }
 
-    public List<String> getEmailsByEventId(String eventId) {
-        ArrayList<String> emailList = new ArrayList<>();
+    public List<User> getUsersByEventId(String eventId) {
+        ArrayList<User> userList = new ArrayList<>();
         try{
             Event e = eventService.getEventById(eventId);
             ArrayList<Customer> bookingList = e.getBookingList();
             for(Customer customer : bookingList){
-                emailList.add(customer.getUsername());
+                userList.add(customer);
             }
-            return emailList;
+            return userList;
         } catch(Exception e){
             return new ArrayList<>();
         }
