@@ -142,4 +142,14 @@ public class EventManagerController {
                     .body("Error deleting ticketing officer: " + e.getMessage());
         }
     }
+
+    @GetMapping("/get-emails-by-event-id/{eventId}")
+    public ResponseEntity<List<String>> getEmailsByEventId(@PathVariable("eventId") String eventId) {
+        List<String> emailList = eventManagerService.getEmailsByEventId(eventId);
+        return emailList == null
+                ? ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(Collections.emptyList())
+                : ResponseEntity.ok(emailList);
+    }
 }

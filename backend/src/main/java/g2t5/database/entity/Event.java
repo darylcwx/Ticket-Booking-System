@@ -18,7 +18,7 @@ public class Event {
   private int ticketsAvailable;
   private int ticketsSold;
   private String status;
-  private ArrayList<String> bookingList;
+  private ArrayList<Customer> bookingList;
   private double cancellationFee;
   private int guestsAllowed;
   private String image;
@@ -76,11 +76,11 @@ public class Event {
     this.status = status;
   }
 
-  public ArrayList<String> getBookingList() {
+  public ArrayList<Customer> getBookingList() {
     return bookingList;
   }
 
-  public void setBookingList(ArrayList<String> bookingList) {
+  public void setBookingList(ArrayList<Customer> bookingList) {
     this.bookingList = bookingList;
   }
 
