@@ -30,7 +30,7 @@ export default function Register() {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
-    const [OldPasswordError, setOldPasswordError] = useState("");
+    const [oldPasswordError, setOldPasswordError] = useState("");
     const [newPasswordError, setNewPasswordError] = useState("");
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
 
@@ -282,8 +282,8 @@ export default function Register() {
                     <Notification
                         type={
                             notification ===
-                                "Successfully reset password! Redirecting you to login..." ||
-                            "Email sent successfully!"
+                                ("Successfully reset password! Redirecting you to login..." ||
+                            "Email sent successfully!")
                                 ? "success"
                                 : "error"
                         }
