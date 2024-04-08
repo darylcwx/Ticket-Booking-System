@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
+import dayjs from "dayjs";
 
 import Navbar from "../components/Navbar";
 import Container from "@mui/material/Container";
@@ -16,7 +17,6 @@ export default function CreateEvent() {
     DocumentTitle("Create Event");
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [discountAvailable, setDiscountAvailable] = useState(false);
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [eventDesc, setEventDesc] = useState();
@@ -96,7 +96,7 @@ export default function CreateEvent() {
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            dateTime: selectedDate,
+            dateTime: dayjs(selectedDate).format(),
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
@@ -219,6 +219,7 @@ export default function CreateEvent() {
                                         style={{ border: "none" }}
                                         className="border-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="eventDatetime"
+                                        onChange={handleDateChange}
                                     />
                                 </LocalizationProvider>
                             </div>
