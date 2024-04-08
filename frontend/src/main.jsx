@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         element: <TicketingOfficerDashboard />,
     },
     { path: "/checkout", element: <Checkout /> },
-    { path: "/createTicket", element: <CreateTicket /> },
+    { path: "/createTicket/:id", element: <CreateTicket /> },
     { path: "/verifyTicket", element: <VerifyTicket /> },
 ]);
 

@@ -107,7 +107,7 @@ export default function EventCard({ event, page }) {
                             <Button
                                 variant="contained"
                                 onClick={() => {
-                                    navigate("/createTicket");
+                                    navigate(`/createTicket/${event.id}`);
                                 }}
                             >
                                 Create Ticket
