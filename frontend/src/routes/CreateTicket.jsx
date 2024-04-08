@@ -77,7 +77,7 @@ export default function CreateTicket() {
     }
 
     return (
-        <div className="bg-main w-screen h-full">
+        <div className="bg-main w-screen h-screen">
             <Navbar />
             <Container className="pt-[65px]">
                 <div className="flex items-end gap-x-3">
