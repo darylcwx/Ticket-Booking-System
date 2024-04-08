@@ -2,6 +2,7 @@ package g2t5.service;
 
 import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
+import g2t5.database.entity.Booking;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
 import g2t5.database.repository.BookingRepository;
@@ -63,7 +64,7 @@ public class CustomerService {
       return false;
     }
 
-    if (bookings.isEmpty() == false){
+    if (bookings.isEmpty() == false) {
       for (Booking booking : bookings) {
         if (booking.getEventId().equals(eventId)) {
           qty = booking.getTickets().size();
@@ -77,7 +78,7 @@ public class CustomerService {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
           int cartqty = cartItem.get("quantity");
-          if (qty + cartqty + quantity > guestsAllowed){
+          if (qty + cartqty + quantity > guestsAllowed) {
             return false;
           }
           cartItem.put("quantity", cartqty + quantity);
@@ -87,7 +88,7 @@ public class CustomerService {
       }
     }
     if (!eventInCart) {
-      if (qty + quantity > guestsAllowed){
+      if (qty + quantity > guestsAllowed) {
         return false;
       }
       Map<String, Object> newItem = new HashMap<>();
@@ -135,13 +136,13 @@ public class CustomerService {
     double total = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
 
-    if (balance - total < 0){
+    if (balance - total < 0) {
       return false;
     }
 
     return true;
   }
-  
+
   public void createBooking(String username, Booking booking, int qty) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     List<Booking> custBookings = customer.getBookings();
@@ -153,14 +154,14 @@ public class CustomerService {
     customer.setAccountBalance(balance - totalPrice);
 
     customerRepository.save(customer);
-    
+
   }
 
   public void cancelAndRefundBooking(String username, String bookingid) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     List<Booking> bookings = customer.getBookings();
-    for (Booking booking : bookings){
-      if (booking.getBookingId() == bookingid){
+    for (Booking booking : bookings) {
+      if (booking.getBookingId() == bookingid) {
         booking.setStatus("cancelled");
         Event event = eventRepository.findbyId(booking.getEventId());
         double totalPrice = event.getTicketPrice() * booking.getTickets().size();
@@ -175,17 +176,17 @@ public class CustomerService {
   }
 
   public void refundEventBookings(List<Booking> bookings) throws Exception {
-    for (Booking booking : bookings){
-        String username = booking.getCustomerId();
-        Customer customer = customerRepository.findByUsername(username);
-        List<Booking> custBookings = customer.getBookings();
+    for (Booking booking : bookings) {
+      String username = booking.getCustomerId();
+      Customer customer = customerRepository.findByUsername(username);
+      List<Booking> custBookings = customer.getBookings();
 
-        for (Booking custBook : custBookings){
-          if (booking.getBookingId().equals(custBook.getBookingId())){
-            custBook.setStatus("cancelled");
-            customerRepository.save(custBook);
-          }
+      for (Booking custBook : custBookings) {
+        if (booking.getBookingId().equals(custBook.getBookingId())) {
+          custBook.setStatus("cancelled");
+          customerRepository.save(custBook);
         }
+      }
     }
   }
 

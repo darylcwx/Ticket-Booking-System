@@ -46,7 +46,7 @@ public class BookingService {
 
     Calendar calendar2 = Calendar.getInstance();
     calendar2.setTime(date);
-    calender2.add(Calendar.HOUR_OF_DAY, -24);
+    calendar2.add(Calendar.HOUR_OF_DAY, -24);
     Date dateAvail2 = calendar.getTime();
 
     if (dateAvail.after(curr) || curr.after(dateAvail2)) { //do event date check
@@ -55,7 +55,7 @@ public class BookingService {
 
     Booking booking = new Booking();
     // List<Tickets> tickets = ticketService.createTickets(); // need to create tickets
-    List<Tickets> tickets = new ArrayList<>(); // temporary placeholder
+    List<Ticket> tickets = new ArrayList<>(); // temporary placeholder
 
     booking.setEventId(eventId);
     booking.setStatus("created");
