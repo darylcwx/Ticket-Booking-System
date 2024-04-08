@@ -35,7 +35,7 @@ public class BookingService {
   }
 
   public Booking createBooking(String username, String eventId, int qty) throws Exception {
-    Event event = eventRepository.findbyId(eventId);
+    Event event = eventRepository.findById(eventId).get();
     Date date = event.getDatetime();
     Date curr = new Date();
 
@@ -72,7 +72,7 @@ public class BookingService {
     List<Booking> bookings = bookingRepository.findAll();
     for (Booking booking : bookings){
         if (booking.getBookingId().equals(bookingId)){
-            Event event = eventRepository.findbyId(booking.getEventId());
+            Event event = eventRepository.findById(booking.getEventId()).get();
             Date date = event.getDatetime();
             Date curr = new Date();
 

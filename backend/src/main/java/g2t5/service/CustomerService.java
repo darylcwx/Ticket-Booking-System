@@ -56,7 +56,7 @@ public class CustomerService {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
     List<Booking> bookings = customer.getBookings();
-    Event event = eventRepository.findbyId(eventId);
+    Event event = eventRepository.findById(eventId).get();
     int guestsAllowed = event.getGuestsAllowed();
     int qty = 0;
 
@@ -132,7 +132,7 @@ public class CustomerService {
 
   public boolean checkBalance(String username, String eventId, int qty) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    Event event = eventRepository.findbyId(eventId);
+    Event event = eventRepository.findById(eventId).get();
     double total = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
 
@@ -148,7 +148,7 @@ public class CustomerService {
     List<Booking> custBookings = customer.getBookings();
     custBookings.add(booking);
 
-    Event event = eventRepository.findbyId(booking.getEventId());
+    Event event = eventRepository.findById(booking.getEventId()).get();
     double totalPrice = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
     customer.setAccountBalance(balance - totalPrice);
@@ -163,7 +163,7 @@ public class CustomerService {
     for (Booking booking : bookings) {
       if (booking.getBookingId() == bookingid) {
         booking.setStatus("cancelled");
-        Event event = eventRepository.findbyId(booking.getEventId());
+        Event event = eventRepository.findById(booking.getEventId()).get();
         double totalPrice = event.getTicketPrice() * booking.getTickets().size();
         double balance = customer.getAccountBalance();
         double cancellationFee = event.getCancellationFee() * booking.getTickets().size();
