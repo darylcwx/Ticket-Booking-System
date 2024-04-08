@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
+import Notification from "../components/Notification";
+
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -16,8 +18,10 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [notification, setNotification] = useState("");
 
     const handleLogin = () => {
+        setNotification(false);
         setUsernameError(false);
         setPasswordError(false);
         if (username === "") {
@@ -38,8 +42,9 @@ export default function Login() {
                 if (response.ok) {
                     localStorage.setItem("username", username);
                 } else {
-                    setUsernameError("Invalid username");
-                    setPasswordError("Invalid password");
+                    setUsernameError(true);
+                    setPasswordError(true);
+                    setNotification(data.message);
                     return;
                 }
             } catch (e) {
@@ -58,7 +63,6 @@ export default function Login() {
                 if (!response.ok) {
                     navigate("/");
                 } else {
-                    console.log(data);
                     switch (data.role) {
                         case "event manager":
                             navigate("/managerDashboard");
@@ -84,7 +88,6 @@ export default function Login() {
                     <div className="text-3xl font-bold  max-w-sm">
                         Sign in to Ticket Booking System
                     </div>
-
                     <div className="pt-8">
                         <TextField
                             className="w-full"
@@ -136,6 +139,12 @@ export default function Login() {
                         <Link to="/register">Register</Link>
                     </div>
                 </div>
+                {notification && (
+                    <Notification
+                        type={notification === "success" ? "success" : "error"}
+                        message={notification}
+                    />
+                )}
             </div>
         </div>
     );

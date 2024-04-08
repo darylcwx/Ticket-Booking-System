@@ -36,6 +36,12 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
+  public void changePassword(String username, String newPassword) {
+    Customer customer = customerRepository.findByUsername(username);
+    customer.setPassword(DigestUtils.sha256Hex(username + newPassword));
+    customerRepository.save(customer);
+  }
+
   public ArrayList<Map<String, Object>> getCart(String username)
       throws Exception {
     Customer customer = customerRepository.findByUsername(username);

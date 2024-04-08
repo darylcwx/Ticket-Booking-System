@@ -39,7 +39,30 @@ export default function Register() {
         // }
 
         // skip email,
+
         const registerUser = async (username, password) => {
+            // check if user exists
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/user/${username}`,
+                    {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                const data = await response.json();
+                console.log(data);
+                if (data.message != "User not found") {
+                    setUsernameError(true);
+                    setPasswordError(true);
+                    setNotification(
+                        "An account with this username already exists, try logging in instead!"
+                    );
+                    return;
+                }
+            } catch (e) {
+                console.log(e);
+            }
             try {
                 const response = await fetch(`http://localhost:8080/register`, {
                     method: "POST",
@@ -48,15 +71,19 @@ export default function Register() {
                 });
                 const data = await response.json();
                 console.log(data);
-                if (data.message == "Customer registered//") {
-                    setNotification("success");
+                if (data.message == "Customer registered") {
+                    setNotification(
+                        "Registered successfully, redirecting you to login..."
+                    );
                     setTimeout(() => {
                         navigate(`/`);
-                    }, 2000);
+                    }, 3000);
                 } else {
-                    setNotification("error");
-                    setUsernameError("Invalid username");
-                    setPasswordError("Invalid password");
+                    setUsernameError(true);
+                    setPasswordError(true);
+                    setNotification(
+                        "Something went wrong, please try again later"
+                    );
                 }
             } catch (e) {
                 console.log(e);
@@ -67,11 +94,15 @@ export default function Register() {
     return (
         <div className="bg-main w-screen h-screen">
             <div className="h-screen flex justify-center items-center">
-                <div className="bg-[#ffffff] p-10 rounded-md">
+                <div className="bg-modal p-10 rounded-md">
                     <div className="text-3xl font-bold max-w-sm">
                         Create your Ticket Booking System account
                     </div>
-                    <div className="pt-8">
+                    <div className="pt-4 text-xs max-w-sm italic">
+                        If you are a ticketing officer or event manager, please
+                        approach the system admin for help instead
+                    </div>
+                    <div className="pt-4">
                         <TextField
                             className="w-full"
                             label="Username"
@@ -121,12 +152,13 @@ export default function Register() {
                 </div>
                 {notification && (
                     <Notification
-                        type={notification === "success" ? "success" : "error"}
-                        message={
-                            notification === "success"
-                                ? "Successfully registered. Redirecting you to login..."
-                                : "Something went wrong"
+                        type={
+                            notification ===
+                            "Registered successfully, redirecting you to login..."
+                                ? "success"
+                                : "error"
                         }
+                        message={notification}
                     />
                 )}
             </div>

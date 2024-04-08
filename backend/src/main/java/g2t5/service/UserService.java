@@ -42,8 +42,8 @@ public class UserService {
         String hashedInputPassword = DigestUtils.sha256Hex(username + password);
 
         // TODO - remove
-        System.out.println(hashedInputPassword);
-        System.out.println(hashedPassword);
+        //System.out.println("hashedinput: " + hashedInputPassword);
+        //System.out.println("actualpass: " + hashedPassword);
 
         if (hashedInputPassword.equals(hashedPassword)) {
           return ResponseEntity.ok(

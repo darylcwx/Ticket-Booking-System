@@ -47,7 +47,7 @@ export default function Checkout() {
         };
         await getUser();
         checkout.forEach((event) => {
-            sendEmail(e, user, event, "booking");
+            sendEmail(e, user, "booking", event, null);
         });
     };
     return (
