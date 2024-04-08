@@ -49,8 +49,7 @@ public class CustomerService {
     return cart;
   }
 
-  public boolean addToCart(String username, String eventId, int quantity)
-      throws Exception {
+  public boolean addToCart(String username, String eventId, int quantity) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
     List<Booking> bookings = customer.getBookings();
@@ -65,8 +64,7 @@ public class CustomerService {
     if (bookings.isEmpty() == false) {
       for (Booking booking : bookings) {
         if (booking.getEventId().equals(eventId)) {
-          qty = booking.getTickets().size();
-          break;
+          qty += booking.getTickets().size();
         }
       }
     }
