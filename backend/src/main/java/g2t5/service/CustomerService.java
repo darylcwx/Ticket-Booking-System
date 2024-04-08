@@ -4,11 +4,9 @@ import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
-import java.util.ArrayList;
+import g2t5.database.repository.BookingRepository;
+import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ public class CustomerService {
 
   @Autowired
   private CustomerRepository customerRepository;
-
+  private BookingRepository bookingRepository;
   private EventRepository eventRepository;
 
   public Customer getCustomerByUsername(String username) {
@@ -32,7 +30,7 @@ public class CustomerService {
     customer.setRole("customer");
     customer.setCart(new ArrayList<Map<String, Object>>());
     customer.setAccountBalance(1000);
-    customer.setBookings(new ArrayList<Map<String, Object>>());
+    customer.setBookings(new List<>());
     customerRepository.save(customer);
   }
 
@@ -52,22 +50,46 @@ public class CustomerService {
     return cart;
   }
 
-  public void addToCart(String username, String eventId, int quantity)
+  public boolean addToCart(String username, String eventId, int quantity)
       throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
+    List<Booking> bookings = customer.getBookings();
+    Event event = eventRepository.findbyId(eventId);
+    int guestsAllowed = event.getGuestsAllowed();
+    int qty = 0;
+
+    if (quantity > guestsAllowed) {
+      return false;
+    }
+
+    if (bookings.isEmpty() == false){
+      for (Booking booking : bookings) {
+        if (booking.getEventId().equals(eventId)) {
+          qty = booking.getTickets().size();
+          break;
+        }
+      }
+    }
+
     boolean eventInCart = false;
     if (cart.isEmpty() == false) {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
-          int currentQuantity = (int) cartItem.get("quantity");
-          cartItem.put("quantity", currentQuantity + quantity);
+          int cartqty = cartItem.get("quantity");
+          if (qty + cartqty + quantity > guestsAllowed){
+            return false;
+          }
+          cartItem.put("quantity", cartqty + quantity);
           eventInCart = true;
           break;
         }
       }
     }
     if (!eventInCart) {
+      if (qty + quantity > guestsAllowed){
+        return false;
+      }
       Map<String, Object> newItem = new HashMap<>();
       newItem.put("id", eventId);
       newItem.put("quantity", quantity);
@@ -75,6 +97,7 @@ public class CustomerService {
     }
     customer.setCart(cart);
     customerRepository.save(customer);
+    return true;
   }
 
   public void removeFromCart(String username, String eventId) throws Exception {
@@ -97,7 +120,7 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
-  public ArrayList<Map<String, Object>> getBookings(String username)
+  public List<Booking> getBookings(String username)
       throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     if (customer == null) {
@@ -105,51 +128,65 @@ public class CustomerService {
     }
     return customer.getBookings();
   }
-  // public ArrayList<Map<String, Object>> createBooking(String username, String
-  // eventId, int numberOfTickets)
-  // throws Exception {
-  // Customer customer = customerRepository.findByUsername(username);
-  // ArrayList<Map<String, Object>> bookings = customer.getBookings();
-  // Event event = eventRepository.findbyId(eventId);
-  // int guestsAllowed = event.getGuestsAllowed();
-  // boolean bookingExist = false;
 
-  // if (event.getTicketsAvailable() >= numberOfTickets && numberOfTickets <=
-  // guestsAllowed){
-  // for (int i = 0; i < bookings.size(); i++){
-  // Map<String, Object> booking = bookings.get(i);
-  // int numTix = (booking.get("tickets")).size();
-  // if (booking.get("eventId") == eventId && numberOfTickets <= guestsAllowed -
-  // numTix){
-  // // booking.put("bookingId", bookingId); // how to generate IDs?
-  // booking.put("eventId", eventId);
-  // ArrayList<Map<String, Object>> tickets = new ArrayList<>();
-  // // for (int i = 0; i < numberOfTickets; i++){
-  // // // add new ticket
-  // // }
-  // booking.put("tickets", tickets);
-  // booking.put("status", "processing"); // what are the diff status?
-  // bookings.add(booking);
-  // bookingExist = true;
-  // break;
-  // }
-  // }
+  public boolean checkBalance(String username, String eventId, int qty) throws Exception {
+    Customer customer = customerRepository.findByUsername(username);
+    Event event = eventRepository.findbyId(eventId);
+    double total = event.getTicketPrice() * qty;
+    double balance = customer.getAccountBalance();
 
-  // if (!bookingExist || bookings.size() == 0){
-  // Map<String, Object> booking = new HashMap<>();
-  // // booking.put("bookingId", bookingId); // how to generate IDs?
-  // booking.put("eventId", eventId);
-  // ArrayList<Map<String, Object>> tickets = new ArrayList<>();
-  // // for (int i = 0; i < numberOfTickets; i++){
-  // // // add new ticket
-  // // }
-  // booking.put("tickets", tickets);
-  // booking.put("status", "processing"); // what are the diff status?
-  // bookings.add(booking);
-  // }
+    if (balance - total < 0){
+      return false;
+    }
 
-  // customer.setBookings(bookings);
-  // customerRepository.save(customer);
-  // }
-  // }
+    return true;
+  }
+  
+  public void createBooking(String username, Booking booking, int qty) throws Exception {
+    Customer customer = customerRepository.findByUsername(username);
+    List<Booking> custBookings = customer.getBookings();
+    custBookings.add(booking);
+
+    Event event = eventRepository.findbyId(booking.getEventId());
+    double totalPrice = event.getTicketPrice() * qty;
+    double balance = customer.getAccountBalance();
+    customer.setAccountBalance(balance - totalPrice);
+
+    customerRepository.save(customer);
+    
+  }
+
+  public void cancelAndRefundBooking(String username, String bookingid) throws Exception {
+    Customer customer = customerRepository.findByUsername(username);
+    List<Booking> bookings = customer.getBookings();
+    for (Booking booking : bookings){
+      if (booking.getBookingId() == bookingid){
+        booking.setStatus("cancelled");
+        Event event = eventRepository.findbyId(booking.getEventId());
+        double totalPrice = event.getTicketPrice() * booking.getTickets().size();
+        double balance = customer.getAccountBalance();
+        double cancellationFee = event.getCancellationFee() * booking.getTickets().size();
+
+        customer.setAccountBalance(balance + totalPrice - cancellationFee);
+        customerRepository.save(customer);
+        break;
+      }
+    }
+  }
+
+  public void refundEventBookings(List<Booking> bookings) throws Exception {
+    for (Booking booking : bookings){
+        String username = booking.getCustomerId();
+        Customer customer = customerRepository.findByUsername(username);
+        List<Booking> custBookings = customer.getBookings();
+
+        for (Booking custBook : custBookings){
+          if (booking.getBookingId().equals(custBook.getBookingId())){
+            custBook.setStatus("cancelled");
+            customerRepository.save(custBook);
+          }
+        }
+    }
+  }
+
 }

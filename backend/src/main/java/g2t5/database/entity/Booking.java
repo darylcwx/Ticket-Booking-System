@@ -1,14 +1,13 @@
 package g2t5.database.entity;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class Booking {
     private String bookingId;
     private String eventId;
-    private ArrayList<Map<String, Object>> tickets;
-    private String status; 
-    // payment details?
+    private String customerId;
+    private List<Ticket> tickets;
+    private String status;
 
     public String getBookingId() {
         return bookingId;
@@ -16,6 +15,14 @@ public class Booking {
 
     public void setBookingId(String bookingId){
         this.bookingId = bookingId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId){
+        this.customerId = customerId;
     }
 
     public String getEventId() {
@@ -34,11 +41,11 @@ public class Booking {
         this.status = status;
     }
 
-    public ArrayList<Map<String, Object>> getTickets() {
+    public List<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(ArrayList<Map<String, Object>> tickets){
+    public void setTickets(List<Ticket> tickets){
         this.tickets = tickets;
     }
 
