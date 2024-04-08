@@ -72,4 +72,16 @@ public class TicketController {
             return new ResponseEntity<>(false, HttpStatus.OK);
         }
     }
+
+    @PostMapping("/delete-ticket")
+    public ResponseEntity<String> deleteTicket(@RequestBody Ticket ticket) {
+        try {
+                ticketService.deactivateTicket(ticket);
+
+            return ResponseEntity.ok("Tickets removed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting ticket" + e.getMessage());
+        }
+    }
 }

@@ -29,6 +29,18 @@ public class TicketService {
       return ticketRepository.findById(ticket.getTicketId()).get();
    }
 
+   public void deactivateTicket(Ticket ticket) throws Exception {
+      Ticket ticket_new = ticketRepository.findById(ticket.getTicketId()).get();
+      if (ticket_new != null) {
+
+        ticket.setStatus("cancelled");
+        ticketRepository.save(ticket);
+      } else {
+          throw new Exception("ticket not found");
+      }
+
+ }
+
 /*     public Ticket buyTicket(Ticket ticket) {
         return ticketRepository.save(ticket);
     } */

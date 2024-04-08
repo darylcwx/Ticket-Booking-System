@@ -58,6 +58,7 @@ export default function Profile() {
                 console.log(e);
             }
         };
+        getUser();
     }, []);
 
     const handleChangePassword = async () => {
@@ -179,7 +180,7 @@ export default function Profile() {
                     <TextField
                         className="w-full"
                         label="Old password"
-                        error={oldPasswordError}
+                        error={oldPasswordError ? true : false}
                         helperText={oldPasswordError}
                         onChange={(e) => setOldPassword(e.target.value)}
                         type={showOldPassword ? "text" : "password"}
@@ -203,7 +204,7 @@ export default function Profile() {
                         <TextField
                             className="w-full"
                             label="New password"
-                            error={newPasswordError}
+                            error={newPasswordError ? true : false}
                             helperText={newPasswordError}
                             onChange={(e) => setNewPassword(e.target.value)}
                             type={showNewPassword ? "text" : "password"}
@@ -228,7 +229,7 @@ export default function Profile() {
                         <TextField
                             className="w-full"
                             label="Confirm new password"
-                            error={confirmNewPasswordError}
+                            error={confirmNewPasswordError ? true : false}
                             helperText={confirmNewPasswordError}
                             onChange={(e) =>
                                 setConfirmNewPassword(e.target.value)
@@ -267,7 +268,7 @@ export default function Profile() {
             {notification && (
                 <Notification
                     type={
-                        notification === "Successfully change password!"
+                        notification === "Successfully changed password!"
                             ? "success"
                             : "error"
                     }
