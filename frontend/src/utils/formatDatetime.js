@@ -7,7 +7,7 @@ function formatDatetime(datetimeString) {
         hour: "numeric",
         minute: "2-digit",
         hour12: true,
-        timeZone: "UTC",
+        timeZone: "Asia/Singapore",
     };
     return datetime.toLocaleString("en-US", options);
 }
