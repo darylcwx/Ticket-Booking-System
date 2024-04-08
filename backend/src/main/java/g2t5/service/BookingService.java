@@ -20,6 +20,7 @@ public class BookingService {
   private BookingRepository bookingRepository;
   private CustomerRepository customerRepository;
   private EventRepository eventRepository;
+  private TicketService ticketService;
 
   public List<Booking> getByEventId(String eventId) throws Exception {
     List<Booking> bookings = bookingRepository.findAll();
@@ -49,7 +50,7 @@ public class BookingService {
     calendar2.add(Calendar.HOUR_OF_DAY, -24);
     Date dateAvail2 = calendar.getTime();
 
-    if (dateAvail.after(curr) || curr.after(dateAvail2)) { //do event date check
+    if (dateAvail.after(curr) || curr.after(dateAvail2)) { 
         return null;
     }
 
@@ -68,41 +69,41 @@ public class BookingService {
   }
 
   public boolean cancelBooking(String bookingId) throws Exception {
+    Booking booking = bookingRepository.findById(bookingId).get();
+    Event event = eventRepository.findById(booking.getEventId()).get();
+    Date date = event.getDatetime();
+    Date curr = new Date();
 
-    List<Booking> bookings = bookingRepository.findAll();
-    for (Booking booking : bookings){
-        if (booking.getBookingId().equals(bookingId)){
-            Event event = eventRepository.findById(booking.getEventId()).get();
-            Date date = event.getDatetime();
-            Date curr = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    calendar.add(Calendar.HOUR_OF_DAY, -48);
+    Date dateAvail = calendar.getTime();
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.HOUR_OF_DAY, -48);
-            Date dateAvail = calendar.getTime();
-
-            if (curr.after(dateAvail)) { //do event date check
-                return false;
-            }
-
-            booking.setStatus("cancelled");
-            bookingRepository.save(booking);
-            // update ticket validity
-        }
+    if (curr.after(dateAvail)) { 
+        return false;
     }
+
+    booking.setStatus("cancelled");
+    List<Ticket> tickets = booking.getTickets();
+    for (Ticket ticket : tickets) {
+        ticketService.deactivateTicket(ticket);
+    }
+    
+    bookingRepository.save(booking);
     return true;
   }
 
     public void cancelEventBookings(List<Booking> bookings) throws Exception {
-        // need to call ticekt service to cancel tickets one by one
-        List<Booking> repo = bookingRepository.findAll();
-        for (Booking booking : bookings){
-            for (Booking bk : repo){
-                if (bk.getBookingId().equals(booking.getBookingId())){
-                    booking.setStatus("cancelled");
-                    bookingRepository.save(booking);
-                }
+        for (Booking booking : bookings) {
+            Booking curr = bookingRepository.findById(booking.getBookingId()).get();
+            curr.setStatus("cancelled");
+
+            List<Ticket> tickets = curr.getTickets();
+            for (Ticket ticket : tickets) {
+                ticketService.deactivateTicket(ticket);
             }
+
+            bookingRepository.save(curr);
         }
     }
 

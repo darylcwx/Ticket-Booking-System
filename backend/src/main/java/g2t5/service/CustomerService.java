@@ -5,7 +5,6 @@ import g2t5.database.entity.Event;
 import g2t5.database.entity.Booking;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
-import g2t5.database.repository.BookingRepository;
 import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ public class CustomerService {
 
   @Autowired
   private CustomerRepository customerRepository;
-  private BookingRepository bookingRepository;
   private EventRepository eventRepository;
 
   public Customer getCustomerByUsername(String username) {
