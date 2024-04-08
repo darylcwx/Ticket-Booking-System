@@ -1,17 +1,17 @@
 package g2t5.model;
 
-public class ResetPasswordRequest {
+public class ChangePasswordRequest {
 
     private String username;
-    private String tempPassword;
+    private String oldPassword;
     private String newPassword;
 
     public String getUsername() {
         return username;
     }
 
-    public String getTempPassword() {
-        return tempPassword;
+    public String getOldPassword() {
+        return oldPassword;
 
     }
 

@@ -22,22 +22,22 @@ export default function Register() {
     const [notification, setNotification] = useState("");
     const [showPasswordSection, setShowPasswordSection] = useState(false);
 
-    const [tempPassword, setTempPassword] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-    const [showTempPassword, setShowTempPassword] = useState(false);
+    const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
-    const [tempPasswordError, setTempPasswordError] = useState("");
+    const [OldPasswordError, setOldPasswordError] = useState("");
     const [newPasswordError, setNewPasswordError] = useState("");
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
 
     const handleReset = async (e) => {
         setNotification(false);
         setUsernameError(false);
-        setTempPasswordError(false);
+        setOldPasswordError(false);
         setNewPasswordError(false);
         setConfirmNewPasswordError(false);
 
@@ -83,7 +83,7 @@ export default function Register() {
 
                 // edit db with temp password
                 const response = await fetch(
-                    `http://localhost:8080/changePassword`,
+                    `http://localhost:8080/adminChangePassword`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -103,31 +103,35 @@ export default function Register() {
                 // authenticate temp pass == temp pass ? change user's password
                 try {
                     const response = await fetch(
-                        `http://localhost:8080/resetPassword`,
+                        `http://localhost:8080/changePassword`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
                                 username,
-                                tempPassword,
+                                oldPassword,
                                 newPassword,
                             }),
                         }
                     );
                     const data = await response.json();
                     console.log(data);
-                    if (data.message == "Temporary password incorrect") {
-                        setTempPasswordError(true);
-                        setNotification(
-                            "Temporary password does not match our records."
-                        );
-                    } else {
+                    if (data.message == "Password changed") {
                         setNotification(
                             "Successfully reset password! Redirecting you to login..."
                         );
                         setTimeout(() => {
                             navigate(`/`);
                         }, 3000);
+                    } else if (data.message == "Old password incorrect") {
+                        setOldPasswordError(true);
+                        setNotification(
+                            "Temporary password does not match our records."
+                        );
+                    } else {
+                        setNotification(
+                            "Something went wrong. Please try again later."
+                        );
                     }
                 } catch (e) {
                     console.log(e);
@@ -172,24 +176,22 @@ export default function Register() {
                                 <TextField
                                     className="w-full"
                                     label="Temporary password"
-                                    error={tempPasswordError}
-                                    helperText={tempPasswordError}
+                                    error={oldPasswordError}
+                                    helperText={oldPasswordError}
                                     onChange={(e) =>
-                                        setTempPassword(e.target.value)
+                                        setOldPassword(e.target.value)
                                     }
-                                    type={
-                                        showTempPassword ? "text" : "password"
-                                    }
+                                    type={showOldPassword ? "text" : "password"}
                                     InputProps={{
                                         endAdornment: (
                                             <IconButton
                                                 onClick={() =>
-                                                    setShowTempPassword(
-                                                        !showTempPassword
+                                                    setShowOldPassword(
+                                                        !showOldPassword
                                                     )
                                                 }
                                             >
-                                                {showTempPassword ? (
+                                                {showOldPassword ? (
                                                     <VisibilityOff />
                                                 ) : (
                                                     <Visibility />

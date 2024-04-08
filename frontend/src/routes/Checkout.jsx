@@ -25,7 +25,6 @@ export default function Checkout() {
     }, []);
 
     const handlePlaceOrder = async (e) => {
-        alert("noice");
         const getUser = async () => {
             const username = localStorage.getItem("username");
             try {
@@ -41,11 +40,12 @@ export default function Checkout() {
                     navigate("/");
                 }
                 setUser(data);
+                return data;
             } catch (e) {
                 console.log(e);
             }
         };
-        await getUser();
+        const user = await getUser();
         checkout.forEach((event) => {
             sendEmail(e, user, "booking", event, null);
         });

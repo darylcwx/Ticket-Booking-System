@@ -5,7 +5,7 @@ import g2t5.model.AddToCartRequest;
 import g2t5.model.CreateBookingRequest;
 // import g2t5.model.CancelBookingRequest;
 import g2t5.model.LoginRequest;
-import g2t5.model.ResetPasswordRequest;
+import g2t5.model.ChangePasswordRequest;
 import g2t5.model.RemoveFromCartRequest;
 import g2t5.service.CustomerService;
 import g2t5.service.EventManagerService;
@@ -62,7 +62,7 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/changePassword")
+  @PostMapping("/adminChangePassword")
   public ResponseEntity<Object> changePassword(@RequestBody LoginRequest request) {
     String username = request.getUsername();
     String password = request.getPassword();
@@ -76,20 +76,20 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/resetPassword")
-  public ResponseEntity<Object> resetPassword(@RequestBody ResetPasswordRequest request) {
+  @PostMapping("/changePassword")
+  public ResponseEntity<Object> resetPassword(@RequestBody ChangePasswordRequest request) {
     String username = request.getUsername();
-    String tempPassword = request.getTempPassword();
+    String oldPassword = request.getOldPassword();
     String newPassword = request.getNewPassword();
     try {
-      ResponseEntity<Object> auth = userService.authenticateUser(username, tempPassword);
+      ResponseEntity<Object> auth = userService.authenticateUser(username, oldPassword);
       if (auth.getBody().toString().contains("Login successful")) {
         customerService.changePassword(username, newPassword);
         return ResponseEntity.ok("{\"message\": \"Password changed\", \"status\": 200}");
       } else {
         return ResponseEntity
             .badRequest()
-            .body("{\"message\": \"Temporary password incorrect\", \"status\": 400}");
+            .body("{\"message\": \"Old password incorrect\", \"status\": 400}");
       }
     } catch (Exception e) {
       return ResponseEntity
