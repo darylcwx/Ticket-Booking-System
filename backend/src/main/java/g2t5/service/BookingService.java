@@ -35,8 +35,8 @@ public class BookingService {
   }
 
   public Booking createBooking(String username, String eventId, int qty) throws Exception {
-    Event event = eventRepository.findbyId(booking.getEventId());
-    Date date = event.getDateTime();
+    Event event = eventRepository.findbyId(eventId);
+    Date date = event.getDatetime();
     Date curr = new Date();
 
     Calendar calendar = Calendar.getInstance();
@@ -68,22 +68,23 @@ public class BookingService {
   }
 
   public boolean cancelBooking(String bookingId) throws Exception {
-    Event event = eventRepository.findbyId(booking.getEventId());
-    Date date = event.getDateTime();
-    Date curr = new Date();
-
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    calendar.add(Calendar.HOUR_OF_DAY, -48);
-    Date dateAvail = calendar.getTime();
-
-    if (curr.after(dateAvail)) { //do event date check
-        return false;
-    }
 
     List<Booking> bookings = bookingRepository.findAll();
     for (Booking booking : bookings){
         if (booking.getBookingId().equals(bookingId)){
+            Event event = eventRepository.findbyId(booking.getEventId());
+            Date date = event.getDatetime();
+            Date curr = new Date();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.HOUR_OF_DAY, -48);
+            Date dateAvail = calendar.getTime();
+
+            if (curr.after(dateAvail)) { //do event date check
+                return false;
+            }
+
             booking.setStatus("cancelled");
             bookingRepository.save(booking);
             // update ticket validity

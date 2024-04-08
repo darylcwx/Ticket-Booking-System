@@ -184,7 +184,7 @@ public class CustomerController {
       if (check){
         Booking booking = bookingService.createBooking(username, eventId, numberOfTickets);
         if (booking != null){
-          customerService.createBookings(username, booking, numberOfTickets);
+          customerService.createBooking(username, booking, numberOfTickets);
           return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
         }else {
           return ResponseEntity.ok("{\"message\": \"Unable to book for event\"}");

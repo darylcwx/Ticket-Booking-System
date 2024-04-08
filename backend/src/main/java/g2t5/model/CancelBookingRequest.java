@@ -14,7 +14,7 @@ public class CancelBookingRequest {
   }
 
   public String getBookingId() {
-    return eventId;
+    return bookingId;
   }
 
   public void setBookingId(String bookingId) {

@@ -1,8 +1,12 @@
 package g2t5.database.entity;
 
 import java.util.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "booking")
 public class Booking {
+    @Id
     private String bookingId;
     private String eventId;
     private String customerId;

@@ -31,7 +31,7 @@ public class CustomerService {
     customer.setRole("customer");
     customer.setCart(new ArrayList<Map<String, Object>>());
     customer.setAccountBalance(1000);
-    customer.setBookings(new List<>());
+    customer.setBookings(new ArrayList<Booking>());
     customerRepository.save(customer);
   }
 
@@ -77,7 +77,7 @@ public class CustomerService {
     if (cart.isEmpty() == false) {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
-          int cartqty = cartItem.get("quantity");
+          int cartqty = (int) cartItem.get("quantity");
           if (qty + cartqty + quantity > guestsAllowed) {
             return false;
           }
@@ -184,7 +184,7 @@ public class CustomerService {
       for (Booking custBook : custBookings) {
         if (booking.getBookingId().equals(custBook.getBookingId())) {
           custBook.setStatus("cancelled");
-          customerRepository.save(custBook);
+          customerRepository.save(customer);
         }
       }
     }
