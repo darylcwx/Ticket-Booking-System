@@ -1,9 +1,11 @@
 package g2t5.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.poi.hpsf.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class EventManagerService {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private TicketingOfficerRepository ticketingOfficerRepository;
@@ -109,4 +114,19 @@ public class EventManagerService {
             throw new Exception("Ticketing officer with ID " + id + " not found");
         }
     }
+
+    public List<String> getEmailsByEventId(String eventId) {
+        ArrayList<String> emailList = new ArrayList<>();
+        try{
+            Event e = eventService.getEventById(eventId);
+            ArrayList<Customer> bookingList = e.getBookingList();
+            for(Customer customer : bookingList){
+                emailList.add(customer.getUsername());
+            }
+            return emailList;
+        } catch(Exception e){
+            return new ArrayList<>();
+        }
+    }
+
 }
