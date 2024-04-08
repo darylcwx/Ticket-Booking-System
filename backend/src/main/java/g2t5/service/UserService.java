@@ -2,6 +2,7 @@ package g2t5.service;
 
 import g2t5.database.entity.*;
 import g2t5.database.repository.UserRepository;
+import g2t5.database.repository.CustomerRepository;
 import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,10 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+  private CustomerRepository customerRepository;
 
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
-  }
-
-  public void saveUser(User user) {
-    userRepository.save(user);
   }
 
   public User getUserByUsername(String username) {
@@ -35,39 +33,37 @@ public class UserService {
   }
 
   public ResponseEntity<Object> authenticateUser(
-    String username,
-    String password
-  ) {
+      String username,
+      String password) {
     try {
       User user = getUserByUsername(username);
       String hashedPassword = user.getPassword();
       try {
         String hashedInputPassword = DigestUtils.sha256Hex(username + password);
 
-        //TODO - remove
+        // TODO - remove
         System.out.println(hashedInputPassword);
         System.out.println(hashedPassword);
 
         if (hashedInputPassword.equals(hashedPassword)) {
           return ResponseEntity.ok(
-            "{\"message\": \"Login successful\", \"status\": 200}"
-          );
+              "{\"message\": \"Login successful\", \"status\": 200}");
         } else {
           return ResponseEntity
-            .badRequest()
-            .body("{\"message\": \"Password wrong\", \"status\": 400}");
+              .badRequest()
+              .body("{\"message\": \"Email or password does not match our records\", \"status\": 400}");
         }
       } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity
-          .badRequest()
-          .body("{\"message\": \"Password wrong\", \"status\": 400}");
+            .badRequest()
+            .body("{\"message\": \"Email or password does not match our records\", \"status\": 400}");
       }
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity
-        .badRequest()
-        .body("{\"message\": \"User not found\", \"status\": 400}");
+          .badRequest()
+          .body("{\"message\": \"User not found\", \"status\": 400}");
     }
   }
 }

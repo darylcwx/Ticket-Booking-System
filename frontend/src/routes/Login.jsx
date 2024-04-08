@@ -27,6 +27,7 @@ export default function Login() {
             setPasswordError("Password is required");
         }
         const loginUser = async (username, password) => {
+            // POST auth
             try {
                 const response = await fetch(`http://localhost:8080/login`, {
                     method: "POST",
@@ -34,31 +35,41 @@ export default function Login() {
                     body: JSON.stringify({ username, password }),
                 });
                 const data = await response.json();
-                console.log(data);
                 if (response.ok) {
                     localStorage.setItem("username", username);
-                    //TODO: Add check for user role
-                    switch (username) {
-                        case "em":
-                            navigate("/managerDashboard");
-                            break;
-                        case "c":
-                            navigate("/dashboard");
-                            break;
-                        case "to":
-                            navigate("/ticketingOfficerDashboard");
-                            break;
-                        // default:
-                        //     break;
-                    }
-                    // {username == 'em' ? (
-                    //     navigate("/managerDashboard")
-                    // ) : username == 'c' ? (
-                    //     navigate("/dashboard")
-                    // ) : navigate("/ticketingOfficerDashboard")}
                 } else {
                     setUsernameError("Invalid username");
                     setPasswordError("Invalid password");
+                    return;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+            // get user and role
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/user/${username}`,
+                    {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                const data = await response.json();
+                if (!response.ok) {
+                    navigate("/");
+                } else {
+                    console.log(data);
+                    switch (data.role) {
+                        case "event manager":
+                            navigate("/managerDashboard");
+                            break;
+                        case "customer":
+                            navigate("/dashboard");
+                            break;
+                        case "ticketing officer":
+                            navigate("/ticketingOfficerDashboard");
+                            break;
+                    }
                 }
             } catch (e) {
                 console.log(e);
