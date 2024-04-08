@@ -1,7 +1,7 @@
 import emailjs from "@emailjs/browser";
 
 const options = {
-    publicKey: import.meta.env.VITE_EMAILJS_D_PUBLIC_KEY,
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
     blockHeadless: true,
     limitRate: {
         id: "app",

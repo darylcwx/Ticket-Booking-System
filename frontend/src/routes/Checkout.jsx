@@ -24,7 +24,7 @@ export default function Checkout() {
         setTotal(totalAmount);
     }, []);
 
-    const handlePlaceOrder = (e) => {
+    const handlePlaceOrder = async (e) => {
         alert("noice");
         const getUser = async () => {
             const username = localStorage.getItem("username");
@@ -41,13 +41,14 @@ export default function Checkout() {
                     navigate("/");
                 }
                 setUser(data);
-                console.log(data);
             } catch (e) {
                 console.log(e);
             }
         };
-        getUser();
-        //sendEmail(e, "darylchua@hotmail.sg", events);
+        await getUser();
+        checkout.forEach((event) => {
+            sendEmail(e, user, event, "booking");
+        });
     };
     return (
         <div className="bg-main min-h-screen min-w-max w-screen">
