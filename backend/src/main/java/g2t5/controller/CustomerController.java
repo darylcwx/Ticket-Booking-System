@@ -28,15 +28,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(
-  origins = "http://localhost:5173/",
-  methods = {
+@CrossOrigin(origins = "http://localhost:5173/", methods = {
     RequestMethod.GET,
     RequestMethod.POST,
     RequestMethod.PUT,
     RequestMethod.DELETE,
-  }
-)
+})
 public class CustomerController {
 
   private final UserService userService;
@@ -44,31 +41,42 @@ public class CustomerController {
 
   @Autowired
   public CustomerController(
-    UserService userService,
-    CustomerService customerService
-  ) {
+      UserService userService,
+      CustomerService customerService) {
     this.userService = userService;
     this.customerService = customerService;
   }
 
+  @PostMapping("/register")
+  public ResponseEntity<Object> register(@RequestBody LoginRequest request) {
+    String username = request.getUsername();
+    String password = request.getPassword();
+    try {
+      customerService.registerCustomer(username, password);
+      return ResponseEntity.ok("{\"message\": \"Customer registered\", \"status\": 200}");
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body("{\"message\": \"Something went wrong\", \"status\": 400}");
+    }
+  }
+
   @GetMapping("/cart/{username}")
   public ResponseEntity<Object> getCartByUsername(
-    @PathVariable String username
-  ) {
+      @PathVariable String username) {
     try {
       ArrayList<Map<String, Object>> cart = customerService.getCart(username);
       return ResponseEntity.ok(cart);
     } catch (Exception e) {
       return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body("{\"message\": \"User not found\"}");
+          .badRequest()
+          .body("{\"message\": \"User not found\"}");
     }
   }
 
   @PostMapping("/cart/add")
   public ResponseEntity<String> addToCart(
-    @RequestBody AddToCartRequest request
-  ) {
+      @RequestBody AddToCartRequest request) {
     String username = request.getUsername();
     String eventId = request.getEventId();
     int quantity = request.getQuantity();
@@ -78,27 +86,25 @@ public class CustomerController {
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("{\"message\": \"Something went wrong\"}");
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
     }
   }
 
   @PostMapping("/cart/remove")
   public ResponseEntity<String> removeFromCart(
-    @RequestBody RemoveFromCartRequest request
-  ) {
+      @RequestBody RemoveFromCartRequest request) {
     String username = request.getUsername();
     String eventId = request.getEventId();
     try {
       customerService.removeFromCart(username, eventId);
       return ResponseEntity.ok(
-        "{\"message\": \"Removed from cart successfully\"}"
-      );
+          "{\"message\": \"Removed from cart successfully\"}");
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("{\"message\": \"Something went wrong\"}");
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
     }
   }
 
@@ -106,37 +112,36 @@ public class CustomerController {
   public ResponseEntity<Object> getBookings(@PathVariable String username) {
     try {
       ArrayList<Map<String, Object>> bookings = customerService.getBookings(
-        username
-      );
+          username);
       return ResponseEntity.ok(bookings);
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body("{\"message\": \"User not found\"}");
+          .status(HttpStatus.NOT_FOUND)
+          .body("{\"message\": \"User not found\"}");
     }
   }
   // @PostMapping("/booking/create")
   // public ResponseEntity<String> createBooking(
-  //   @RequestBody CreateBookingRequest request
+  // @RequestBody CreateBookingRequest request
   // ) {
-  //   String username = request.getUsername();
-  //   String eventId = request.getEventId();
-  //   int numberOfTickets = request.getNumberOfTickets();
-  //   try {
-  //     customerService.createBooking(username, eventId, numberOfTickets);
-  //     return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
-  //   } catch (Exception e) {
-  //     System.out.println(e.getMessage());
-  //     return ResponseEntity
-  //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-  //       .body("{\"message\": \"Something went wrong\"}");
-  //   }
+  // String username = request.getUsername();
+  // String eventId = request.getEventId();
+  // int numberOfTickets = request.getNumberOfTickets();
+  // try {
+  // customerService.createBooking(username, eventId, numberOfTickets);
+  // return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
+  // } catch (Exception e) {
+  // System.out.println(e.getMessage());
+  // return ResponseEntity
+  // .status(HttpStatus.INTERNAL_SERVER_ERROR)
+  // .body("{\"message\": \"Something went wrong\"}");
+  // }
   // }
 
   // @PostMapping("/booking/cancel")
   // public ResponseEntity<String> cancelBooking(
-  //   @RequestBody CancelBookingRequest request
+  // @RequestBody CancelBookingRequest request
   // ) {
   // }
 }
