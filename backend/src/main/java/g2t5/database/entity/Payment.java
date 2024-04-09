@@ -1,29 +1,24 @@
 package g2t5.database.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.sql.Date;
+
 import org.springframework.data.annotation.Id;
 @Document(collection = "payment")
 public class Payment {
 
     @Id
     private String paymentId;
-    
+    private Date date;
     private Long amount;
-    private String currency;    
-    private String customerId;
+
 
     public Payment() {}
 
-    public Payment(Long amount, String customerId) {
+    public Payment(Long amount, Date date) {
         this.amount = amount;
-        this.currency = "sgd";
-        this.customerId = customerId;
-    }
-
-    public Payment(Long amount) {
-        this.amount = amount;
-        this.currency = "sgd";
-        this.customerId = "onsite";
+        this.date = date;
     }
 
     // Getters and setters
@@ -35,11 +30,15 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getId() {
+        return paymentId;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
