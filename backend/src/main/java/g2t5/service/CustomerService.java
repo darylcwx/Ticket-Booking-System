@@ -143,6 +143,7 @@ public class CustomerService {
     Customer customer = customerRepository.findByUsername(username);
     List<Booking> custBookings = customer.getBookings();
     custBookings.add(booking);
+    customer.setBookings(custBookings);
 
     Event event = eventRepository.findById(booking.getEventId()).get();
     double totalPrice = event.getTicketPrice() * qty;
@@ -157,7 +158,7 @@ public class CustomerService {
     Customer customer = customerRepository.findByUsername(username);
     List<Booking> bookings = customer.getBookings();
     for (Booking booking : bookings) {
-      if (booking.getBookingId() == bookingid) {
+      if (booking.getBookingId().equals(bookingid)) {
         booking.setStatus("cancelled");
         Event event = eventRepository.findById(booking.getEventId()).get();
         double totalPrice = event.getTicketPrice() * booking.getTickets().size();
@@ -165,6 +166,7 @@ public class CustomerService {
         double cancellationFee = event.getCancellationFee() * booking.getTickets().size();
 
         customer.setAccountBalance(balance + totalPrice - cancellationFee);
+        customer.setBookings(bookings);
         customerRepository.save(customer);
         break;
       }
@@ -180,6 +182,7 @@ public class CustomerService {
       for (Booking custBook : custBookings) {
         if (booking.getBookingId().equals(custBook.getBookingId())) {
           custBook.setStatus("cancelled");
+          customer.setBookings(custBookings);
           customerRepository.save(customer);
         }
       }
