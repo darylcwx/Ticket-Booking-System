@@ -12,6 +12,7 @@ public class Booking {
     private String customerId;
     private List<Ticket> tickets;
     private String status;
+    private Date dateCreated;
 
     public String getBookingId() {
         return bookingId;
@@ -53,7 +54,15 @@ public class Booking {
         this.tickets = tickets;
     }
 
+    public Date getDateCreated(){
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated){
+        this.dateCreated = dateCreated;
+    }
+
     public String toString() {
-        return "Booking ID: [" + bookingId + "]" + " Event ID: [" + eventId + "]" + " Tickets: [" + tickets + "]" + " Status: [" + status + "]";
+        return "Booking ID: [" + bookingId + "]" + " Event ID: [" + eventId + "]" + " Tickets: [" + tickets + "]" + " Status: [" + status + "]" + " Date Created: [" + dateCreated + "]";
     }
 }

@@ -69,6 +69,7 @@ public class BookingService {
     booking.setStatus("created");
     booking.setCustomerId(username);
     booking.setTickets(tickets);
+    booking.setDateCreated(new Date());
 
     bookingRepository.save(booking);
 
