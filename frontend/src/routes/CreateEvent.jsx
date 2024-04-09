@@ -97,11 +97,13 @@ export default function CreateEvent() {
             venue: eventVenue,
             description: eventDesc,
             datetime: dayjs(selectedDate).format(),
+            totalTickets: totalTicketNum,
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
             cancellationFee: cancellationFee,
             image: imagePath,
+            status: 'upcoming'
         };
 
         // Create Event

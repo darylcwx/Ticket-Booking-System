@@ -21,6 +21,7 @@ export default function EditEvent() {
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [eventDesc, setEventDesc] = useState();
+    const [ticketsAvailable, setTicketsAvailable] = useState();
     const [totalTicketNum, setTotalTicketNum] = useState();
     const [maxGuestNum, setMaxGuestNum] = useState();
     const [ticketPrice, setTicketPrice] = useState();
@@ -46,7 +47,8 @@ export default function EditEvent() {
                 setEventDesc(data.description);
                 setEventVenue(data.venue);
                 setSelectedDate(dayjs(data.datetime));
-                setTotalTicketNum(data.ticketsAvailable);
+                setTicketsAvailable(data.ticketsAvailable);
+                setTotalTicketNum(data.totalTickets);
                 setMaxGuestNum(data.guestsAllowed);
                 setTicketPrice(data.ticketPrice);
                 setCancellationFee(data.cancellationFee);
@@ -118,11 +120,13 @@ export default function EditEvent() {
             venue: eventVenue,
             description: eventDesc,
             datetime: dayjs(selectedDate).format(),
-            ticketsAvailable: totalTicketNum,
+            ticketsAvailable: ticketsAvailable,
+            totalTickets: totalTicketNum,
             guestsAllowed: maxGuestNum,
             ticketPrice: ticketPrice,
             cancellationFee: cancellationFee,
             image: imagePath,
+            status: 'upcoming'
         };
 
         // Update Event
