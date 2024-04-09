@@ -15,23 +15,20 @@ export default function Ticket() {
     const [alertOpen, setAlertOpen] = useState(false);
 
     if (!ticket) {
-        // Handle case when ticket object is not available
         return <div>No ticket found</div>;
     }
 
     // Extract ticket details
-    const { customerName, customerEmail, ticketId, eventName, venue, datetime, price } = ticket;
+    const { customerEmail, ticketId, eventName, venue, datetime, price } = ticket;
 
     const handleEticketIssue = () => {
-        
         setAlertOpen(true);
-        // You can add logic here to send an email with the e-ticket content
+        // Send an email with the e-ticket content
     };
 
     const handlePrintTicket = () => {
-        // Logic to print ticket
         setAlertOpen(true);
-        // You can add logic here to trigger printing the ticket
+        // Print ticket
     };
 
     const handleCloseAlert = () => {
@@ -52,7 +49,6 @@ export default function Ticket() {
                         <CardContent>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography><strong>Customer Name:</strong> {customerName}</Typography>
                                     <Typography><strong>Customer Email:</strong> {customerEmail}</Typography>
                                     <Typography><strong>Ticket ID:</strong> {ticketId}</Typography>
                                     <Typography><strong>Event Name:</strong> {eventName}</Typography>

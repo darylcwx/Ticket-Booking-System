@@ -8,17 +8,20 @@ import dayjs from "dayjs";
 export default function CreateTicket() {
     DocumentTitle("Create Ticket");
     const navigate = useNavigate();
-    const [name, setName] = useState();
-    const [nameError, setNameError] = useState("");
     const [email, setEmail] = useState();
     const [emailError, setEmailError] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    // const [event, setEvent] = useState({});
+    const [event, setEvent] = useState({});
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
+    const [eventDesc, setEventDesc] = useState();
+    const [ticketsAvailable, setTicketsAvailable] = useState();
+    const [totalTicketNum, setTotalTicketNum] = useState();
+    const [maxGuestNum, setMaxGuestNum] = useState();
     const [ticketPrice, setTicketPrice] = useState();
-    const [ticket, setTicket] = useState(null);
+    const [cancellationFee, setCancellationFee] = useState();
     const [showAlert, setShowAlert] = useState(false);
+    const [showAlert2, setShowAlert2] = useState(false);
 
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
@@ -33,11 +36,16 @@ export default function CreateTicket() {
                 );
                 const data = await response.json();
                 // console.log(data);
-                // setEvent(data);
+                setEvent(data);
                 setEventName(data.name);
+                setEventDesc(data.description);
                 setEventVenue(data.venue);
                 setSelectedDate(dayjs(data.datetime).format('YYYY-MM-DD HH:mm'));
+                setTicketsAvailable(data.ticketsAvailable);
+                setTotalTicketNum(data.totalTickets);
+                setMaxGuestNum(data.guestsAllowed);
                 setTicketPrice(data.ticketPrice);
+                setCancellationFee(data.cancellationFee);
             } catch (e) {
                 console.log(e);
             }
@@ -45,35 +53,35 @@ export default function CreateTicket() {
         fetchEvent(eventId);
     }, []);
 
-    const handleNameChange = e => {
-        setName(e.target.value);
-        if (e.target.value.length < 3) {
-            setNameError("Name must be at least 3 characters long");
-        } else if (e.target.value.length > 20) {
-            setNameError("Name must be less than 20 characters long");
-        } else if (!/^[a-zA-Z ]+$/.test(e.target.value)) {
-            setNameError("Name must contain only letters and spaces");
-        } else {
-            setNameError(false);
-        }
-    };
     const handleEmailChange = e => {
         setEmail(e.target.value);
-        if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/.test(e.target.value)) {
+        if (!e.target.value.trim()) {
+            setEmailError("Email address is required");
+        } else if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(e.target.value)) {
             setEmailError("Invalid email address");
         } else {
             setEmailError(false);
         }
+        if (e.target.value.trim()) {
+            setShowAlert(false);
+        }
     };
 
-    const handleSubmit = async (e) => {
+    const handleCreateTicket = async (e) => {
         e.preventDefault();
-        if (nameError || emailError) {
-            alert("Form is invalid! Please check the fields...");
-        } 
-        // else {
-        //     alert("Form is valid! Submitting the form...");
-        // }
+
+        if (!email || !email.trim()) {
+            setShowAlert(true);
+            return;
+        }
+
+        if (emailError) {
+            setShowAlert(true);
+            return;
+        }
+
+        // Call Edit Event
+        await handleEditEvent(e);
 
         // Construct ticket object
         const ticket = {
@@ -81,7 +89,6 @@ export default function CreateTicket() {
             "venue": eventVenue,
             "datetime": selectedDate,
             "price": ticketPrice,
-            "customerName": name,
             "customerEmail": email,
             "status": "active"
         }
@@ -98,20 +105,66 @@ export default function CreateTicket() {
             if (!response.ok) {
                 throw new Error("Failed to create ticket");
             }
-            // setShowAlert(true);
+
             const createdTicket = await response.json();
             console.log("Ticket created successfully:", createdTicket);
-            setTicket(createdTicket);
+
+            setShowAlert2(true);
+
             setTimeout(() => {
-                // setShowAlert(false);
+                setShowAlert2(false);
                 navigate(
                     `/Ticket/${createdTicket.ticketId}`,
                     { state: { ticket: createdTicket } }
                 );
-            }, 1000);
+            }, 1500);
         } catch (error) {
             console.error("Error creating ticket:", error.message);
         }
+
+    }
+
+    const handleEditEvent = async (e) => {
+        e.preventDefault();
+        const eventId = location.pathname.split("/")[2];
+        const imagePath = eventName.toLowerCase().replace(/[^a-zA-Z0-9]/g, "") + ".png";
+
+        // Construct the event object
+        const event = {
+            id: eventId,
+            name: eventName,
+            venue: eventVenue,
+            description: eventDesc,
+            datetime: dayjs(selectedDate).format(),
+            ticketsAvailable: ticketsAvailable - 1,
+            totalTickets: totalTicketNum,
+            guestsAllowed: maxGuestNum,
+            ticketPrice: ticketPrice,
+            cancellationFee: cancellationFee,
+            image: imagePath,
+            status: 'upcoming'
+        };
+
+        // Update Event
+        try {
+            const response = await fetch("http://localhost:8080/edit-event", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(event),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to edit event");
+            }
+            console.log("Event edited successfully");
+        } catch (error) {
+            console.error("Error editing event:", error.message);
+        }
+    }
+
+    const handleCancel = () => {
+        navigate("/ticketingOfficerDashboard");
     }
 
     return (
@@ -124,28 +177,10 @@ export default function CreateTicket() {
                     </h1>
                 </div>
                 <Container className="bg-gray-50 p-5 mt-[20px] mb-[60px] w-auto">
-                    {/* <form className="w-full" onSubmit={handleSubmit}> */}
-                    <Box component="form" onSubmit={handleSubmit} noValidate>
-
-                        {/* CUSTOMER NAME */}
-                        <div className="flex flex-wrap -mx-3 mb-5">
-                            <div className="w-full px-3">
-                                <TextField
-                                    required
-                                    className="appearance-none block w-full text-gray-700 border ${errorMessage ? 'border-red-500' : 'border-gray-200'} rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    id="name"
-                                    type="text"
-                                    label="Name"
-                                    value={name}
-                                    onChange={handleNameChange}
-                                    error={nameError}
-                                    helperText={nameError}
-                                />
-                            </div>
-                        </div>
+                    <Box component="form" onSubmit={handleCreateTicket} noValidate>
 
                         {/* CUSTOMER EMAIL */}
-                        <div className="flex flex-wrap -mx-3 mb-5">
+                        <div className="flex flex-wrap -mx-3 mb-5 mt-3">
                             <div className="w-full px-3">
                                 <TextField
                                     required
@@ -255,15 +290,29 @@ export default function CreateTicket() {
                             </div>
                         </div>
 
-                        {/* SUBMIT BUTTON */}
-                        <div className="flex justify-end">
+                        {/* SUBMIT AND CANCEL BUTTON */}
+                        <div className="flex justify-end gap-x-2">
+                            <Button variant="contained" onClick={handleCancel} style={{ backgroundColor: 'red', color: 'white' }}>
+                                Cancel
+                            </Button>
                             <Button type="submit" variant="contained">
                                 Create Ticket
                             </Button>
                         </div>
-                        
+
+                        {showAlert && (
+                            <Alert severity="error" className="mt-4">
+                                {emailError ? "Invalid email address." : "Email address is required."}
+                            </Alert>
+                        )}
+
+                        {showAlert2 && (
+                            <Alert severity="success" className="mt-4">
+                                Ticket created successfully!
+                            </Alert>
+                        )}
+
                     </Box>
-                    {/* </form> */}
                 </Container>
             </Container>
         </div>
