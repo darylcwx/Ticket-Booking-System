@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
-import { InputLabel, TextField, Box, Button, Container, Chip, Alert } from "@mui/material";
+import { InputLabel, TextField, Box, Button, Container, Alert } from "@mui/material";
 import dayjs from "dayjs";
 import sendEmail from "../utils/sendEmail";
 
@@ -14,12 +14,11 @@ export default function CreateTicket() {
     const [email, setEmail] = useState();
     const [emailError, setEmailError] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [event, setEvent] = useState({});
+    // const [event, setEvent] = useState({});
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [ticketPrice, setTicketPrice] = useState();
     const [showAlert, setShowAlert] = useState(false);
-    const [users, setUsers] = useState({});
 
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
@@ -33,11 +32,11 @@ export default function CreateTicket() {
                     }
                 );
                 const data = await response.json();
-                console.log(data);
-                setEvent(data);
+                // console.log(data);
+                // setEvent(data);
                 setEventName(data.name);
                 setEventVenue(data.venue);
-                setSelectedDate(dayjs(data.datetime));
+                setSelectedDate(dayjs(data.datetime).format('YYYY-MM-DD HH:mm'));
                 setTicketPrice(data.ticketPrice);
             } catch (e) {
                 console.log(e);
@@ -71,8 +70,42 @@ export default function CreateTicket() {
         e.preventDefault();
         if (nameError || emailError) {
             alert("Form is invalid! Please check the fields...");
-        } else {
-            alert("Form is valid! Submitting the form...");
+        } 
+        // else {
+        //     alert("Form is valid! Submitting the form...");
+        // }
+
+        // Construct ticket object
+        const ticket = {
+            "eventName": eventName,
+            "venue": eventVenue,
+            "datetime": selectedDate,
+            "price": ticketPrice,
+            "customerName": name,
+            "customerEmail": email,
+            "status": "active"
+        }
+
+        // Create Ticket
+        try {
+            const response = await fetch("http://localhost:8080/create-ticket", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(ticket),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to create ticket");
+            }
+            console.log("Event created successfully");
+            // setShowAlert(true);
+            setTimeout(() => {
+                // setShowAlert(false);
+                navigate(`/ticketingOfficerDashboard`);
+            }, 2000);
+        } catch (error) {
+            console.error("Error creating ticket:", error.message);
         }
     }
 
@@ -182,7 +215,7 @@ export default function CreateTicket() {
                                     className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="eventDatetime"
                                     type="text"
-                                    value={dayjs(event.datetime).format('YYYY-MM-DD HH:mm')}
+                                    value={selectedDate}
                                     sx={{
                                         "& .MuiInputBase-input.Mui-disabled": {
                                             WebkitTextFillColor: "black",
