@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 export default function EventCard({ event, page }) {
     const navigate = useNavigate();
     // const storedImage = localStorage.getItem(${event.image});
+    const isTicketCreationDisabled = event.ticketsAvailable === 0;
+
     return (
         <div
             key={event.id}
@@ -109,6 +111,7 @@ export default function EventCard({ event, page }) {
                                 onClick={() => {
                                     navigate(`/createTicket/${event.id}`);
                                 }}
+                                disabled={isTicketCreationDisabled}
                             >
                                 Create Ticket
                             </Button>
