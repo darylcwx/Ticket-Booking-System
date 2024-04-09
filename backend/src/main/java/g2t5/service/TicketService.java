@@ -31,6 +31,10 @@ public class TicketService {
       return ticketRepository.findById(ticket.getTicketId()).get();
    }
 
+   public Ticket getTicket(String id) {
+    return ticketRepository.findById(id).get();
+   }
+   
    public void deactivateTicket(Ticket ticket) throws Exception {
       Ticket ticket_new = ticketRepository.findById(ticket.getTicketId()).get();
       if (ticket_new != null) {
