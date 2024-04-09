@@ -110,7 +110,7 @@ public class CustomerController {
   public ResponseEntity<Object> getCartByUsername(
       @PathVariable String username) {
     try {
-      ArrayList<Map<String, Object>> cart = customerService.getCart(username);
+      List<Map<String, Object>> cart = customerService.getCart(username);
       return ResponseEntity.ok(cart);
     } catch (Exception e) {
       return ResponseEntity
