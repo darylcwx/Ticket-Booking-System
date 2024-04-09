@@ -121,7 +121,7 @@ public class ReportService {
                     String email = customer.getUsername();
                     customerEmail = customerEmail + email + ",";
                 }
-                customerEmail = customerEmail.substring(0,customerEmail.length()-1);
+                customerEmail = customerEmail.substring(0, customerEmail.length() - 1);
             } catch (Exception e) {
 
             }
@@ -140,12 +140,33 @@ public class ReportService {
 
             // Create header row
             Row headerRow = sheet.createRow(0);
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setBorderBottom(BorderStyle.THIN);
+            headerCellStyle.setBorderTop(BorderStyle.THIN);
+            headerCellStyle.setBorderLeft(BorderStyle.THIN);
+            headerCellStyle.setBorderRight(BorderStyle.THIN);
+
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerCellStyle.setFont(headerFont);
+
             headerRow.createCell(0).setCellValue("Event Name");
+            headerRow.getCell(0).setCellStyle(headerCellStyle);
+
             headerRow.createCell(1).setCellValue("Date");
+            headerRow.getCell(1).setCellStyle(headerCellStyle);
+
             headerRow.createCell(2).setCellValue("Tickets Sold");
+            headerRow.getCell(2).setCellStyle(headerCellStyle);
+
             headerRow.createCell(3).setCellValue("Revenue");
-            headerRow.createCell(3).setCellValue("Tickets cancelled");
-            headerRow.createCell(4).setCellValue("Customer emails");
+            headerRow.getCell(3).setCellStyle(headerCellStyle);
+
+            headerRow.createCell(4).setCellValue("Tickets Cancelled");
+            headerRow.getCell(4).setCellStyle(headerCellStyle);
+
+            headerRow.createCell(5).setCellValue("Customer Emails");
+            headerRow.getCell(5).setCellStyle(headerCellStyle);
 
             int rowNum = 1;
             List<Event> events = eventRepository.findAll();
@@ -166,8 +187,13 @@ public class ReportService {
                 row.createCell(1).setCellValue(formattedDate);
                 row.createCell(2).setCellValue(ticketsSales.get(eventName));
                 row.createCell(3).setCellValue(revenue.get(eventName));
-                row.createCell(3).setCellValue(ticketsCancelled.get(eventName));
-                row.createCell(4).setCellValue(customerEmails.get(eventName));
+                row.createCell(4).setCellValue(ticketsCancelled.get(eventName));
+                row.createCell(5).setCellValue(customerEmails.get(eventName));
+            }
+
+            // Autosize columns
+            for (int i = 0; i < headerRow.getLastCellNum(); i++) {
+                sheet.autoSizeColumn(i);
             }
 
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
