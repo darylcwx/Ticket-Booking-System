@@ -58,6 +58,17 @@ public class EventManagerController {
         }
     }
 
+    @PostMapping("/add-concert")
+    public ResponseEntity<String> addConcert(@RequestBody Concert concert) {
+        try {
+            eventManagerService.addEvent(concert);
+            return ResponseEntity.ok("concert added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error adding concert: " + e.getMessage());
+        }
+    }
+
     @PutMapping("/edit-event")
     public ResponseEntity<String> editEvent(@RequestBody Event event) {
         try {
