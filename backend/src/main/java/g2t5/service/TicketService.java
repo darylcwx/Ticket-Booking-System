@@ -17,8 +17,10 @@ public class TicketService {
       this.ticketRepository = ticketRepository;
     }
 
-    public void createTicket(Ticket ticket) {
+    public Ticket createTicket(Ticket ticket) {
       ticketRepository.save(ticket);
+
+      return getTicket(ticket);
     }
 
     public List<Ticket> getAllTicket() {

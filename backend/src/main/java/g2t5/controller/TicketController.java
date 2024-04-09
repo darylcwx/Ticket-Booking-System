@@ -45,8 +45,8 @@ public class TicketController {
     public ResponseEntity<String> createTicket(@RequestBody Ticket ticket) {
         //return ticketService.createTicket(ticket);
         try {
-            ticketService.createTicket(ticket);
-            return ResponseEntity.ok(ticket.getTicketId());
+            
+            return ResponseEntity.ok(ticketService.createTicket(ticket).getTicketId());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating ticket" + e.getMessage());
