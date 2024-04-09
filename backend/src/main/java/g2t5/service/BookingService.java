@@ -72,6 +72,9 @@ public class BookingService {
 
     bookingRepository.save(booking);
 
+    event.setTicketsAvailable(event.getTicketsAvailable() - qty);
+    eventRepository.save(event);
+
     return booking;
   }
 
@@ -97,6 +100,10 @@ public class BookingService {
     }
     
     bookingRepository.save(booking);
+
+    event.setTicketsAvailable(event.getTicketsAvailable() + tickets.size());
+    eventRepository.save(event);
+
     return true;
   }
 
