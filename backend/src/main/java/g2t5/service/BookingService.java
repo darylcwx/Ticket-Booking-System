@@ -12,7 +12,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.bson.types.ObjectId;
 
 @Service
 public class BookingService {
@@ -37,7 +36,7 @@ public class BookingService {
   }
 
   public Booking createBooking(String username, String eventId, int qty) throws Exception {
-    Event event = eventRepository.findById(new ObjectId(eventId)).get();
+    Event event = eventRepository.findById(eventId).get();
     Date date = event.getDatetime();
     Date curr = new Date();
 
@@ -70,8 +69,8 @@ public class BookingService {
   }
 
   public boolean cancelBooking(String bookingId) throws Exception {
-    Booking booking = bookingRepository.findById(new ObjectId(bookingId)).get();
-    Event event = eventRepository.findById(new ObjectId(booking.getEventId())).get();
+    Booking booking = bookingRepository.findById(bookingId).get();
+    Event event = eventRepository.findById(booking.getEventId()).get();
     Date date = event.getDatetime();
     Date curr = new Date();
 
@@ -96,7 +95,7 @@ public class BookingService {
 
     public void cancelEventBookings(List<Booking> bookings) throws Exception {
         for (Booking booking : bookings) {
-            Booking curr = bookingRepository.findById(new ObjectId(booking.getBookingId())).get();
+            Booking curr = bookingRepository.findById(booking.getBookingId()).get();
             curr.setStatus("cancelled");
 
             List<Ticket> tickets = curr.getTickets();

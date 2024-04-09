@@ -4,11 +4,9 @@ import java.util.*;
 import g2t5.database.entity.Booking;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import org.bson.types.ObjectId;
 
 @Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
     List<Booking> findAll();
-    Optional<Booking> findById(ObjectId id);
 }
 
