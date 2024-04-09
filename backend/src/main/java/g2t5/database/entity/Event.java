@@ -18,7 +18,6 @@ public class Event {
   private int ticketsAvailable;
   private int ticketsSold;
   private String status;
-  private ArrayList<Customer> bookingList;
   private double cancellationFee;
   private int guestsAllowed;
   private String image;
@@ -74,14 +73,6 @@ public class Event {
 
   public void setStatus(String status) {
     this.status = status;
-  }
-
-  public ArrayList<Customer> getBookingList() {
-    return bookingList;
-  }
-
-  public void setBookingList(ArrayList<Customer> bookingList) {
-    this.bookingList = bookingList;
   }
 
   public double getCancellationFee() {

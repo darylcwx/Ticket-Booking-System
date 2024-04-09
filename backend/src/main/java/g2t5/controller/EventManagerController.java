@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -143,13 +144,17 @@ public class EventManagerController {
         }
     }
 
-    @GetMapping("/get-users-by-event-id/{eventId}")
-    public ResponseEntity<List<User>> getUsersByEventId(@PathVariable("eventId") String eventId) {
-        List<User> userList = eventManagerService.getUsersByEventId(eventId);
-        return userList == null
-                ? ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(Collections.emptyList())
-                : ResponseEntity.ok(userList);
+    @GetMapping("/get-customers-email-by-event-id/{eventId}")
+    public ResponseEntity<List<String>> getCustomersByEventId(@PathVariable("eventId") String eventId) {
+        try{
+            ArrayList<String> customerEmails = new ArrayList<>();
+            List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
+            for(Customer customer : userList){
+                customerEmails.add(customer.getUsername());
+            }
+            return ResponseEntity.ok(customerEmails);
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
     }
 }

@@ -22,10 +22,16 @@ public class EventManagerService {
     private EventRepository eventRepository;
 
     @Autowired
+    private BookingService bookingService;
+
+    @Autowired
     private ReportService reportService;
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private TicketingOfficerRepository ticketingOfficerRepository;
@@ -115,17 +121,26 @@ public class EventManagerService {
         }
     }
 
-    public List<User> getUsersByEventId(String eventId) {
-        ArrayList<User> userList = new ArrayList<>();
-        try{
-            Event e = eventService.getEventById(eventId);
-            ArrayList<Customer> bookingList = e.getBookingList();
-            for(Customer customer : bookingList){
-                userList.add(customer);
+    public List<Customer> getCustomersByEventId(String eventId) throws Exception {
+        ArrayList<Customer> customerList = new ArrayList<>();
+        List<Booking> bookingList = bookingService.getByEventId(eventId);
+        try {
+            for (Booking booking : bookingList) {
+                String customerId = booking.getCustomerId();
+                System.out.println(customerId);
+                Optional<Customer> customerOptional = customerRepository.findById(customerId);
+                System.out.println(customerOptional);
+                if (customerOptional.isPresent()) {
+                    Customer customer = customerOptional.get();
+                    System.out.println(customer);
+                    customerList.add(customer);
+                } else {
+                    throw new Exception("Customer with id " + customerId + " does not exist");
+                }
             }
-            return userList;
-        } catch(Exception e){
-            return new ArrayList<>();
+            return customerList;
+        } catch (Exception e) {
+            throw new Exception("Error obtaining customer", e);
         }
     }
 
