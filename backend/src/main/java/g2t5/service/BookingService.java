@@ -63,8 +63,7 @@ public class BookingService {
     }
 
     Booking booking = new Booking();
-    // List<Tickets> tickets = ticketService.createTickets(); // need to create tickets
-    List<Ticket> tickets = new ArrayList<>(); // temporary placeholder
+    List<Ticket> tickets = ticketService.createTickets(eventId, username, qty);
 
     booking.setEventId(eventId);
     booking.setStatus("created");
