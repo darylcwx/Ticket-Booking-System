@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
 import DocumentTitle from "../components/DocumentTitle";
-import Navbar from "../components/Navbar";
-
+// import Navbar from "../components/Navbar";
 import { Typography, Card, CardContent, Grid, Container, Button, Snackbar, Alert } from '@mui/material';
-
+import jsPDF from 'jspdf';
 import sendEmail from "../utils/sendEmail";
 
 export default function Ticket() {
@@ -23,21 +21,50 @@ export default function Ticket() {
 
     const handleEticketIssue = () => {
         setAlertOpen(true);
-        // Send an email with the e-ticket content
+        generatePDF();
+        // Send email
     };
 
     const handlePrintTicket = () => {
         setAlertOpen(true);
-        // Print ticket
+        // 'Print' ticket
     };
 
     const handleCloseAlert = () => {
         setAlertOpen(false);
     };
 
+    const generatePDF = () => {
+        const doc = new jsPDF({
+            orientation: 'landscape'
+        });
+
+        // Calculate middle position
+        const middleX = doc.internal.pageSize.getWidth() / 2;
+        const middleY = doc.internal.pageSize.getHeight() / 2;
+
+        // Title
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(20);
+        const titleText = "E-Ticket";
+        const titleWidth = doc.getStringUnitWidth(titleText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+        doc.text(titleText, middleX - titleWidth / 2, 10, { align: 'center' });
+
+        // Ticket details
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        doc.text(`Customer Email: ${customerEmail}`, middleX, middleY);
+        doc.text(`Ticket ID: ${ticketId}`, middleX, middleY + 10);
+        doc.text(`Event Name: ${eventName}`, middleX, middleY + 20);
+        doc.text(`Event Venue: ${venue}`, middleX, middleY + 30);
+        doc.text(`Date & Time: ${datetime}`, middleX, middleY + 40);
+        doc.text(`Price($): ${price}`, middleX, middleY + 50);
+
+        doc.save('e-ticket.pdf');
+    };
+
     return(
         <div className="bg-main w-screen h-screen">
-            <Navbar />
             <Container className="pt-[65px]">
                 <div className="flex items-end gap-x-3">
                     <h1 className="text-white text-3xl mt-[40px]">
@@ -45,7 +72,7 @@ export default function Ticket() {
                     </h1>
                 </div>
                 <Container className="bg-gray-50 p-5 mt-[20px] mb-[60px] w-auto">
-                    <Card>
+                    <Card id="ticket-card">
                         <CardContent>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
