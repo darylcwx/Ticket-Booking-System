@@ -1,9 +1,12 @@
 package g2t5.controller;
 
-import g2t5.database.entity.*;
+import g2t5.database.entity.Customer;
+import g2t5.database.entity.Booking;
+import g2t5.database.entity.User;
+import g2t5.database.entity.Ticket;
 import g2t5.model.AddToCartRequest;
 import g2t5.model.CreateBookingRequest;
-// import g2t5.model.CancelBookingRequest;
+import g2t5.model.CancelBookingRequest;
 import g2t5.model.LoginRequest;
 import g2t5.model.ChangePasswordRequest;
 import g2t5.model.RemoveFromCartRequest;
@@ -11,10 +14,9 @@ import g2t5.service.CustomerService;
 import g2t5.service.EventManagerService;
 import g2t5.service.EventService;
 import g2t5.service.UserService;
+import g2t5.service.BookingService;
+import g2t5.service.TicketService;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,13 +41,19 @@ public class CustomerController {
 
   private final UserService userService;
   private final CustomerService customerService;
+  private final BookingService bookingService;
+  private final TicketService ticketService;
 
   @Autowired
   public CustomerController(
       UserService userService,
-      CustomerService customerService) {
+      CustomerService customerService,
+      BookingService bookingService,
+      TicketService ticketService) {
     this.userService = userService;
     this.customerService = customerService;
+    this.bookingService = bookingService;
+    this.ticketService = ticketService;
   }
 
   @PostMapping("/register")
@@ -118,8 +126,13 @@ public class CustomerController {
     String eventId = request.getEventId();
     int quantity = request.getQuantity();
     try {
-      customerService.addToCart(username, eventId, quantity);
-      return ResponseEntity.ok("{\"message\": \"Added to cart successfully\"}");
+      boolean success = customerService.addToCart(username, eventId, quantity);
+      if (success) {
+        return ResponseEntity.ok("{\"message\": \"Added to cart successfully\"}");
+      }else {
+        return ResponseEntity.ok("{\"message\": \"Unable to add to cart\"}");
+      }
+      
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
@@ -148,7 +161,7 @@ public class CustomerController {
   @PostMapping("/bookings/{username}")
   public ResponseEntity<Object> getBookings(@PathVariable String username) {
     try {
-      ArrayList<Map<String, Object>> bookings = customerService.getBookings(
+      List<Booking> bookings = customerService.getBookings(
           username);
       return ResponseEntity.ok(bookings);
     } catch (Exception e) {
@@ -158,27 +171,58 @@ public class CustomerController {
           .body("{\"message\": \"User not found\"}");
     }
   }
-  // @PostMapping("/booking/create")
-  // public ResponseEntity<String> createBooking(
-  // @RequestBody CreateBookingRequest request
-  // ) {
-  // String username = request.getUsername();
-  // String eventId = request.getEventId();
-  // int numberOfTickets = request.getNumberOfTickets();
-  // try {
-  // customerService.createBooking(username, eventId, numberOfTickets);
-  // return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
-  // } catch (Exception e) {
-  // System.out.println(e.getMessage());
-  // return ResponseEntity
-  // .status(HttpStatus.INTERNAL_SERVER_ERROR)
-  // .body("{\"message\": \"Something went wrong\"}");
-  // }
-  // }
 
-  // @PostMapping("/booking/cancel")
-  // public ResponseEntity<String> cancelBooking(
-  // @RequestBody CancelBookingRequest request
-  // ) {
-  // }
+  @PostMapping("/booking/create")
+  public ResponseEntity<String> createBooking(@RequestBody CreateBookingRequest request) {
+    String username = request.getUsername();
+    String eventId = request.getEventId();
+    int numberOfTickets = request.getNumberOfTickets();
+
+    try {
+      boolean check = customerService.checkBalance(username, eventId, numberOfTickets);
+
+      if (check){
+        Booking booking = bookingService.createBooking(username, eventId, numberOfTickets);
+        if (booking != null){
+          customerService.createBooking(username, booking, numberOfTickets);
+          return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
+        }else {
+          return ResponseEntity.ok("{\"message\": \"Unable to book for event\"}");
+        }
+
+      }else {
+        return ResponseEntity.ok("{\"message\": \"Insufficient balance\"}");
+      }
+      
+
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .body("{\"message\": \"Something went wrong\"}");
+    }
+  }
+
+  @PostMapping("/booking/cancel")
+  public ResponseEntity<String> cancelBooking(@RequestBody CancelBookingRequest request) {
+    String username = request.getUsername();
+    String bookingId = request.getBookingId();
+
+    try {
+      boolean check = bookingService.cancelBooking(bookingId);
+      if (check) {
+        customerService.cancelAndRefundBooking(username, bookingId);
+        return ResponseEntity.ok("{\"message\": \"Cancelled booking successfully\"}");
+      }else {
+        return ResponseEntity.ok("{\"message\": \"Unable to cancel booking\"}");
+      }
+      
+
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .body("{\"message\": \"Something went wrong\"}");
+    }
+  }
 }
