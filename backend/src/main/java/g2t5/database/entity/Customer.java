@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 public class Customer extends User {
 
-  private ArrayList<Map<String, Object>> cart;
+  private List<Map<String, Object>> cart; 
   private double accountBalance;
   private List<Booking> bookings; 
 
@@ -18,11 +18,11 @@ public class Customer extends User {
     this.accountBalance = accountBalance;
   }
 
-  public ArrayList<Map<String, Object>> getCart() {
+  public List<Map<String, Object>> getCart() {
     return cart;
   }
 
-  public void setCart(ArrayList<Map<String, Object>> cart) {
+  public void setCart(List<Map<String, Object>> cart) {
     this.cart = cart;
   }
 

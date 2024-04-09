@@ -16,7 +16,7 @@ public class CustomerService {
   @Autowired
   private final CustomerRepository customerRepository;
   private final EventRepository eventRepository;
-  
+
   @Autowired
   public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository) {
     this.customerRepository = customerRepository;
@@ -44,25 +44,29 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
-  public ArrayList<Map<String, Object>> getCart(String username)
-      throws Exception {
+  public List<Map<String, Object>> getCart(String username) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
+
     if (customer == null) {
       throw new Exception("User not found");
     }
-    ArrayList<Map<String, Object>> cart = customer.getCart();
+
+    List<Map<String, Object>> cart = customer.getCart();
     return cart;
   }
 
   public boolean addToCart(String username, String eventId, int quantity) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    ArrayList<Map<String, Object>> cart = customer.getCart();
+    List<Map<String, Object>> cart = customer.getCart();
     List<Booking> bookings = customer.getBookings();
+
     Event event = eventRepository.findById(eventId).get();
+    int tixAvail = event.getTicketsAvailable();
     int guestsAllowed = event.getGuestsAllowed();
+
     int qty = 0;
 
-    if (quantity > guestsAllowed) {
+    if (quantity > tixAvail || quantity > guestsAllowed) {
       return false;
     }
 
@@ -104,7 +108,7 @@ public class CustomerService {
 
   public void removeFromCart(String username, String eventId) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    ArrayList<Map<String, Object>> cart = customer.getCart();
+    List<Map<String, Object>> cart = customer.getCart();
     if (cart.size() != 0) {
       for (Map<String, Object> cartItem : cart) {
         if (cartItem.get("id").equals(eventId)) {
@@ -154,6 +158,14 @@ public class CustomerService {
     double totalPrice = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
     customer.setAccountBalance(balance - totalPrice);
+
+    List<Map<String, Object>> cart = customer.getCart();
+    for (Map<String, Object> item : cart){
+      if (item.get("id").equals(booking.getEventId())){
+        cart.remove(item);
+        break;
+      }
+    }
 
     customerRepository.save(customer);
 
