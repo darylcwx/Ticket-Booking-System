@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useLocation } from "react-router-dom";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
 import QuantitySelector from "../components/QuantitySelector";
@@ -15,6 +15,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function Event(props) {
+    const navigate = useNavigate();
     const [event, setEvent] = useState({});
     const [quantity, setQuantity] = useState(0);
     const [quantityMax, setQuantityMax] = useState(false);
@@ -128,6 +129,17 @@ export default function Event(props) {
                                         message={notification}
                                     />
                                 )}
+                            </div>
+                        ) : page === "toDashboard" ? (
+                            <div className="flex justify-end">
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        navigate(`/createTicket/${event.id}`);
+                                    }}
+                                >
+                                    Create Ticket
+                                </Button>
                             </div>
                         ) : (
                             <></>
