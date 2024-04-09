@@ -24,17 +24,14 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(String eventName, String venue, String datetime, double price, String customerName, String customerEmail, String status) {
+    public Ticket(String eventName, String venue, String datetime, double price, String customerEmail, String status) {
         this.eventName = eventName;
         this.venue = venue;
         this.datetime = datetime;
         this.price = price;
-        this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.status = status;
     }
-
-
 
     public String getTicketId() {
         return ticketId;
@@ -77,14 +74,6 @@ public class Ticket {
         this.price = price;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
     public String getCustomerEmail() {
         return customerEmail;
     }
@@ -100,7 +89,5 @@ public class Ticket {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
     
 }
