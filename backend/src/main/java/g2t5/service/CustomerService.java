@@ -8,7 +8,6 @@ import g2t5.database.repository.EventRepository;
 import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +16,11 @@ public class CustomerService {
   @Autowired
   private CustomerRepository customerRepository;
   private EventRepository eventRepository;
+
+  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository) {
+    this.customerRepository = customerRepository;
+    this.eventRepository = eventRepository;
+  }
 
   public Customer getCustomerByUsername(String username) {
     return customerRepository.findByUsername(username);
