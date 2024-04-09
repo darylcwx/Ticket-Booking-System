@@ -4,7 +4,6 @@ import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
 import { InputLabel, TextField, Box, Button, Container, Alert } from "@mui/material";
 import dayjs from "dayjs";
-import sendEmail from "../utils/sendEmail";
 
 export default function CreateTicket() {
     DocumentTitle("Create Ticket");

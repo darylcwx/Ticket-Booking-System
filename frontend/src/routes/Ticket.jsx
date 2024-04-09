@@ -4,12 +4,15 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
 
-import { Typography, Card, CardContent, Grid, Container } from '@mui/material';
+import { Typography, Card, CardContent, Grid, Container, Button, Snackbar, Alert } from '@mui/material';
+
+import sendEmail from "../utils/sendEmail";
 
 export default function Ticket() {
-    DocumentTitle("Ticket");
+    DocumentTitle("Ticket Details");
     const location = useLocation();
     const { ticket } = location.state || {};
+    const [alertOpen, setAlertOpen] = useState(false);
 
     if (!ticket) {
         // Handle case when ticket object is not available
@@ -17,7 +20,23 @@ export default function Ticket() {
     }
 
     // Extract ticket details
-    const { customerName, customerEmail, ticketId, eventName, venue, datetime, price, status } = ticket;
+    const { customerName, customerEmail, ticketId, eventName, venue, datetime, price } = ticket;
+
+    const handleEticketIssue = () => {
+        
+        setAlertOpen(true);
+        // You can add logic here to send an email with the e-ticket content
+    };
+
+    const handlePrintTicket = () => {
+        // Logic to print ticket
+        setAlertOpen(true);
+        // You can add logic here to trigger printing the ticket
+    };
+
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
+    };
 
     return(
         <div className="bg-main w-screen h-screen">
@@ -47,8 +66,22 @@ export default function Ticket() {
                             </Grid>
                         </CardContent>
                     </Card>
+                    <Grid container spacing={2} justifyContent="flex-end" sx={{ marginTop: '20px' }}>
+                        <Grid item>
+                            <Button variant="contained" onClick={handleEticketIssue}>Issue e-ticket</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" onClick={handlePrintTicket}>Print ticket</Button>
+                        </Grid>
+                    </Grid>
                 </Container>
             </Container>
+            <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity="success">
+                    {/* Alert message */}
+                    Ticket action completed successfully.
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
