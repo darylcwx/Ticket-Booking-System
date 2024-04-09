@@ -21,7 +21,7 @@ public class BookingService {
   private final CustomerRepository customerRepository;
   private final EventRepository eventRepository;
   private final TicketService ticketService;
-  
+
   @Autowired
   public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, EventRepository eventRepository, TicketService ticketService){
     this.bookingRepository = bookingRepository;
@@ -56,7 +56,7 @@ public class BookingService {
     Calendar calendar2 = Calendar.getInstance();
     calendar2.setTime(date);
     calendar2.add(Calendar.HOUR_OF_DAY, -24);
-    Date dateAvail2 = calendar.getTime();
+    Date dateAvail2 = calendar2.getTime();
 
     if (dateAvail.after(curr) || curr.after(dateAvail2)) { 
         return null;
