@@ -112,7 +112,7 @@ export default function EditEvent() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const eventId = location.pathname.split("/")[2];
-        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".png";
+        const imagePath = eventName.toLowerCase().replace(/[^a-zA-Z0-9]/g, "") + ".png";
         // Construct the event object
         const event = {
             id: eventId,
