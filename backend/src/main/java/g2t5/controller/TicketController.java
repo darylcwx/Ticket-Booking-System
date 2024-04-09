@@ -42,14 +42,14 @@ public class TicketController {
     }
 
     @PostMapping("/create-ticket")
-    public ResponseEntity<String> createTicket(@RequestBody Ticket ticket) {
+    public ResponseEntity<?> createTicket(@RequestBody Ticket ticket) {
         //return ticketService.createTicket(ticket);
         try {
             
-            return ResponseEntity.ok(ticketService.createTicket(ticket).getTicketId());
+            return ResponseEntity.ok(ticketService.createTicket(ticket));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating ticket" + e.getMessage());
+                    .body(ticket + e.getMessage());
         }
         
     }
