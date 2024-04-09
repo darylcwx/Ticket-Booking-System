@@ -34,6 +34,9 @@ public class EventManagerService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private CustomerService customerService;
+
+    @Autowired
     private TicketingOfficerRepository ticketingOfficerRepository;
 
     public void addEvent(Event event) {
@@ -67,11 +70,19 @@ public class EventManagerService {
 
         Optional<Event> optionalEvent = eventRepository.findById(cancelEvent.getId());
         if (optionalEvent.isPresent()) {
+            //set cancelled stauts for Event
             Event event = optionalEvent.get();
-
             event.setStatus("cancelled");
-
             eventRepository.save(event);
+
+            //set cancelled status for Booking
+            String eventId = event.getId();
+            List<Booking> bookingList = bookingService.getByEventId(eventId);
+            bookingService.cancelEventBookings(bookingList);
+
+            //Refund
+            customerService.refundEventBookings(bookingList);
+
         } else {
             throw new Exception("No event found");
         }
