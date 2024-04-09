@@ -130,7 +130,7 @@ public class CustomerController {
       if (success) {
         return ResponseEntity.ok("{\"message\": \"Added to cart successfully\"}");
       }else {
-        return ResponseEntity.ok("{\"message\": \"Unable to add to cart\"}");
+        return ResponseEntity.ok("{\"message\": \"Maximum quantity reached\"}");
       }
       
     } catch (Exception e) {

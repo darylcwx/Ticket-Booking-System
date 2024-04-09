@@ -18,6 +18,7 @@ export default function CreateTicket() {
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [ticketPrice, setTicketPrice] = useState();
+    const [ticket, setTicket] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
@@ -98,12 +99,17 @@ export default function CreateTicket() {
             if (!response.ok) {
                 throw new Error("Failed to create ticket");
             }
-            console.log("Event created successfully");
             // setShowAlert(true);
+            const createdTicket = await response.json();
+            console.log("Ticket created successfully:", createdTicket);
+            setTicket(createdTicket);
             setTimeout(() => {
                 // setShowAlert(false);
-                navigate(`/ticketingOfficerDashboard`);
-            }, 2000);
+                navigate(
+                    `/Ticket/${createdTicket.ticketId}`,
+                    { state: { ticket: createdTicket } }
+                );
+            }, 1000);
         } catch (error) {
             console.error("Error creating ticket:", error.message);
         }

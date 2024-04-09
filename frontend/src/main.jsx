@@ -15,6 +15,7 @@ import Profile from "./routes/Profile";
 import Cart from "./routes/Cart";
 import Checkout from "./routes/Checkout";
 import CreateTicket from "./routes/CreateTicket.jsx";
+import Ticket from "./routes/Ticket.jsx";
 import VerifyTicket from "./routes/VerifyTicket";
 import App from "./App.jsx";
 import initEmailJS from "./utils/initEmailJS";
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
     },
     { path: "/checkout", element: <Checkout /> },
     { path: "/createTicket/:id", element: <CreateTicket /> },
+    { path: "/Ticket/:id", element: <Ticket /> },
     { path: "/verifyTicket", element: <VerifyTicket /> },
 ]);
 

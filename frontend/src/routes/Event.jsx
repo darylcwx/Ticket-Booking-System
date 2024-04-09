@@ -21,7 +21,7 @@ export default function Event(props) {
     const [notification, setNotification] = useState("");
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const page = searchParams.get('page')
+    const page = searchParams.get("page");
 
     useEffect(() => {
         const eventId = location.pathname.split("/")[2];
@@ -45,12 +45,18 @@ export default function Event(props) {
 
     const handleAddToCart = async (eventId) => {
         setNotification(false);
+        if (quantity == 0) {
+            setNotification("Quantity cannot be 0");
+            return;
+        }
         const username = localStorage.getItem("username");
         const response = await addToCart(username, eventId, quantity);
         if (response.message === "Added to cart successfully") {
-            setNotification("success");
+            setNotification("Added to cart successfully");
+        } else if (response.message == "Maximum quantity reached") {
+            setNotification("Maximum quantity reached or purchased");
         } else {
-            setNotification("error");
+            setNotification("Something went wrong. Please try again later.");
         }
     };
 
@@ -114,15 +120,12 @@ export default function Event(props) {
                                 {notification && (
                                     <Notification
                                         type={
-                                            notification === "success"
+                                            notification ===
+                                            "Added to cart successfully"
                                                 ? "success"
                                                 : "error"
                                         }
-                                        message={
-                                            notification === "success"
-                                                ? "Added to cart successfully"
-                                                : "Something went wrong"
-                                        }
+                                        message={notification}
                                     />
                                 )}
                             </div>

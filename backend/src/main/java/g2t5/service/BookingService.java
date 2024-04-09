@@ -12,16 +12,23 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.bson.types.ObjectId;
 
 @Service
 public class BookingService {
 
   @Autowired
-  private BookingRepository bookingRepository;
-  private CustomerRepository customerRepository;
-  private EventRepository eventRepository;
-  private TicketService ticketService;
+  private final BookingRepository bookingRepository;
+  private final CustomerRepository customerRepository;
+  private final EventRepository eventRepository;
+  private final TicketService ticketService;
+
+  @Autowired
+  public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, EventRepository eventRepository, TicketService ticketService){
+    this.bookingRepository = bookingRepository;
+    this.customerRepository = customerRepository;
+    this.eventRepository = eventRepository;
+    this.ticketService = ticketService;
+  }
 
   public List<Booking> getByEventId(String eventId) throws Exception {
     List<Booking> bookings = bookingRepository.findAll();
@@ -37,7 +44,7 @@ public class BookingService {
   }
 
   public Booking createBooking(String username, String eventId, int qty) throws Exception {
-    Event event = eventRepository.findById(new ObjectId(eventId)).get();
+    Event event = eventRepository.findById(eventId).get();
     Date date = event.getDatetime();
     Date curr = new Date();
 
@@ -49,7 +56,7 @@ public class BookingService {
     Calendar calendar2 = Calendar.getInstance();
     calendar2.setTime(date);
     calendar2.add(Calendar.HOUR_OF_DAY, -24);
-    Date dateAvail2 = calendar.getTime();
+    Date dateAvail2 = calendar2.getTime();
 
     if (dateAvail.after(curr) || curr.after(dateAvail2)) { 
         return null;
@@ -70,8 +77,8 @@ public class BookingService {
   }
 
   public boolean cancelBooking(String bookingId) throws Exception {
-    Booking booking = bookingRepository.findById(new ObjectId(bookingId)).get();
-    Event event = eventRepository.findById(new ObjectId(booking.getEventId())).get();
+    Booking booking = bookingRepository.findById(bookingId).get();
+    Event event = eventRepository.findById(booking.getEventId()).get();
     Date date = event.getDatetime();
     Date curr = new Date();
 
@@ -96,7 +103,7 @@ public class BookingService {
 
     public void cancelEventBookings(List<Booking> bookings) throws Exception {
         for (Booking booking : bookings) {
-            Booking curr = bookingRepository.findById(new ObjectId(booking.getBookingId())).get();
+            Booking curr = bookingRepository.findById(booking.getBookingId()).get();
             curr.setStatus("cancelled");
 
             List<Ticket> tickets = curr.getTickets();

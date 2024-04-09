@@ -46,8 +46,22 @@ export default function Checkout() {
             }
         };
         const user = await getUser();
-        checkout.forEach((event) => {
-            sendEmail(e, user, "booking", event, null);
+        checkout.forEach(async (event) => {
+            const response = await fetch(
+                `http://localhost:8080/booking/create`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: user.username,
+                        eventId: event.id,
+                        numberOfTickets: event.quantity,
+                    }),
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+            //sendEmail(e, user, "booking", event, null);
         });
     };
     return (
