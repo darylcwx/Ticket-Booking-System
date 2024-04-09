@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import DocumentTitle from "../components/DocumentTitle";
+import Navbar from "../components/Navbar";
+import CartItem from "../components/CartItem";
+import Notification from "../components/Notification";
 
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 
-import Navbar from "../components/Navbar";
-import CartItem from "../components/CartItem";
-import Notification from "../components/Notification";
 import { getCart, addToCart, removeFromCart } from "../utils/cart";
 
 export default function Cart() {
-    DocumentTitle("Cart")
+    DocumentTitle("Cart");
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
     const [events, setEvents] = useState([]);
@@ -47,7 +48,7 @@ export default function Cart() {
 
     // Update cart with event details
     useEffect(() => {
-        if (cart != []) {
+        if (cart.length != 0 && cart != null) {
             const updatedCart = cart.map((cartItem) => {
                 const event = events.find(
                     (eventItem) => eventItem.id === cartItem.id
@@ -67,6 +68,8 @@ export default function Cart() {
             }, 0);
             setTotal(totalAmount);
             setUpdatedCart(updatedCart);
+        } else {
+            setUpdatedCart([]);
         }
     }, [cart]);
 
@@ -116,56 +119,72 @@ export default function Cart() {
         <div className="bg-main min-h-screen min-w-max w-screen">
             <Navbar />
             <Container className="pt-[65px]">
-                <div className="flex text-modal text-lg font-semibold mt-4 py-2 items-center">
-                    <div className="w-[60px] text-center shrink-0">
-                        <Checkbox
-                            disabled
-                            checked
-                            sx={{
-                                "&.Mui-disabled": {
-                                    color: "#f2f2f2",
-                                },
-                            }}
-                        />
+                {updatedCart.length == 0 ? (
+                    <div className="text-white text-center p-8">
+                        <div>No events in cart. 😔</div>
+                        <Link to="/dashboard">See all events instead?</Link>
                     </div>
-                    <div className="w-[160px] text-center shrink-0">
-                        Event Image
+                ) : (
+                    <div>
+                        <div className="flex text-modal text-lg font-semibold mt-4 py-2 items-center">
+                            <div className="w-[60px] text-center shrink-0">
+                                <Checkbox
+                                    disabled
+                                    checked
+                                    sx={{
+                                        "&.Mui-disabled": {
+                                            color: "#f2f2f2",
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="w-[160px] text-center shrink-0">
+                                Event Image
+                            </div>
+                            <div className="ml-4 w-[400px] shrink-0">
+                                Event Details
+                            </div>
+                            <div className="w-[100px] text-center shrink-0">
+                                Unit Price
+                            </div>
+                            <div className="w-[150px] text-center shrink-0">
+                                Quantity
+                            </div>
+                            <div className="w-[150px] text-center shrink-0">
+                                Item Subtotal
+                            </div>
+                        </div>
+                        {updatedCart.map((event) => (
+                            <CartItem
+                                key={event.id}
+                                event={event}
+                                onToggleCheck={() =>
+                                    handleToggleCheck(event.id)
+                                }
+                                onChangeQuantity={handleQuantityChange}
+                            />
+                        ))}
+                        <div className="flex text-modal pt-4 items-center">
+                            <div className="w-[886px] text-end shrink-0">
+                                Total:&nbsp;
+                            </div>
+                            <div className="w-[150px] text-center shrink-0 text-blue-500">
+                                ${total.toFixed(2)}
+                            </div>
+                        </div>
+                        <div className="flex text-modal pt-4 items-center">
+                            <div className="w-[886px] text-end shrink-0"></div>
+                            <div className="w-[150px] flex justify-center">
+                                <Button
+                                    variant="contained"
+                                    onClick={handleCheckout}
+                                >
+                                    Proceed to Checkout
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="ml-4 w-[400px] shrink-0">Event Details</div>
-                    <div className="w-[100px] text-center shrink-0">
-                        Unit Price
-                    </div>
-                    <div className="w-[150px] text-center shrink-0">
-                        Quantity
-                    </div>
-                    <div className="w-[150px] text-center shrink-0">
-                        Item Subtotal
-                    </div>
-                </div>
-                {updatedCart.map((event) => (
-                    <CartItem
-                        key={event.id}
-                        event={event}
-                        onToggleCheck={() => handleToggleCheck(event.id)}
-                        onChangeQuantity={handleQuantityChange}
-                    />
-                ))}
-                <div className="flex text-modal pt-4 items-center">
-                    <div className="w-[886px] text-end shrink-0">
-                        Total:&nbsp;
-                    </div>
-                    <div className="w-[150px] text-center shrink-0 text-blue-500">
-                        ${total.toFixed(2)}
-                    </div>
-                </div>
-                <div className="flex text-modal pt-4 items-center">
-                    <div className="w-[886px] text-end shrink-0"></div>
-                    <div className="w-[150px] flex justify-center">
-                        <Button variant="contained" onClick={handleCheckout}>
-                            Proceed to Checkout
-                        </Button>
-                    </div>
-                </div>
+                )}
             </Container>
             {notification && (
                 <Notification

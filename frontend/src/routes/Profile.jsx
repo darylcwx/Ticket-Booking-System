@@ -7,7 +7,6 @@ import Notification from "../components/Notification";
 
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -23,7 +22,7 @@ export default function Profile() {
     const [user, setUser] = useState();
     const navigate = useNavigate();
     const [notification, setNotification] = useState("");
-    const [showLogOutAlert, setShowLogOutAlert] = useState(false);
+
     const [showModal, setShowModal] = useState(false);
 
     const [oldPassword, setOldPassword] = useState("");
@@ -54,6 +53,7 @@ export default function Profile() {
                     navigate("/");
                 }
                 setUser(data);
+                console.log(data);
             } catch (e) {
                 console.log(e);
             }
@@ -107,30 +107,50 @@ export default function Profile() {
             );
         }
     };
-    // HANDLE SUCCESSFUL LOGOUT
-    const handleSuccessfulLogOut = () => {
-        setShowLogOutAlert(true);
-        setTimeout(() => {
-            navigate(`/`);
-        }, 1000);
-    };
+
     return (
         <div className="bg-main w-screen h-screen">
             <Navbar />
             <Container className="">
                 <div className="text-white pt-[65px]">
-                    <div className="text-3xl pt-10">Profile</div>
+                    <div className="flex justify-center">
+                        <div className="text-3xl pt-10 w-2/3">My Profile</div>
+                    </div>
                     <div className="flex justify-center align-center">
-                        <div className="grid grid-cols-2 w-1/2 gap-4 pt-4">
+                        <div className="grid grid-cols-2 w-2/3 gap-8 pt-4">
                             <div className="flex items-center text-xl">
                                 Username
                             </div>
                             <div className="flex items-center text-xl">
                                 {user?.username}
                             </div>
-                            <div className="flex items-center text-xl">
-                                <div className="">Password</div>
-                            </div>
+                            {user?.role === "customer" ? (
+                                <>
+                                    <div className="flex items-center text-xl">
+                                        Account Balance
+                                    </div>
+                                    <div className="flex items-center text-xl">
+                                        $ {user?.accountBalance}
+                                    </div>
+                                    <div></div>
+                                    <div className="flex items-center text-xl">
+                                        <Button
+                                            variant="contained"
+                                            className=""
+                                            onClick={() => {
+                                                alert("top up stripe?");
+                                            }}
+                                        >
+                                            Top up balance
+                                        </Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                            <div></div>
+                            <div></div>
+                            <div></div>
                             <Button
                                 variant="contained"
                                 className=""
@@ -141,25 +161,6 @@ export default function Profile() {
                                 Change password
                             </Button>
                         </div>
-                    </div>
-
-                    {user?.role === "customer" && (
-                        <>
-                            <div className="text-3xl pt-10">
-                                Booking History
-                            </div>
-                            <div className=""></div>
-                        </>
-                    )}
-
-                    <div className="flex justify-center pt-10">
-                        <Button
-                            onClick={handleSuccessfulLogOut}
-                            variant="contained"
-                            color="error"
-                        >
-                            Log Out
-                        </Button>
                     </div>
                 </div>
             </Container>
@@ -274,12 +275,6 @@ export default function Profile() {
                     }
                     message={notification}
                 />
-            )}
-            {/* SUCCESSFUL LOGOUT */}
-            {showLogOutAlert && (
-                <Alert severity="success" className="fixed top-16 right-0 m-5">
-                    Logging out...
-                </Alert>
             )}
         </div>
     );

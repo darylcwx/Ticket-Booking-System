@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
+import Notification from "./Notification";
+
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GetReportIcon from "@mui/icons-material/Description";
 import ManageTicketingOfficersIcon from "@mui/icons-material/People";
 import CreateEventIcon from "@mui/icons-material/Add";
-import { getCart } from "../utils/cart";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
 export default function Navbar() {
     const navigate = useNavigate();
     const [user, setUser] = useState();
     const [cartCount, setCartCount] = useState(0);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [notification, setNotification] = useState("");
 
     //TODO - re-render on add to cart
     useEffect(() => {
@@ -30,7 +38,7 @@ export default function Navbar() {
                 }
                 setUser(data);
                 let total = 0;
-                if (data.cart.length != 0) {
+                if (data.cart.length != 0 && data.cart != null) {
                     data.cart.forEach((item) => {
                         total += parseInt(item.quantity);
                     });
@@ -67,6 +75,22 @@ export default function Navbar() {
             );
     };
 
+    const handleOpenMenu = (e) => {
+        setMenuOpen(true);
+        setAnchorEl(e.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setMenuOpen(false);
+        setAnchorEl(null);
+    };
+
+    const handleLogOut = () => {
+        setNotification("Logging you out...");
+        localStorage.removeItem("username");
+        setTimeout(() => {
+            navigate(`/`);
+        }, 2000);
+    };
     return (
         <div className="navbar fixed z-50">
             <div className="">
@@ -123,18 +147,48 @@ export default function Navbar() {
                             )}
                             {user?.role === "ticketing officer" && (
                                 <div>
-                                    <Link to="/verifyTicket">Verify Ticket</Link>
+                                    <Link to="/verifyTicket">
+                                        Verify Ticket
+                                    </Link>
                                 </div>
                             )}
-                            <IconButton size="small">
-                                <Link to="/profile">
-                                    <AccountCircleIcon fontSize="large"></AccountCircleIcon>
-                                </Link>
+                            <IconButton
+                                size="small"
+                                onClick={(e) => handleOpenMenu(e)}
+                            >
+                                <AccountCircleIcon
+                                    sx={{ color: "#1565c0" }}
+                                    fontSize="large"
+                                ></AccountCircleIcon>
                             </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={menuOpen}
+                                onClose={handleCloseMenu}
+                            >
+                                <MenuItem onClick={handleCloseMenu}>
+                                    <Link to="/profile">Profile</Link>
+                                </MenuItem>
+                                {user?.role === "customer" ? (
+                                    <MenuItem onClick={handleCloseMenu}>
+                                        <Link to="/bookings">My bookings</Link>
+                                    </MenuItem>
+                                ) : (
+                                    <div></div>
+                                )}
+                                <MenuItem onClick={handleLogOut}>
+                                    <div className="text-[#1565c0]">Logout</div>
+                                </MenuItem>
+                            </Menu>
                         </div>
                     </div>
                 </div>
             </div>
+            {notification && (
+                <Notification severity="success" message={notification}>
+                    Logging out...
+                </Notification>
+            )}
         </div>
     );
 }

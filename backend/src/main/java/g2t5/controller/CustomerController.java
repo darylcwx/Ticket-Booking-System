@@ -129,10 +129,10 @@ public class CustomerController {
       boolean success = customerService.addToCart(username, eventId, quantity);
       if (success) {
         return ResponseEntity.ok("{\"message\": \"Added to cart successfully\"}");
-      }else {
+      } else {
         return ResponseEntity.ok("{\"message\": \"Maximum quantity reached\"}");
       }
-      
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
@@ -158,7 +158,7 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/bookings/{username}")
+  @GetMapping("/bookings/{username}")
   public ResponseEntity<Object> getBookings(@PathVariable String username) {
     try {
       List<Booking> bookings = customerService.getBookings(
@@ -181,25 +181,24 @@ public class CustomerController {
     try {
       boolean check = customerService.checkBalance(username, eventId, numberOfTickets);
 
-      if (check){
+      if (check) {
         Booking booking = bookingService.createBooking(username, eventId, numberOfTickets);
-        if (booking != null){
+        if (booking != null) {
           customerService.createBooking(username, booking, numberOfTickets);
           return ResponseEntity.ok("{\"message\": \"Created booking successfully\"}");
-        }else {
+        } else {
           return ResponseEntity.ok("{\"message\": \"Unable to book for event\"}");
         }
 
-      }else {
+      } else {
         return ResponseEntity.ok("{\"message\": \"Insufficient balance\"}");
       }
-      
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body("{\"message\": \"Something went wrong\"}");
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
     }
   }
 
@@ -213,16 +212,15 @@ public class CustomerController {
       if (check) {
         customerService.cancelAndRefundBooking(username, bookingId);
         return ResponseEntity.ok("{\"message\": \"Cancelled booking successfully\"}");
-      }else {
+      } else {
         return ResponseEntity.ok("{\"message\": \"Unable to cancel booking\"}");
       }
-      
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .body("{\"message\": \"Something went wrong\"}");
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
     }
   }
 }

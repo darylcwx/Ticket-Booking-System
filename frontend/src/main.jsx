@@ -13,6 +13,7 @@ import ForgotPassword from "./routes/ForgotPassword";
 import Event from "./routes/Event.jsx";
 import Profile from "./routes/Profile";
 import Cart from "./routes/Cart";
+import Bookings from "./routes/Bookings";
 import Checkout from "./routes/Checkout";
 import CreateTicket from "./routes/CreateTicket.jsx";
 import Ticket from "./routes/Ticket.jsx";
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
     { path: "/event/:id", element: <Event /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },
+    { path: "/bookings", element: <Bookings /> },
     {
         path: "/ticketingOfficerDashboard",
         element: <TicketingOfficerDashboard />,
