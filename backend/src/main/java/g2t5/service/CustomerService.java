@@ -14,9 +14,10 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
   @Autowired
-  private CustomerRepository customerRepository;
-  private EventRepository eventRepository;
-
+  private final CustomerRepository customerRepository;
+  private final EventRepository eventRepository;
+  
+  @Autowired
   public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository) {
     this.customerRepository = customerRepository;
     this.eventRepository = eventRepository;

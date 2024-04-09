@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
     List<Booking> findAll();
+
+    Optional<Booking> findById(String bookingId);
 }
 

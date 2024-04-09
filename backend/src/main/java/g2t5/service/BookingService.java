@@ -17,10 +17,18 @@ import org.springframework.stereotype.Service;
 public class BookingService {
 
   @Autowired
-  private BookingRepository bookingRepository;
-  private CustomerRepository customerRepository;
-  private EventRepository eventRepository;
-  private TicketService ticketService;
+  private final BookingRepository bookingRepository;
+  private final CustomerRepository customerRepository;
+  private final EventRepository eventRepository;
+  private final TicketService ticketService;
+  
+  @Autowired
+  public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, EventRepository eventRepository, TicketService ticketService){
+    this.bookingRepository = bookingRepository;
+    this.customerRepository = customerRepository;
+    this.eventRepository = eventRepository;
+    this.ticketService = ticketService;
+  }
 
   public List<Booking> getByEventId(String eventId) throws Exception {
     List<Booking> bookings = bookingRepository.findAll();
