@@ -9,6 +9,7 @@ import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.bson.types.ObjectId;
 
 @Service
 public class CustomerService {
@@ -57,7 +58,7 @@ public class CustomerService {
     Customer customer = customerRepository.findByUsername(username);
     ArrayList<Map<String, Object>> cart = customer.getCart();
     List<Booking> bookings = customer.getBookings();
-    Event event = eventRepository.findById(eventId).get();
+    Event event = eventRepository.findById(new ObjectId(eventId)).get();
     int guestsAllowed = event.getGuestsAllowed();
     int qty = 0;
 
@@ -132,7 +133,7 @@ public class CustomerService {
 
   public boolean checkBalance(String username, String eventId, int qty) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    Event event = eventRepository.findById(eventId).get();
+    Event event = eventRepository.findById(new ObjectId(eventId)).get();
     double total = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
 
@@ -149,7 +150,7 @@ public class CustomerService {
     custBookings.add(booking);
     customer.setBookings(custBookings);
 
-    Event event = eventRepository.findById(booking.getEventId()).get();
+    Event event = eventRepository.findById(new ObjectId(booking.getEventId())).get();
     double totalPrice = event.getTicketPrice() * qty;
     double balance = customer.getAccountBalance();
     customer.setAccountBalance(balance - totalPrice);
@@ -164,7 +165,7 @@ public class CustomerService {
     for (Booking booking : bookings) {
       if (booking.getBookingId().equals(bookingid)) {
         booking.setStatus("cancelled");
-        Event event = eventRepository.findById(booking.getEventId()).get();
+        Event event = eventRepository.findById(new ObjectId(booking.getEventId())).get();
         double totalPrice = event.getTicketPrice() * booking.getTickets().size();
         double balance = customer.getAccountBalance();
         double cancellationFee = event.getCancellationFee() * booking.getTickets().size();
