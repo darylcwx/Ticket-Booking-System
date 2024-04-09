@@ -3,6 +3,7 @@ package g2t5.service;
 import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
 import g2t5.database.entity.Booking;
+import g2t5.database.entity.Payment;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
 import java.util.*;
@@ -205,6 +206,20 @@ public class CustomerService {
         }
       }
     }
+  }
+
+  public boolean topupAccount(String username, Double amount, Payment payment) throws Exception {
+    if (payment.getStatus().equals("success")){
+      Customer customer = customerRepository.findByUsername(username);
+      List<Payment> payments = customer.getPaymentHistory();
+      payments.add(payment);
+      customer.setAccountBalance(customer.getAccountBalance() + amount);
+
+      customerRepository.save(customer);
+      return true;
+    }
+
+    return false;
   }
 
 }

@@ -9,7 +9,7 @@ public class Customer extends User {
   private List<Map<String, Object>> cart; 
   private double accountBalance;
   private List<Booking> bookings; 
-  // private List<Payment> paymentHistory;
+  private List<Payment> paymentHistory;
 
   public double getAccountBalance() {
     return accountBalance;
@@ -35,15 +35,15 @@ public class Customer extends User {
     this.bookings = bookings;
   }
 
-  // public List<Payment> getPaymentHistory() {
-  //   return paymentHistory;
-  // }
+  public List<Payment> getPaymentHistory() {
+    return paymentHistory;
+  }
 
-  // public void setPaymentHistory(List<Payment> paymentHistory) {
-  //   this.paymentHistory = paymentHistory;
-  // }
+  public void setPaymentHistory(List<Payment> paymentHistory) {
+    this.paymentHistory = paymentHistory;
+  }
 
-  // public String toString() {
-  //   return " Account Balance: [" + accountBalance + "]" + " Cart: [" + cart + "]" + " Bookings History: [" + bookings + "]" + " Payment History : [" + paymentHistory + "]";
-  // }
+  public String toString() {
+    return " Account Balance: [" + accountBalance + "]" + " Cart: [" + cart + "]" + " Bookings History: [" + bookings + "]" + " Payment History : [" + paymentHistory + "]";
+  }
 }

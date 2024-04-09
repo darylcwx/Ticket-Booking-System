@@ -4,9 +4,11 @@ import g2t5.database.entity.Customer;
 import g2t5.database.entity.Booking;
 import g2t5.database.entity.User;
 import g2t5.database.entity.Ticket;
+import g2t5.database.entity.Payment;
 import g2t5.model.AddToCartRequest;
 import g2t5.model.CreateBookingRequest;
 import g2t5.model.CancelBookingRequest;
+import g2t5.model.TopupRequest;
 import g2t5.model.LoginRequest;
 import g2t5.model.ChangePasswordRequest;
 import g2t5.model.RemoveFromCartRequest;
@@ -16,6 +18,7 @@ import g2t5.service.EventService;
 import g2t5.service.UserService;
 import g2t5.service.BookingService;
 import g2t5.service.TicketService;
+import g2t5.service.PaymentService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.stripe.exception.StripeException;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173/", methods = {
@@ -43,17 +48,20 @@ public class CustomerController {
   private final CustomerService customerService;
   private final BookingService bookingService;
   private final TicketService ticketService;
+  private final PaymentService paymentService;
 
   @Autowired
   public CustomerController(
       UserService userService,
       CustomerService customerService,
       BookingService bookingService,
-      TicketService ticketService) {
+      TicketService ticketService,
+      PaymentService paymentService) {
     this.userService = userService;
     this.customerService = customerService;
     this.bookingService = bookingService;
     this.ticketService = ticketService;
+    this.paymentService = paymentService;
   }
 
   @PostMapping("/register")
@@ -221,6 +229,27 @@ public class CustomerController {
       return ResponseEntity
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body("{\"message\": \"Something went wrong\"}");
+    }
+  }
+
+  @PostMapping("/topup")
+  public RedirectView topupAccount(@RequestBody TopupRequest request) throws StripeException {
+    String username = request.getUsername();
+    Double amount = request.getAmount();
+
+    try {
+      Payment payment = paymentService.createPayment(amount, username); 
+      // RedirectView view = paymentService.createCheckoutSession(amount, username, payment.getId()); 
+      boolean check = customerService.topupAccount(username, amount, payment);
+      if (check){
+        return new RedirectView();
+        // return view;
+      }
+      return null;
+
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return null;
     }
   }
 }
