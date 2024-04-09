@@ -16,7 +16,7 @@ public class Event {
   private Date datetime = new Date();
   private double ticketPrice;
   private int ticketsAvailable;
-  private int ticketsSold;
+  private int totalTickets;
   private String status;
   private double cancellationFee;
   private int guestsAllowed;
@@ -99,12 +99,12 @@ public class Event {
     this.image = image;
   }
 
-  public int getTicketsSold() {
-    return this.ticketsSold;
+  public int getTotalTickets() {
+    return this.totalTickets;
   }
 
-  public void setTicketsSold(int ticketsSold){
-    this.ticketsSold = ticketsSold;
+  public void setTotalTickets(int totalTickets){
+    this.totalTickets = totalTickets;
   }
 
   public String getVenue(){
