@@ -8,6 +8,7 @@ import g2t5.database.entity.Payment;
 import g2t5.model.AddToCartRequest;
 import g2t5.model.CreateBookingRequest;
 import g2t5.model.CancelBookingRequest;
+import g2t5.model.GetBookingsRequest;
 import g2t5.model.TopupRequest;
 import g2t5.model.LoginRequest;
 import g2t5.model.ChangePasswordRequest;
@@ -167,7 +168,10 @@ public class CustomerController {
   }
 
   @GetMapping("/bookings/{username}")
-  public ResponseEntity<Object> getBookings(@PathVariable String username, @PathVariable String status) {
+  public ResponseEntity<Object> getBookings(@RequestBody GetBookingsRequest request) {
+    String username = request.getUsername();
+    String status = request.getStatus();
+
     try {
       List<String> bookings = customerService.getBookings(username, status); // created, cancelled, completed
       return ResponseEntity.ok(bookings);
