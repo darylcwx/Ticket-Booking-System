@@ -9,7 +9,8 @@ public class Payment {
 
     @Id
     private String paymentId;
-    private Date date;
+
+    private Date date = new Date();
     private Double amount;
     private String customerId;
     private String status;
@@ -17,11 +18,12 @@ public class Payment {
 
     public Payment() {}
 
-    public Payment(Double amount, String customerId, Date date) {
+    public Payment(Double amount, String customerId, Date date, String status) {
         this.amount = amount;
         this.customerId = customerId;
+        this.status = status;
         this.date = date;
-        this.status = "";
+
     }
 
     // Getters and setters

@@ -1,5 +1,8 @@
 package g2t5.database.entity;
 
+import java.util.Date;
+
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +15,7 @@ public class Ticket {
 
     private String venue;
 
-    private String datetime;
+    private Date datetime  = new Date();
 
     private double price;
 
@@ -24,7 +27,7 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(String eventName, String venue, String datetime, double price, String customerEmail, String status) {
+    public Ticket(String eventName, String venue, Date datetime, double price, String customerEmail, String status) {
         this.eventName = eventName;
         this.venue = venue;
         this.datetime = datetime;
@@ -58,11 +61,11 @@ public class Ticket {
         this.venue = venue;
     }
 
-    public String getDatetime() {
+    public Date getDatetime() {
         return datetime;
     }
 
-    public void setDatetime(String datetime) {
+    public void setDatetime(Date datetime) {
         this.datetime = datetime;
     }
 

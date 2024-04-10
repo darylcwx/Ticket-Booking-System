@@ -40,10 +40,11 @@ public class PaymentController {
     private String key;
 
     @PostMapping("/payments/create-checkout-session")
+    //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
     //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
     public RedirectView createCheckoutSession() throws StripeException {
 
-        
+        //Long amount, String paymentObjID
         Stripe.apiKey = key;
 
         // Define the parameters for the checkout session
@@ -52,6 +53,7 @@ public class PaymentController {
         builder.setMode(SessionCreateParams.Mode.PAYMENT);
         builder.setSuccessUrl("http://localhost:5173/dashboard");
         builder.setCancelUrl("http://localhost:5173/dashboard");
+        builder.putMetadata("paymentObjID", "paymentObjID");
         builder.addLineItem(
                 SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
@@ -61,7 +63,8 @@ public class PaymentController {
                                         .setUnitAmount(1000L) // Amount in cents
                                         .setProductData(
                                                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                        .setName("Product 1")
+                                                        .setName("Top up" + (1000L / 100) + " sgd")
+                                                        .setDescription("objid")
                                                         .build())
                                         .build())
                         .build());

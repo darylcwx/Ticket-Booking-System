@@ -1,51 +1,102 @@
 package g2t5.service;
 
-import g2t5.database.entity.Payment;
-import com.stripe.Stripe;
+import java.util.*;
+
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import g2t5.database.repository.PaymentRepository;
+import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import g2t5.database.entity.Payment;
+import g2t5.database.entity.Customer;
+import g2t5.service.*;
+
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.stripe.Stripe;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.stereotype.Service;
+
+import g2t5.database.repository.*;
+
+
+
+
 
 @Service
 public class PaymentService {
 
     @Value("${stripe.apiKey}")
-    private String apiKey;
+    private String key;
 
     @Autowired
-    private final PaymentRepository paymentRepository;
+    private PaymentRepository paymentRepository;
+    //@PostMapping("/payments/create-checkout-session")
+    //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
+    //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
+    public RedirectView createCheckoutSession(Double amount, String paymentObjID) throws StripeException {
 
-    @Autowired
-    public PaymentService(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
+        //Long amount, String paymentObjID
+        Stripe.apiKey = key;
+
+        // Define the parameters for the checkout session
+        SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
+        builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.PAYNOW);
+        builder.setMode(SessionCreateParams.Mode.PAYMENT);
+        builder.setSuccessUrl("http://localhost:5173/dashboard");
+        builder.setCancelUrl("http://localhost:5173/dashboard");
+        builder.putMetadata("paymentObjID", paymentObjID);
+        builder.addLineItem(
+                SessionCreateParams.LineItem.builder()
+                        .setQuantity(1L)
+                        .setPriceData(
+                                SessionCreateParams.LineItem.PriceData.builder()
+                                        .setCurrency("sgd")
+                                        .setUnitAmount(1000L) // Amount in cents
+                                        .setProductData(
+                                                SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                        .setName("Top up" + (1000L / 100) + " sgd")
+                                                        .setDescription("Ticket" + paymentObjID)
+                                                        .build())
+                                        .build())
+                        .build());
+
+        // Create the checkout session
+        Session session = Session.create(builder.build());
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(session.getUrl());
+        return redirectView;
     }
 
-    public Payment createPayment(Double amount, String customerId){
-        Payment payment = new Payment(amount, customerId, new Date());
-
+    public Payment createPayment( Double amount, String customer) {
+        Payment payment = new Payment(amount, customer, new Date(), "unpaid");
         paymentRepository.save(payment);
-
+  
         return payment;
-
     }
 
-    public PaymentIntent createPaymentIntent(Long amount, String currency) throws StripeException {
-        Stripe.apiKey = apiKey;
-
-        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(amount)
-                .setCurrency(currency)
-                .build();
-
-        return PaymentIntent.create(params);
+    public Payment getPayment( String paymentId) {
+        return paymentRepository.findById(paymentId).get();
     }
 
-
-
-    // You can add more methods for handling other Stripe functionalities as needed
+    public void updatePayment( String paymentId) {
+        //Payment payment = new Payment(amount, customer, new Date(), "unpaid");
+        Payment payment = getPayment(paymentId);
+        payment.setStatus("Paid");
+        paymentRepository.save(payment);
+      }
 }
