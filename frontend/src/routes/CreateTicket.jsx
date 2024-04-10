@@ -12,6 +12,7 @@ export default function CreateTicket() {
     const [emailError, setEmailError] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [event, setEvent] = useState({});
+    const [eventId, setEventId] = useState();
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [eventDesc, setEventDesc] = useState();
@@ -24,7 +25,9 @@ export default function CreateTicket() {
     const [showAlert2, setShowAlert2] = useState(false);
 
     useEffect(() => {
-        const eventId = location.pathname.split("/")[2];
+        const currentEventId = location.pathname.split("/")[2];
+        setEventId(currentEventId);
+
         const fetchEvent = async (eventId) => {
             try {
                 const response = await fetch(
@@ -50,7 +53,7 @@ export default function CreateTicket() {
                 console.log(e);
             }
         };
-        fetchEvent(eventId);
+        fetchEvent(currentEventId);
     }, []);
 
     const handleEmailChange = e => {
@@ -80,14 +83,12 @@ export default function CreateTicket() {
             return;
         }
 
-        // Call Edit Event
-        await handleEditEvent(e);
-
         // Construct ticket object
         const ticket = {
+            "eventId": eventId,
             "eventName": eventName,
             "venue": eventVenue,
-            "datetime": selectedDate,
+            "datetime": Date.parse(selectedDate),
             "price": ticketPrice,
             "customerEmail": email,
             "status": "active"
@@ -109,6 +110,9 @@ export default function CreateTicket() {
             const createdTicket = await response.json();
             console.log("Ticket created successfully:", createdTicket);
 
+            // Call Edit Event to minus 1 ticket count
+            await handleEditEvent(e);
+
             setShowAlert2(true);
 
             setTimeout(() => {
@@ -126,7 +130,7 @@ export default function CreateTicket() {
 
     const handleEditEvent = async (e) => {
         e.preventDefault();
-        const eventId = location.pathname.split("/")[2];
+        // const eventId = location.pathname.split("/")[2];
         const imagePath = eventName.toLowerCase().replace(/[^a-zA-Z0-9]/g, "") + ".png";
 
         // Construct the event object

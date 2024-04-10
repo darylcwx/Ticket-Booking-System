@@ -20,8 +20,6 @@ public class Ticket {
 
     private double price;
 
-    private String customerName;
-
     private String customerEmail;
 
     private String status;
@@ -29,8 +27,7 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(String eventId, String eventName, String venue, Date datetime, double price, String customerEmail,
-            String status) {
+    public Ticket(String eventId, String eventName, String venue, Date datetime, double price, String customerEmail, String status) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.venue = venue;

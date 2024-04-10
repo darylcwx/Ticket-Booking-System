@@ -50,6 +50,9 @@ export default function Ticket() {
         const titleWidth = doc.getStringUnitWidth(titleText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
         doc.text(titleText, middleX - titleWidth / 2, 10, { align: 'center' });
 
+        // Images
+        // doc.addImage('https://example.com/logo.png', 'PNG', 10, 5, 40, 20);
+        
         // Ticket details
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
