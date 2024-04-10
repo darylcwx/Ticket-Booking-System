@@ -57,19 +57,9 @@ public class ReportService {
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
             String name = event.getName();
-            String eventId = event.getId();
             int ticketsSold = 0;
             try {
-                List<Booking> bookingList = bookingService.getByEventId(eventId);
-                for (Booking booking : bookingList) {
-                    List<String> ticketList = booking.getTickets();
-                    for(String ticketId : ticketList){
-                        Ticket ticket = ticketService.getTicket(ticketId);
-                        if(!ticket.getStatus().equals("cancelled")){
-                            ticketsSold++;
-                        }
-                    }
-                }
+                ticketsSold = event.getTotalTickets() - event.getTicketsAvailable();
             } catch (Exception e) {
 
             }
@@ -118,25 +108,36 @@ public class ReportService {
         Map<String, Integer> reportCustomer = new HashMap<>();
         List<Event> events = eventRepository.findAll();
         for (int i = 0; i < events.size(); i++) {
-            int total = 0;
+            int cancelled = 0;
             Event event = events.get(i);
+            int attendees = event.getTotalTickets();
             String name = event.getName();
             String eventId = event.getId();
             try {
                 List<Booking> bookingList = bookingService.getByEventId(eventId);
                 for (Booking booking : bookingList) {
                     List<String> ticketList = booking.getTickets();
-                    for(String ticketId : ticketList){
+                    for (String ticketId : ticketList) {
                         Ticket ticket = ticketService.getTicket(ticketId);
-                        if(ticket.getStatus().equals("inactive")){
-                            total++;
+                        if (ticket.getStatus().equals("cancelled")) {
+                            cancelled++;
                         }
                     }
                 }
             } catch (Exception e) {
 
             }
-            reportCustomer.put(name, total);
+            Date endDate = event.getEndDate();
+            Instant instant = endDate.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime endLocalDateTime = instant.atZone(zoneId).toLocalDateTime();
+
+            LocalDateTime nowDateTime = LocalDateTime.now();
+            if (nowDateTime.isAfter(endLocalDateTime)) {
+                reportCustomer.put(name, attendees - cancelled);
+            } else {
+                reportCustomer.put(name, 0);
+            }
         }
         return reportCustomer;
     }
@@ -185,11 +186,14 @@ public class ReportService {
             headerRow.createCell(7).setCellValue("Type");
             headerRow.getCell(7).setCellStyle(headerCellStyle);
 
+            headerRow.createCell(8).setCellValue("Event Status");
+            headerRow.getCell(8).setCellStyle(headerCellStyle);
+
             int rowNum = 1;
             List<Event> events = eventRepository.findAll();
             for (Event event : events) {
-                String type = "null";
-                if(event instanceof Concert){
+                String type = "Event";
+                if (event instanceof Concert) {
                     type = "Concert";
                 }
                 String eventName = event.getName();
@@ -212,6 +216,7 @@ public class ReportService {
                 row.createCell(5).setCellValue(revenue.get(eventName));
                 row.createCell(6).setCellValue(customerAttendees.get(eventName));
                 row.createCell(7).setCellValue(type);
+                row.createCell(8).setCellValue(event.getStatus());
             }
 
             // Autosize columns

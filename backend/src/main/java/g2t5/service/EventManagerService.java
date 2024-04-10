@@ -166,12 +166,14 @@ public class EventManagerService {
         for (Event event : eventList) {
             Date endDate = event.getEndDate();
             if (currentDate.after(endDate) || currentDate.equals(endDate)) {
+                event.setStatus("ended");
                 String eventId = event.getId();
                 try{
                     bookingService.updateBookings(eventId);
                 } catch (Exception e){
                     System.out.println("Error updating booking" + e);
                 }
+                eventRepository.save(event);
             }
         }
     }
