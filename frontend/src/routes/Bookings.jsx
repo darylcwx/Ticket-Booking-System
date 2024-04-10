@@ -25,16 +25,19 @@ export default function Bookings() {
         const getBookings = async () => {
             try {
                 const response = await fetch(
-                    `http://localhost:8080/bookings/${username}`,
+                    `http://localhost:8080/bookings/${encodeURIComponent(
+                        username
+                    )}?status=${encodeURIComponent("all")}`,
                     {
                         method: "GET",
                         headers: { "Content-Type": "application/json" },
                     }
                 );
                 const data = await response.json();
+                console.log(data);
                 setBookings(data);
             } catch (e) {
-                return null;
+                console.log(e);
             }
         };
         getBookings();
@@ -55,8 +58,9 @@ export default function Bookings() {
     }, []);
 
     useEffect(() => {
-        let initialBookings = bookings;
-        for (let booking of initialBookings) {
+        //let initialBookings = bookings;
+        // if (initialBookings != [] && initialBookings.length != 0) {
+        for (let booking of bookings) {
             for (const event of events) {
                 for (let ticket of booking.tickets) {
                     if (ticket.eventId === event.id) {
@@ -66,8 +70,10 @@ export default function Bookings() {
                 }
             }
         }
-        setUpdatedBookings(initialBookings);
-    }, [events]);
+        //}
+        console.log(bookings);
+        setUpdatedBookings(bookings);
+    }, [bookings]);
 
     const handleCancel = async (bookingId) => {
         try {
@@ -102,7 +108,7 @@ export default function Bookings() {
                 ) : (
                     updatedBookings.map((booking) => (
                         <div key={booking.bookingId}>
-                            <div className="bg-modal p-4 my-4 w-[1080px]">
+                            <div className="bg-modal p-4 my-4 w-[960px]">
                                 <div>
                                     <div className="flex">
                                         <div className="w-1/3">
@@ -114,7 +120,11 @@ export default function Bookings() {
                                         <div className="w-1/3">
                                             Booking Date
                                         </div>
-                                        <div>{booking.dateCreated}</div>
+                                        <div>
+                                            {formatDatetime(
+                                                booking.dateCreated
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex">
                                         <div className="w-1/3">
@@ -130,35 +140,109 @@ export default function Bookings() {
                                     {booking.tickets.map((ticket) => (
                                         <div key={ticket.ticketId}>
                                             <div className="bg-[#e5e5e5] m-2 flex">
-                                                <Link
-                                                    to={`/event/${ticket.eventId}`}
-                                                >
-                                                    <img
-                                                        className="shrink max-w-[80px] md:max-w-[200px]"
-                                                        src={`../events/${ticket.image}`}
-                                                    />
-                                                </Link>
+                                                <img
+                                                    className="shrink max-w-[80px] md:max-w-[200px]"
+                                                    src={`../qr.png`}
+                                                />
+
                                                 <TicketDividerVertical
                                                     className="hidden md:flex"
                                                     tabColor="bg-[#f2f2f2]"
                                                 />
-                                                <div className="pt-0 md:pt-4 p-4 md:pl-0 flex flex-col justify-between">
-                                                    <div>
-                                                        Ticket ID:{" "}
-                                                        {ticket.ticketId}
-                                                    </div>
-                                                    <div className="">
-                                                        <div className="flex items-center">
-                                                            {formatDatetime(
-                                                                ticket.datetime
-                                                            )}
+                                                <div className="flex w-full justify-between relative">
+                                                    <div className=" p-4 pl-0 flex flex-col justify-between w-full">
+                                                        <div>
+                                                            <div className="flex">
+                                                                <div className="font-bold w-1/4">
+                                                                    Event Name:
+                                                                </div>
+                                                                <div className="">
+                                                                    {
+                                                                        ticket.eventName
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex">
+                                                                <div className="font-bold w-1/4">
+                                                                    Event Venue:
+                                                                </div>
+                                                                <div>
+                                                                    {
+                                                                        ticket.venue
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex">
+                                                                <div className="font-bold w-1/4">
+                                                                    Event Date:
+                                                                </div>
+                                                                <div>
+                                                                    {formatDatetime(
+                                                                        ticket.datetime
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="flex">
+                                                                <div className="font-bold w-1/4">
+                                                                    Ticket ID:
+                                                                </div>
+                                                                <div className="">
+                                                                    {
+                                                                        ticket.ticketId
+                                                                    }
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex">
+                                                                <div className="font-bold w-1/4">
+                                                                    Ticket
+                                                                    Owner:
+                                                                </div>
+                                                                <div className="">
+                                                                    {
+                                                                        ticket.customerEmail
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center">
+                                                                <div className="font-bold w-1/4">
+                                                                    Ticket
+                                                                    price:
+                                                                </div>
+                                                                <div>
+                                                                    $
+                                                                    {
+                                                                        ticket.price
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="italic absolute bottom-0 text-[6px]">
+                                                            This ticket is
+                                                            non-transferable.
+                                                            Cancellations are
+                                                            only permitted 48
+                                                            hours before the
+                                                            event is scheduled.
+                                                            The organizers
+                                                            reserve the right to
+                                                            cancel or reschedule
+                                                            events.
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center">
-                                                        Price paid:
-                                                        <span className="text-green-600 font-semibold text-lg pl-2">
-                                                            {ticket.price}
-                                                        </span>
+
+                                                    <div>
+                                                        <Link
+                                                            to={`/event/${ticket.eventId}`}
+                                                        >
+                                                            <img
+                                                                className="shrink max-w-[80px] md:max-w-[200px]"
+                                                                src={`../events/${ticket.image}`}
+                                                            />
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>
