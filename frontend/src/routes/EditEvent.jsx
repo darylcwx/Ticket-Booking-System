@@ -16,7 +16,8 @@ import sendEmail from "../utils/sendEmail";
 export default function EditEvent() {
     DocumentTitle("Edit Event");
     const navigate = useNavigate();
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
     const [event, setEvent] = useState({});
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
@@ -46,7 +47,8 @@ export default function EditEvent() {
                 setEventName(data.name);
                 setEventDesc(data.description);
                 setEventVenue(data.venue);
-                setSelectedDate(dayjs(data.datetime));
+                setSelectedStartDate(dayjs(data.startDate));
+                setSelectedEndDate(dayjs(data.endDate));
                 setTicketsAvailable(data.ticketsAvailable);
                 setTotalTicketNum(data.totalTickets);
                 setMaxGuestNum(data.guestsAllowed);
@@ -59,8 +61,12 @@ export default function EditEvent() {
         fetchEvent(eventId);
     }, []);
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
+    const handleStartDateChange = (date) => {
+        setSelectedStartDate(date);
+    };
+
+    const handleEndDateChange = (date) => {
+        setSelectedStartDate(date);
     };
 
     const handleCancel = async (e) => {
@@ -119,7 +125,8 @@ export default function EditEvent() {
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            datetime: dayjs(selectedDate).format(),
+            startDate: dayjs(selectedStartDate).format(),
+            endDate: dayjs(selectedEndDate).format(),
             ticketsAvailable: ticketsAvailable,
             totalTickets: totalTicketNum,
             guestsAllowed: maxGuestNum,
@@ -236,14 +243,14 @@ export default function EditEvent() {
                             </div>
                         </div>
 
-                        {/* EVENET DATETIME */}
+                        {/* EVENT DATETIME */}
                         <div className="flex flex-wrap -mx-3 mb-6">
-                            <div className="w-full px-3">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <label
                                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                     for="eventDatetime"
                                 >
-                                    Date & time
+                                    Start Datetime
                                 </label>
                                 <LocalizationProvider
                                     dateAdapter={AdapterDayjs}
@@ -252,8 +259,27 @@ export default function EditEvent() {
                                         style={{ border: "none" }}
                                         className="border-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="eventDatetime"
-                                        value={dayjs(event.datetime)}
-                                        onChange={handleDateChange}
+                                        onChange={handleStartDateChange}
+                                        value={dayjs(event.startDate)}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label
+                                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="eventDatetime"
+                                >
+                                    End Datetime
+                                </label>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
+                                    <DateTimePicker
+                                        style={{ border: "none" }}
+                                        className="border-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="eventDatetime"
+                                        onChange={handleEndDateChange}
+                                        value={dayjs(event.endDate)}
                                     />
                                 </LocalizationProvider>
                             </div>

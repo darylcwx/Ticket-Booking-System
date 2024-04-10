@@ -16,7 +16,8 @@ import { styled } from "@mui/material/styles";
 export default function CreateEvent() {
     DocumentTitle("Create Event");
     const navigate = useNavigate();
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
     const [eventName, setEventName] = useState();
     const [eventVenue, setEventVenue] = useState();
     const [eventDesc, setEventDesc] = useState();
@@ -56,8 +57,12 @@ export default function CreateEvent() {
         }
     };
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
+    const handleStartDateChange = (date) => {
+        setSelectedStartDate(date);
+    };
+
+    const handleEndDateChange = (date) => {
+        setSelectedEndDate(date);
     };
 
     const handleSubmit = async (e) => {
@@ -96,7 +101,8 @@ export default function CreateEvent() {
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            datetime: dayjs(selectedDate).format(),
+            startDate: dayjs(selectedStartDate).format(),
+            endDate: dayjs(selectedEndDate).format(),
             totalTickets: totalTicketNum,
             ticketsAvailable: totalTicketNum,
             guestsAllowed: maxGuestNum,
@@ -204,12 +210,12 @@ export default function CreateEvent() {
 
                         {/* EVENT DATETIME */}
                         <div className="flex flex-wrap -mx-3 mb-6">
-                            <div className="w-full px-3">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <label
                                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                     for="eventDatetime"
                                 >
-                                    Date & time
+                                    Start Datetime
                                 </label>
                                 <LocalizationProvider
                                     dateAdapter={AdapterDayjs}
@@ -218,7 +224,25 @@ export default function CreateEvent() {
                                         style={{ border: "none" }}
                                         className="border-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                         id="eventDatetime"
-                                        onChange={handleDateChange}
+                                        onChange={handleStartDateChange}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label
+                                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    for="eventDatetime"
+                                >
+                                    End Datetime
+                                </label>
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
+                                    <DateTimePicker
+                                        style={{ border: "none" }}
+                                        className="border-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="eventDatetime"
+                                        onChange={handleEndDateChange}
                                     />
                                 </LocalizationProvider>
                             </div>
