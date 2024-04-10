@@ -16,12 +16,12 @@ export default function EventCard({ event, page }) {
     return (
         <div
             key={event.id}
-            className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto"
+            className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto max-w-[400px] md:max-w-none"
         >
-            <div className="">
+            <div className="flex m-auto">
                 <Link to={`/event/${event.id}`}>
                     <img
-                        className="shrink md:max-w-[300px] lg:max-w-[400px]"
+                        className="shrink maw-w-[400px] md:max-w-[300px]"
                         src={`../events/${event.image}`}
                     />
                 </Link>
@@ -32,7 +32,7 @@ export default function EventCard({ event, page }) {
             <TicketDividerHorizontal className="flex md:hidden" />
 
             {/* //SECTION - event details */}
-            <div className="pt-0 md:pt-4 p-4 md:pl-0 flex flex-col justify-between">
+            <div className="pt-0 md:pt-4 p-4 md:pl-0 flex flex-col justify-between w-full">
                 <div className="">
                     <div className="sm:flex md:block lg:flex block  justify-between">
                         {page == "managerDashboard" ? (

@@ -168,10 +168,8 @@ public class CustomerController {
   }
 
   @GetMapping("/bookings/{username}")
-  public ResponseEntity<Object> getBookings(@RequestBody GetBookingsRequest request) {
-    String username = request.getUsername();
-    String status = request.getStatus();
-
+  public ResponseEntity<Object> getBookings(@PathVariable String username, @RequestParam Map<String, String> queryParams) {
+    String status = queryParams.get("status");
     try {
       List<Booking> bookings = customerService.getBookings(username, status); // created, cancelled, completed
       return ResponseEntity.ok(bookings);
@@ -245,10 +243,10 @@ public class CustomerController {
     try {
       Payment payment = paymentService.createPayment(amount, username);
 
-      return paymentService.createCheckoutSession(username, amount, payment.getId()); 
+      return paymentService.createCheckoutSession(username, amount, payment.getId());
 
     } catch (Exception e) {
-        System.out.println(e.getMessage());
+      System.out.println(e.getMessage());
 
       return null;
     }

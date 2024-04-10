@@ -24,7 +24,8 @@ public class CustomerService {
   private final PaymentService paymentService;
 
   @Autowired
-  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository, BookingRepository bookingRepository, BookingService bookingService, PaymentService paymentService) {
+  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository,
+      BookingRepository bookingRepository, BookingService bookingService, PaymentService paymentService) {
     this.customerRepository = customerRepository;
     this.eventRepository = eventRepository;
     this.bookingRepository = bookingRepository;
@@ -144,10 +145,12 @@ public class CustomerService {
     }
     List<String> bookings = customer.getBookings();
     List<Booking> lst = new ArrayList<>();
-
-    for (String bid : bookings){
+    System.out.println("status: " +status);
+    for (String bid : bookings) {
       Booking booking = bookingRepository.findById(bid).get();
-      if (booking.getStatus().equals(status)) {
+      if (status.equals("all")) {
+        lst.add(booking);
+      } else if (booking.getStatus().equals(status)) {
         lst.add(booking);
       }
     }
@@ -180,8 +183,8 @@ public class CustomerService {
     customer.setAccountBalance(balance - totalPrice);
 
     List<Map<String, Object>> cart = customer.getCart();
-    for (Map<String, Object> item : cart){
-      if (item.get("id").equals(booking.getEventId())){
+    for (Map<String, Object> item : cart) {
+      if (item.get("id").equals(booking.getEventId())) {
         cart.remove(item);
         break;
       }
@@ -232,8 +235,8 @@ public class CustomerService {
 
   public boolean topupAccount(String username, Double amount, String paymentId) throws Exception {
     Payment payment = paymentService.getPayment(paymentId);
-    
-    if (payment.getStatus().equals("paid")){
+
+    if (payment.getStatus().equals("paid")) {
       Customer customer = customerRepository.findByUsername(username);
       List<Payment> payments = customer.getPaymentHistory();
       payments.add(payment);
