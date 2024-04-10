@@ -4,7 +4,8 @@ export default function SendEmail(
     user,
     purpose,
     event = null,
-    tempPass = null
+    tempPass = null,
+    attachment = null
 ) {
     e.preventDefault();
     const service_id = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -27,8 +28,8 @@ export default function SendEmail(
             messageBody = `We've received your order for ${event.name} 🤩`;
             messageFooter = "We look forward to seeing you soon!";
             break;
-        case "eticket":
-            template_id = import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID;
+        case "e-ticket":
+            template_id = import.meta.env.VITE_EMAILJS_OTHER_TEMPLATE_ID;
             messageSubject = `eTicket for ${event.name}`;
             messageBody = `Your eTicket for ${event.name} is confirmed 🤩`;
             messageFooter = "We look forward to seeing you soon!";
@@ -62,7 +63,11 @@ export default function SendEmail(
         totalAmount: event?.ticketPrice * event?.quantity,
     };
 
-    emailjs.send(service_id, template_id, template_params).then(
+    const attachmentData = attachment
+        ? [{ name: "e-ticket.pdf", data: attachment }]
+        : null;
+
+    emailjs.send(service_id, template_id, template_params, attachmentData).then(
         (response) => {
             console.log("SUCCESS", response);
         },

@@ -9,6 +9,7 @@ import sendEmail from "../utils/sendEmail";
 
 export default function Ticket() {
     DocumentTitle("Ticket Details");
+    const navigate = useNavigate();
     const location = useLocation();
     const { ticket } = location.state || {};
     const [alertOpen, setAlertOpen] = useState(false);
@@ -20,22 +21,33 @@ export default function Ticket() {
     // Extract ticket details
     const { customerEmail, ticketId, eventName, venue, datetime, price } = ticket;
 
-    const handleEticketIssue = () => {
+    // Send Email
+    const handleEticketIssue = (e) => {
+        e.preventDefault();
         setAlertOpen(true);
-        generatePDF();
-        // Send email
+        const pdf = generatePDF(false);
+        sendEmail(e, customerEmail, "e-ticket", ticket, null, pdf);
+        // setTimeout(() => {
+        //     setAlertOpen(false);
+        //     navigate(`/ticketingOfficerDashboard`);
+        // }, 1500);
     };
 
+    // 'Print' ticket
     const handlePrintTicket = () => {
         setAlertOpen(true);
-        // 'Print' ticket
+        generatePDF(true);
+        setTimeout(() => {
+            setAlertOpen(false);
+            navigate(`/ticketingOfficerDashboard`);
+        }, 1500);
     };
 
     const handleCloseAlert = () => {
         setAlertOpen(false);
     };
 
-    const generatePDF = () => {
+    const generatePDF = (savePDF) => {
         const doc = new jsPDF({
             orientation: 'landscape'
         });
@@ -64,7 +76,11 @@ export default function Ticket() {
         doc.text(`Date & Time: ${formatDatetime(datetime)}`, middleX, middleY + 40);
         doc.text(`Price($): ${price}`, middleX, middleY + 50);
 
-        doc.save('e-ticket.pdf');
+        if (savePDF) {
+            doc.save('e-ticket.pdf'); // Save PDF
+        } else {
+            return doc.output(); // Return PDF data
+        }
     };
 
     return(
