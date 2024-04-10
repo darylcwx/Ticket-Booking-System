@@ -1,12 +1,14 @@
 package g2t5.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.hpsf.Array;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import g2t5.database.entity.*;
@@ -71,16 +73,16 @@ public class EventManagerService {
 
         Optional<Event> optionalEvent = eventRepository.findById(cancelEvent.getId());
         if (optionalEvent.isPresent()) {
-            //set cancelled stauts for Event
+            // set cancelled stauts for Event
             Event event = optionalEvent.get();
             event.setStatus("cancelled");
             eventRepository.save(event);
 
-            //set cancelled status for Booking
+            // set cancelled status for Booking
             String eventId = event.getId();
             bookingService.cancelEventBookings(eventId);
 
-            //Refund
+            // Refund
             customerService.refundEventBookings(eventId);
 
         } else {
@@ -152,6 +154,25 @@ public class EventManagerService {
             return customerList;
         } catch (Exception e) {
             throw new Exception("Error obtaining customer", e);
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void updateBookings() {
+        List<Event> eventList = eventRepository.findAll();
+
+        Date currentDate = new Date(); // Current date and time
+
+        for (Event event : eventList) {
+            Date endDate = event.getEndDate();
+            if (currentDate.after(endDate) || currentDate.equals(endDate)) {
+                String eventId = event.getId();
+                try{
+                    bookingService.updateBookings(eventId);
+                } catch (Exception e){
+                    System.out.println("Error updating booking" + e);
+                }
+            }
         }
     }
 

@@ -23,6 +23,7 @@ import g2t5.database.entity.Booking;
 import g2t5.database.entity.Concert;
 import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
+import g2t5.database.entity.Ticket;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
 import g2t5.database.repository.ReportRepository;
@@ -45,6 +46,9 @@ public class ReportService {
     private BookingService bookingService;
 
     @Autowired
+    private TicketService ticketService;
+
+    @Autowired
     private EventRepository eventRepository;
 
     public Map<String, Integer> generateReportTicketsSales() {
@@ -58,8 +62,12 @@ public class ReportService {
             try {
                 List<Booking> bookingList = bookingService.getByEventId(eventId);
                 for (Booking booking : bookingList) {
-                    if (booking.getStatus().equals("created")) {
-                        ticketsSold += booking.getTickets().size();
+                    List<String> ticketList = booking.getTickets();
+                    for(String ticketId : ticketList){
+                        Ticket ticket = ticketService.getTicket(ticketId);
+                        if(!ticket.getStatus().equals("cancelled")){
+                            ticketsSold++;
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -106,27 +114,29 @@ public class ReportService {
         return reportTickets;
     }
 
-    public Map<String, String> generateCustomerDetails() {
-        Map<String, String> reportCustomer = new HashMap<>();
+    public Map<String, Integer> generateAttendees() {
+        Map<String, Integer> reportCustomer = new HashMap<>();
         List<Event> events = eventRepository.findAll();
         for (int i = 0; i < events.size(); i++) {
-            String customerEmail = "";
+            int total = 0;
             Event event = events.get(i);
             String name = event.getName();
             String eventId = event.getId();
             try {
                 List<Booking> bookingList = bookingService.getByEventId(eventId);
                 for (Booking booking : bookingList) {
-                    Optional<Customer> customerOptional = customerRepository.findById(booking.getCustomerId());
-                    Customer customer = customerOptional.get();
-                    String email = customer.getUsername();
-                    customerEmail = customerEmail + email + ",";
+                    List<String> ticketList = booking.getTickets();
+                    for(String ticketId : ticketList){
+                        Ticket ticket = ticketService.getTicket(ticketId);
+                        if(ticket.getStatus().equals("inactive")){
+                            total++;
+                        }
+                    }
                 }
-                customerEmail = customerEmail.substring(0, customerEmail.length() - 1);
             } catch (Exception e) {
 
             }
-            reportCustomer.put(name, customerEmail);
+            reportCustomer.put(name, total);
         }
         return reportCustomer;
     }
@@ -135,8 +145,7 @@ public class ReportService {
         Map<String, Double> revenue = generateReportRevenue();
         Map<String, Integer> ticketsSales = generateReportTicketsSales();
         Map<String, Integer> ticketsCancelled = generateTicketsCancelled();
-        Map<String, String> customerEmails = generateCustomerDetails();
-        System.out.println(customerEmails);
+        Map<String, Integer> customerAttendees = generateAttendees();
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Event Report");
 
@@ -170,7 +179,7 @@ public class ReportService {
             headerRow.createCell(5).setCellValue("Revenue");
             headerRow.getCell(5).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(6).setCellValue("Customer Emails");
+            headerRow.createCell(6).setCellValue("Number of Attendees");
             headerRow.getCell(6).setCellStyle(headerCellStyle);
 
             headerRow.createCell(7).setCellValue("Type");
@@ -201,7 +210,7 @@ public class ReportService {
                 row.createCell(3).setCellValue(ticketsSales.get(eventName));
                 row.createCell(4).setCellValue(ticketsCancelled.get(eventName));
                 row.createCell(5).setCellValue(revenue.get(eventName));
-                row.createCell(6).setCellValue(customerEmails.get(eventName));
+                row.createCell(6).setCellValue(customerAttendees.get(eventName));
                 row.createCell(7).setCellValue(type);
             }
 
