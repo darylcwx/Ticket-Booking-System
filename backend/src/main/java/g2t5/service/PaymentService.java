@@ -96,7 +96,7 @@ public class PaymentService {
     public void updatePayment( String paymentId) {
         //Payment payment = new Payment(amount, customer, new Date(), "unpaid");
         Payment payment = getPayment(paymentId);
-        payment.setStatus("Paid");
+        payment.setStatus("paid");
         paymentRepository.save(payment);
       }
 }

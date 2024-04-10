@@ -31,7 +31,7 @@ public class TicketService {
     List<Ticket> tickets = new ArrayList<>();
     for (int i = 0; i < qty; i++) {
       // change customer name thingy
-      Ticket ticket = new Ticket(event.getId(), event.getName(), event.getVenue(), event.getDatetime(),
+      Ticket ticket = new Ticket(event.getId(), event.getName(), event.getVenue(), event.getStartDate(),
           event.getTicketPrice(), username, "active");
       tickets.add(ticket);
       ticketRepository.save(ticket);

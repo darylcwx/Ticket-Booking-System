@@ -45,7 +45,7 @@ public class BookingService {
 
   public Booking createBooking(String username, String eventId, int qty) throws Exception {
     Event event = eventRepository.findById(eventId).get();
-    Date date = event.getDatetime();
+    Date date = event.getStartDate();
     Date curr = new Date();
 
     Calendar calendar = Calendar.getInstance();
@@ -82,7 +82,7 @@ public class BookingService {
   public boolean cancelBooking(String bookingId) throws Exception {
     Booking booking = bookingRepository.findById(bookingId).get();
     Event event = eventRepository.findById(booking.getEventId()).get();
-    Date date = event.getDatetime();
+    Date date = event.getStartDate();
     Date curr = new Date();
 
     Calendar calendar = Calendar.getInstance();
@@ -107,20 +107,6 @@ public class BookingService {
 
     return true;
   }
-
-    // public void cancelEventBookings(List<Booking> bookings) throws Exception {
-    //     for (Booking booking : bookings) {
-    //         Booking curr = bookingRepository.findById(booking.getBookingId()).get();
-    //         curr.setStatus("cancelled");
-
-    //         List<Ticket> tickets = curr.getTickets();
-    //         for (Ticket ticket : tickets) {
-    //             ticketService.deactivateTicket(ticket);
-    //         }
-
-    //         bookingRepository.save(curr);
-    //     }
-    // }
 
     public void cancelEventBookings(String eventId) throws Exception {
       List<Booking> bookings = bookingRepository.findAll();
