@@ -132,12 +132,6 @@ public class BookingService {
           if (booking.getEventId().equals(eventId)) {
             booking.setStatus("completed");
 
-            List<String> tickets = booking.getTickets();
-            for (String ticketid : tickets) {
-              Ticket ticket = ticketService.getTicket(ticketid);
-              ticketService.updateTicket(ticket);
-            }
-
             bookingRepository.save(booking);
           }
         }
