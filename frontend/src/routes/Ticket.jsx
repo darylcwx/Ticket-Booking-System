@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 // import Navbar from "../components/Navbar";
+import formatDatetime from "../utils/formatDatetime";
 import { Typography, Card, CardContent, Grid, Container, Button, Snackbar, Alert } from '@mui/material';
 import jsPDF from 'jspdf';
 import sendEmail from "../utils/sendEmail";
@@ -56,11 +57,11 @@ export default function Ticket() {
         // Ticket details
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
-        doc.text(`Customer Email: ${customerEmail}`, middleX, middleY);
+        doc.text(`Email: ${customerEmail}`, middleX, middleY);
         doc.text(`Ticket ID: ${ticketId}`, middleX, middleY + 10);
         doc.text(`Event Name: ${eventName}`, middleX, middleY + 20);
         doc.text(`Event Venue: ${venue}`, middleX, middleY + 30);
-        doc.text(`Date & Time: ${datetime}`, middleX, middleY + 40);
+        doc.text(`Date & Time: ${formatDatetime(datetime)}`, middleX, middleY + 40);
         doc.text(`Price($): ${price}`, middleX, middleY + 50);
 
         doc.save('e-ticket.pdf');
@@ -83,7 +84,7 @@ export default function Ticket() {
                                     <Typography><strong>Ticket ID:</strong> {ticketId}</Typography>
                                     <Typography><strong>Event Name:</strong> {eventName}</Typography>
                                     <Typography><strong>Event Venue:</strong> {venue}</Typography>
-                                    <Typography><strong>Date & Time:</strong> {datetime}</Typography>
+                                    <Typography><strong>Date & Time:</strong> {formatDatetime(datetime)}</Typography>
                                     <Typography><strong>Price($):</strong> {price}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
