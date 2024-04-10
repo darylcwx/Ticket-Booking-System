@@ -26,15 +26,14 @@ public class TicketService {
     return getTicket(ticket);
   }
 
-  public List<Ticket> createTickets(String eventId, String username, int qty) {
+  public List<String> createTickets(String eventId, String username, int qty) {
     Event event = eventRepository.findById(eventId).get();
-    List<Ticket> tickets = new ArrayList<>();
+    List<String> tickets = new ArrayList<>();
     for (int i = 0; i < qty; i++) {
-      // change customer name thingy
-      Ticket ticket = new Ticket(event.getId(), event.getName(), event.getVenue(), event.getStartDate(),
-          event.getTicketPrice(), username, "active");
-      tickets.add(ticket);
+      Ticket ticket = new Ticket(event.getId(), event.getName(), event.getVenue(), event.getStartDate(), event.getTicketPrice(), username, "active");
+
       ticketRepository.save(ticket);
+      tickets.add(ticket.getTicketId());
     }
 
     return tickets;
@@ -50,6 +49,19 @@ public class TicketService {
 
   public Ticket getTicket(String id) {
     return ticketRepository.findById(id).get();
+  }
+
+  public List<Ticket> getBookingTickets(List<String> tids) {
+    List<Ticket> tickets = new ArrayList<>();
+    for (String tid : tids) {
+      try{
+        updateTicketInfo(tid);
+        tickets.add(getTicket(tid));
+      }catch(Exception e){
+      }
+    }
+
+    return tickets;
   }
 
   public void deactivateTicket(Ticket ticket) throws Exception {
