@@ -13,7 +13,8 @@ public class Event {
 
   private String name;
   private String description;
-  private Date datetime = new Date();
+  private Date startDate = new Date();
+  private Date endDate = new Date();
   private double ticketPrice;
   private int ticketsAvailable;
   private int totalTickets;
@@ -43,12 +44,20 @@ public class Event {
     this.description = description;
   }
 
-  public Date getDatetime() {
-    return datetime;
+  public Date getStartDate() {
+    return startDate;
   }
 
-  public void setDatetime(Date datetime) {
-    this.datetime = datetime;
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
   }
 
   public double getTicketPrice() {

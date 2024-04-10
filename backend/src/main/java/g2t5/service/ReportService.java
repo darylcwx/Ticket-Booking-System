@@ -175,7 +175,7 @@ public class ReportService {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
                 // Convert Date to LocalDateTime
-                Date date = event.getDatetime();
+                Date date = event.getStartDate();
                 Instant instant = date.toInstant();
                 LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
 

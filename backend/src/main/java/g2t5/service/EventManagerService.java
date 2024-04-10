@@ -51,7 +51,8 @@ public class EventManagerService {
 
             event.setName(updatedEvent.getName());
             event.setDescription(updatedEvent.getDescription());
-            event.setDatetime(updatedEvent.getDatetime());
+            event.setStartDate(updatedEvent.getStartDate());
+            event.setEndDate(updatedEvent.getEndDate());
             event.setTicketPrice(updatedEvent.getTicketPrice());
             event.setTicketsAvailable(updatedEvent.getTicketsAvailable());
             event.setStatus(updatedEvent.getStatus());
