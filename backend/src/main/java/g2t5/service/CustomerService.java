@@ -137,17 +137,18 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
-  public List<String> getBookings(String username, String status) throws Exception {
+  public List<Booking> getBookings(String username, String status) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     if (customer == null) {
       throw new Exception("User not found");
     }
     List<String> bookings = customer.getBookings();
-    List<String> lst = new ArrayList<>();
+    List<Booking> lst = new ArrayList<>();
+
     for (String bid : bookings){
       Booking booking = bookingRepository.findById(bid).get();
       if (booking.getStatus().equals(status)) {
-        lst.add(bid);
+        lst.add(booking);
       }
     }
     Collections.sort(lst, new BookingComparator());

@@ -173,7 +173,7 @@ public class CustomerController {
     String status = request.getStatus();
 
     try {
-      List<String> bookings = customerService.getBookings(username, status); // created, cancelled, completed
+      List<Booking> bookings = customerService.getBookings(username, status); // created, cancelled, completed
       return ResponseEntity.ok(bookings);
 
     } catch (Exception e) {
