@@ -6,6 +6,7 @@ import g2t5.database.entity.Booking;
 import g2t5.database.entity.Payment;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
+import g2t5.database.repository.BookingRepository;
 import java.util.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,15 @@ public class CustomerService {
   @Autowired
   private final CustomerRepository customerRepository;
   private final EventRepository eventRepository;
+  private final BookingRepository bookingRepository;
+  private final BookingService bookingService;
 
   @Autowired
-  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository) {
+  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository, BookingRepository bookingRepository, BookingService bookingService) {
     this.customerRepository = customerRepository;
     this.eventRepository = eventRepository;
+    this.bookingRepository = bookingRepository;
+    this.bookingService = bookingService;
   }
 
   public Customer getCustomerByUsername(String username) {
@@ -35,7 +40,7 @@ public class CustomerService {
     customer.setRole("customer");
     customer.setCart(new ArrayList<Map<String, Object>>());
     customer.setAccountBalance(1000);
-    customer.setBookings(new ArrayList<Booking>());
+    customer.setBookings(new ArrayList<String>());
     // customer.setPaymentHistory(new ArrayList<Payment>());
     customerRepository.save(customer);
   }
@@ -60,7 +65,7 @@ public class CustomerService {
   public boolean addToCart(String username, String eventId, int quantity) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     List<Map<String, Object>> cart = customer.getCart();
-    List<Booking> bookings = customer.getBookings();
+    List<String> bookings = customer.getBookings();
 
     Event event = eventRepository.findById(eventId).get();
     int tixAvail = event.getTicketsAvailable();
@@ -73,8 +78,9 @@ public class CustomerService {
     }
 
     if (bookings.isEmpty() == false) {
-      for (Booking booking : bookings) {
-        if (booking.getEventId().equals(eventId)) {
+      for (String bid : bookings) {
+        Booking booking = bookingRepository.findById(bid).get();
+        if (booking.getEventId().equals(eventId) && booking.getStatus().equals("created")) {
           qty += booking.getTickets().size();
         }
       }
@@ -128,13 +134,20 @@ public class CustomerService {
     customerRepository.save(customer);
   }
 
-  public List<Booking> getBookings(String username)
-      throws Exception {
+  public List<String> getBookings(String username, String status) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
     if (customer == null) {
       throw new Exception("User not found");
     }
-    return customer.getBookings();
+    List<String> bookings = customer.getBookings();
+    List<String> lst = new ArrayList<>();
+    for (String bid : bookings){
+      Booking booking = bookingRepository.findById(bid).get();
+      if (booking.getStatus().equals(status)) {
+        lst.add(bid);
+      }
+    }
+    return lst;
   }
 
   public boolean checkBalance(String username, String eventId, int qty) throws Exception {
@@ -152,8 +165,8 @@ public class CustomerService {
 
   public void createBooking(String username, Booking booking, int qty) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    List<Booking> custBookings = customer.getBookings();
-    custBookings.add(booking);
+    List<String> custBookings = customer.getBookings();
+    custBookings.add(booking.getBookingId());
     customer.setBookings(custBookings);
 
     Event event = eventRepository.findById(booking.getEventId()).get();
@@ -175,34 +188,38 @@ public class CustomerService {
 
   public void cancelAndRefundBooking(String username, String bookingid) throws Exception {
     Customer customer = customerRepository.findByUsername(username);
-    List<Booking> bookings = customer.getBookings();
-    for (Booking booking : bookings) {
-      if (booking.getBookingId().equals(bookingid)) {
-        booking.setStatus("cancelled");
+    List<String> bookings = customer.getBookings();
+    for (String bid : bookings) {
+      if (bid.equals(bookingid)) {
+        Booking booking = bookingRepository.findById(bid).get();
         Event event = eventRepository.findById(booking.getEventId()).get();
         double totalPrice = event.getTicketPrice() * booking.getTickets().size();
         double balance = customer.getAccountBalance();
         double cancellationFee = event.getCancellationFee() * booking.getTickets().size();
 
         customer.setAccountBalance(balance + totalPrice - cancellationFee);
-        customer.setBookings(bookings);
         customerRepository.save(customer);
         break;
       }
     }
   }
 
-  public void refundEventBookings(List<Booking> bookings) throws Exception {
+  public void refundEventBookings(String eventId) throws Exception {
+    List<Booking> bookings = bookingService.getByEventId(eventId);
+    Event event = eventRepository.findById(eventId).get();
+    Double ticketPrice = event.getTicketPrice();
+
     for (Booking booking : bookings) {
       String username = booking.getCustomerId();
       Customer customer = customerRepository.findByUsername(username);
-      List<Booking> custBookings = customer.getBookings();
+      List<String> custBookings = customer.getBookings();
+      double balance = customer.getAccountBalance();
 
-      for (Booking custBook : custBookings) {
-        if (booking.getBookingId().equals(custBook.getBookingId())) {
-          custBook.setStatus("cancelled");
-          customer.setBookings(custBookings);
+      for (String custBook : custBookings) {
+        if (booking.getBookingId().equals(custBook)) {
+          customer.setAccountBalance(balance + (ticketPrice * booking.getTickets().size()));
           customerRepository.save(customer);
+          break;
         }
       }
     }

@@ -108,17 +108,33 @@ public class BookingService {
     return true;
   }
 
-    public void cancelEventBookings(List<Booking> bookings) throws Exception {
-        for (Booking booking : bookings) {
-            Booking curr = bookingRepository.findById(booking.getBookingId()).get();
-            curr.setStatus("cancelled");
+    // public void cancelEventBookings(List<Booking> bookings) throws Exception {
+    //     for (Booking booking : bookings) {
+    //         Booking curr = bookingRepository.findById(booking.getBookingId()).get();
+    //         curr.setStatus("cancelled");
 
-            List<Ticket> tickets = curr.getTickets();
+    //         List<Ticket> tickets = curr.getTickets();
+    //         for (Ticket ticket : tickets) {
+    //             ticketService.deactivateTicket(ticket);
+    //         }
+
+    //         bookingRepository.save(curr);
+    //     }
+    // }
+
+    public void cancelEventBookings(String eventId) throws Exception {
+      List<Booking> bookings = bookingRepository.findAll();
+        for (Booking booking : bookings) {
+          if (booking.getEventId().equals(eventId)) {
+            booking.setStatus("cancelled");
+
+            List<Ticket> tickets = booking.getTickets();
             for (Ticket ticket : tickets) {
                 ticketService.deactivateTicket(ticket);
             }
 
-            bookingRepository.save(curr);
+            bookingRepository.save(booking);
+          }
         }
     }
 

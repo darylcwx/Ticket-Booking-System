@@ -8,7 +8,7 @@ public class Customer extends User {
 
   private List<Map<String, Object>> cart; 
   private double accountBalance;
-  private List<Booking> bookings; 
+  private List<String> bookings; 
   private List<Payment> paymentHistory;
 
   public double getAccountBalance() {
@@ -27,11 +27,11 @@ public class Customer extends User {
     this.cart = cart;
   }
 
-  public List<Booking> getBookings() {
+  public List<String> getBookings() {
     return bookings;
   }
 
-  public void setBookings(List<Booking> bookings) {
+  public void setBookings(List<String> bookings) {
     this.bookings = bookings;
   }
 

@@ -77,11 +77,10 @@ public class EventManagerService {
 
             //set cancelled status for Booking
             String eventId = event.getId();
-            List<Booking> bookingList = bookingService.getByEventId(eventId);
-            bookingService.cancelEventBookings(bookingList);
+            bookingService.cancelEventBookings(eventId);
 
             //Refund
-            customerService.refundEventBookings(bookingList);
+            customerService.refundEventBookings(eventId);
 
         } else {
             throw new Exception("No event found");

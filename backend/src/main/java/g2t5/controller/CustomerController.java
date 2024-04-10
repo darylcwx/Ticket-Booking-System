@@ -167,11 +167,11 @@ public class CustomerController {
   }
 
   @GetMapping("/bookings/{username}")
-  public ResponseEntity<Object> getBookings(@PathVariable String username) {
+  public ResponseEntity<Object> getBookings(@PathVariable String username, @PathVariable String status) {
     try {
-      List<Booking> bookings = customerService.getBookings(
-          username);
+      List<String> bookings = customerService.getBookings(username, status); // created, cancelled, completed
       return ResponseEntity.ok(bookings);
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return ResponseEntity
@@ -233,7 +233,7 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/topup")
+  @PostMapping("/profile/topup")
   public RedirectView topupAccount(@RequestBody TopupRequest request) throws StripeException {
     String username = request.getUsername();
     Double amount = request.getAmount();
