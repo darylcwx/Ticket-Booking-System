@@ -83,7 +83,7 @@ export default function Event() {
                                 {event.name}
                             </div>
                             <div className="">
-                                {formatDatetime(event.datetime)}
+                                {formatDatetime(event.startDate)}
                             </div>
                             <div className="pt-2">{event.description}</div>
 

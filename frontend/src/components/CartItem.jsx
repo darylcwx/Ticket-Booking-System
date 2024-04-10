@@ -90,7 +90,7 @@ export default function CartItem({
                                 </Link>
                             </div>
                             <div className="">
-                                {formatDatetime(event.datetime)}
+                                {formatDatetime(event.startDate)}
                             </div>
                         </div>
                         <div className="max-w-[380px] truncate shrink-0 pt-4">

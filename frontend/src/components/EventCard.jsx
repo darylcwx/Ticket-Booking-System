@@ -50,7 +50,7 @@ export default function EventCard({ event, page }) {
                             </div>
                         )}
                         <div className="flex items-center">
-                            {formatDatetime(event.datetime)}
+                            {formatDatetime(event.startDate)}
                         </div>
                     </div>
                     <div className="pt-2">{event.description}</div>
