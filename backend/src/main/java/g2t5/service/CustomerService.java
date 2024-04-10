@@ -4,6 +4,7 @@ import g2t5.database.entity.Customer;
 import g2t5.database.entity.Event;
 import g2t5.database.entity.Booking;
 import g2t5.database.entity.Payment;
+import g2t5.database.entity.BookingComparator;
 import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
 import g2t5.database.repository.BookingRepository;
@@ -147,6 +148,7 @@ public class CustomerService {
         lst.add(bid);
       }
     }
+    Collections.sort(lst, new BookingComparator());
     return lst;
   }
 
@@ -226,7 +228,7 @@ public class CustomerService {
   }
 
   public boolean topupAccount(String username, Double amount, Payment payment) throws Exception {
-    if (payment.getStatus().equals("success")){
+    if (payment.getStatus().equals("paid")){
       Customer customer = customerRepository.findByUsername(username);
       List<Payment> payments = customer.getPaymentHistory();
       payments.add(payment);
