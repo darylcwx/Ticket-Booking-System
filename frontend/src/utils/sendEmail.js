@@ -5,7 +5,6 @@ export default function SendEmail(
     purpose,
     event = null,
     tempPass = null,
-    attachment = null
 ) {
     e.preventDefault();
     const service_id = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -18,7 +17,8 @@ export default function SendEmail(
     let toEmail = user.username;
     console.log(user);
 
-    toEmail = "darylchua@hotmail.sg";
+    // toEmail = "darylchua@hotmail.sg";
+    toEmail = "is442g2t5@gmail.com";
     const toName = " " + toEmail.split("@")[0];
 
     switch (purpose) {
@@ -63,11 +63,8 @@ export default function SendEmail(
         totalAmount: event?.ticketPrice * event?.quantity,
     };
 
-    const attachmentData = attachment
-        ? [{ name: "e-ticket.pdf", data: attachment }]
-        : null;
-
-    emailjs.send(service_id, template_id, template_params, attachmentData).then(
+    emailjs.send(service_id, template_id, template_params)
+    .then(
         (response) => {
             console.log("SUCCESS", response);
         },

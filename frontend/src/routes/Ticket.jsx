@@ -24,19 +24,18 @@ export default function Ticket() {
     // Send Email
     const handleEticketIssue = (e) => {
         e.preventDefault();
+        sendEmail(e, customerEmail, "e-ticket", ticket, null);
         setAlertOpen(true);
-        const pdf = generatePDF(false);
-        sendEmail(e, customerEmail, "e-ticket", ticket, null, pdf);
-        // setTimeout(() => {
-        //     setAlertOpen(false);
-        //     navigate(`/ticketingOfficerDashboard`);
-        // }, 1500);
+        setTimeout(() => {
+            setAlertOpen(false);
+            navigate(`/ticketingOfficerDashboard`);
+        }, 1500);
     };
 
     // 'Print' ticket
     const handlePrintTicket = () => {
-        setAlertOpen(true);
         generatePDF(true);
+        setAlertOpen(true);
         setTimeout(() => {
             setAlertOpen(false);
             navigate(`/ticketingOfficerDashboard`);
@@ -76,11 +75,7 @@ export default function Ticket() {
         doc.text(`Date & Time: ${formatDatetime(datetime)}`, middleX, middleY + 40);
         doc.text(`Price($): ${price}`, middleX, middleY + 50);
 
-        if (savePDF) {
-            doc.save('e-ticket.pdf'); // Save PDF
-        } else {
-            return doc.output(); // Return PDF data
-        }
+        doc.save('e-ticket.pdf');
     };
 
     return(
