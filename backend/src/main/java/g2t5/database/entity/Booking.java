@@ -10,7 +10,7 @@ public class Booking {
     private String bookingId;
     private String eventId;
     private String customerId;
-    private List<Ticket> tickets;
+    private List<String> tickets;
     private String status;
     private Date dateCreated;
 
@@ -46,11 +46,11 @@ public class Booking {
         this.status = status;
     }
 
-    public List<Ticket> getTickets() {
+    public List<String> getTickets() {
         return tickets;
     }
 
-    public void setTickets(List<Ticket> tickets){
+    public void setTickets(List<String> tickets){
         this.tickets = tickets;
     }
 

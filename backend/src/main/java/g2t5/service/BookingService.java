@@ -63,7 +63,7 @@ public class BookingService {
     }
 
     Booking booking = new Booking();
-    List<Ticket> tickets = ticketService.createTickets(eventId, username, qty);
+    List<String> tickets = ticketService.createTickets(eventId, username, qty);
 
     booking.setEventId(eventId);
     booking.setStatus("created");
@@ -95,9 +95,10 @@ public class BookingService {
     }
 
     booking.setStatus("cancelled");
-    List<Ticket> tickets = booking.getTickets();
-    for (Ticket ticket : tickets) {
-        ticketService.deactivateTicket(ticket);
+    List<String> tickets = booking.getTickets();
+    for (String ticketid : tickets) {
+      Ticket ticket = ticketService.getTicket(ticketid);
+      ticketService.deactivateTicket(ticket);
     }
     
     bookingRepository.save(booking);
@@ -114,9 +115,10 @@ public class BookingService {
           if (booking.getEventId().equals(eventId)) {
             booking.setStatus("cancelled");
 
-            List<Ticket> tickets = booking.getTickets();
-            for (Ticket ticket : tickets) {
-                ticketService.deactivateTicket(ticket);
+            List<String> tickets = booking.getTickets();
+            for (String ticketid : tickets) {
+              Ticket ticket = ticketService.getTicket(ticketid);
+              ticketService.deactivateTicket(ticket);
             }
 
             bookingRepository.save(booking);
@@ -130,9 +132,10 @@ public class BookingService {
           if (booking.getEventId().equals(eventId)) {
             booking.setStatus("completed");
 
-            List<Ticket> tickets = booking.getTickets();
-            for (Ticket ticket : tickets) {
-                ticketService.updateTicket(ticket);
+            List<String> tickets = booking.getTickets();
+            for (String ticketid : tickets) {
+              Ticket ticket = ticketService.getTicket(ticketid);
+              ticketService.updateTicket(ticket);
             }
 
             bookingRepository.save(booking);
