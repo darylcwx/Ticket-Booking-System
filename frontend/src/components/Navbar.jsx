@@ -12,7 +12,7 @@ import CreateEventIcon from "@mui/icons-material/Add";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-export default function Navbar() {
+export default function Navbar({ handleAddedToCart }) {
     const navigate = useNavigate();
     const [user, setUser] = useState();
     const [cartCount, setCartCount] = useState(0);
@@ -49,7 +49,7 @@ export default function Navbar() {
             }
         };
         getUser();
-    }, []);
+    }, [handleAddedToCart]);
 
     // GET STATISTICS FUNCTION - FOR EVENT MANAGER
     const getStatistics = async (e) => {

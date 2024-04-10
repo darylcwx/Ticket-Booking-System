@@ -117,7 +117,7 @@ export default function Cart() {
     };
     return (
         <div className="bg-main min-h-screen min-w-max w-screen">
-            <Navbar />
+            <Navbar handleAddedToCart={handleQuantityChange} />
             <Container className="pt-[65px]">
                 {updatedCart.length == 0 ? (
                     <div className="text-white text-center p-8">

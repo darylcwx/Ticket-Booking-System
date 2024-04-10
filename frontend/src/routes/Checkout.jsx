@@ -61,8 +61,10 @@ export default function Checkout() {
             );
             const data = await response.json();
             console.log(data);
+            //TODO -
             //sendEmail(e, user, "booking", event, null);
         });
+        window.location.reload();
     };
     return (
         <div className="bg-main min-h-screen min-w-max w-screen">

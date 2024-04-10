@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function Event(props) {
+export default function Event() {
     const navigate = useNavigate();
     const [event, setEvent] = useState({});
     const [quantity, setQuantity] = useState(0);
@@ -67,7 +67,7 @@ export default function Event(props) {
     DocumentTitle(event.name);
     return (
         <div className="bg-main w-screen h-screen">
-            <Navbar />
+            <Navbar handleAddedToCart={handleAddToCart} />
             <Container className="pt-[65px]">
                 <div className="text-white p-4">
                     <div className="flex justify-center">

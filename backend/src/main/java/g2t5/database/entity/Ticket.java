@@ -2,7 +2,6 @@ package g2t5.database.entity;
 
 import java.util.Date;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,12 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ticket {
     @Id
     private String ticketId;
-    
+
+    private String eventId;
+
     private String eventName;
 
     private String venue;
 
-    private Date datetime  = new Date();
+    private Date datetime = new Date();
 
     private double price;
 
@@ -25,9 +26,12 @@ public class Ticket {
 
     private String status;
 
-    public Ticket() {}
+    public Ticket() {
+    }
 
-    public Ticket(String eventName, String venue, Date datetime, double price, String customerEmail, String status) {
+    public Ticket(String eventId, String eventName, String venue, Date datetime, double price, String customerEmail,
+            String status) {
+        this.eventId = eventId;
         this.eventName = eventName;
         this.venue = venue;
         this.datetime = datetime;
@@ -44,6 +48,13 @@ public class Ticket {
         this.ticketId = ticketId;
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId){
+        this.eventId = eventId;
+    }
 
     public String getEventName() {
         return eventName;
@@ -87,10 +98,10 @@ public class Ticket {
 
     public String getStatus() {
         return status;
-    }  
+    }
 
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
 }

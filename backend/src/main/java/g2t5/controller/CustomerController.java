@@ -217,6 +217,7 @@ public class CustomerController {
 
     try {
       boolean check = bookingService.cancelBooking(bookingId);
+      System.out.println(check);
       if (check) {
         customerService.cancelAndRefundBooking(username, bookingId);
         return ResponseEntity.ok("{\"message\": \"Cancelled booking successfully\"}");
@@ -238,10 +239,11 @@ public class CustomerController {
     Double amount = request.getAmount();
 
     try {
-      Payment payment = paymentService.createPayment(amount, username); 
-      // RedirectView view = paymentService.createCheckoutSession(amount, username, payment.getId()); 
+      Payment payment = paymentService.createPayment(amount, username);
+      // RedirectView view = paymentService.createCheckoutSession(amount, username,
+      // payment.getId());
       boolean check = customerService.topupAccount(username, amount, payment);
-      if (check){
+      if (check) {
         return new RedirectView();
         // return view;
       }

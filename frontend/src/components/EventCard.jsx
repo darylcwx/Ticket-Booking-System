@@ -19,29 +19,12 @@ export default function EventCard({ event, page }) {
             className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto"
         >
             <div className="">
-                {/* {page == "managerDashboard" ? (
+                <Link to={`/event/${event.id}`}>
                     <img
                         className="shrink md:max-w-[300px] lg:max-w-[400px]"
-                        // width={eventImageHeightAndWidth}
                         src={`../events/${event.image}`}
                     />
-                ) : (
-                    <Link to={`/event/${event.id}`}>
-                        <img
-                            className="shrink md:max-w-[300px] lg:max-w-[400px]"
-                            // width={eventImageHeightAndWidth}
-                            src={`../events/${event.image}`}
-                        />
-                    </Link>
-                )} */}
-                {/* <Link to={`/event/${event.id}`}> */}
-                    <img
-                        className="shrink md:max-w-[300px] lg:max-w-[400px]"
-                        // width={eventImageHeightAndWidth}
-                        src={`../events/${event.image}`}
-                    />
-                {/* </Link> */}
-                
+                </Link>
             </div>
 
             {/* //SECTION - ticket divider */}
