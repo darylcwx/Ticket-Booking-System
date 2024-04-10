@@ -65,6 +65,19 @@ public class TicketService {
 
   }
 
+  public void updateTicket(Ticket ticket) throws Exception {
+    try{
+      Ticket ticket_new = ticketRepository.findById(ticket.getTicketId()).get();
+      ticket.setStatus("inactive"); // when ticket is alr used for event
+      ticketRepository.save(ticket);
+
+    }catch (Exception e){
+      throw new Exception("ticket not found");
+      
+    }
+
+  }
+
   /*
    * public Ticket buyTicket(Ticket ticket) {
    * return ticketRepository.save(ticket);

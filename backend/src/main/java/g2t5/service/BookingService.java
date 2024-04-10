@@ -124,4 +124,20 @@ public class BookingService {
         }
     }
 
+    public void updateBookings(String eventId) throws Exception {
+      List<Booking> bookings = bookingRepository.findAll();
+        for (Booking booking : bookings) {
+          if (booking.getEventId().equals(eventId)) {
+            booking.setStatus("completed");
+
+            List<Ticket> tickets = booking.getTickets();
+            for (Ticket ticket : tickets) {
+                ticketService.updateTicket(ticket);
+            }
+
+            bookingRepository.save(booking);
+          }
+        }
+    }
+
 }
