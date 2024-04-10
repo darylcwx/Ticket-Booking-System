@@ -53,13 +53,14 @@ public class TicketService {
   }
 
   public void deactivateTicket(Ticket ticket) throws Exception {
-    Ticket ticket_new = ticketRepository.findById(ticket.getTicketId()).get();
-    if (ticket_new != null) {
-
+    try{
+      Ticket ticket_new = ticketRepository.findById(ticket.getTicketId()).get();
       ticket.setStatus("cancelled");
       ticketRepository.save(ticket);
-    } else {
+
+    }catch (Exception e){
       throw new Exception("ticket not found");
+      
     }
 
   }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TicketRepository extends MongoRepository<Ticket, String>{
     List<Ticket> findAll();
+
+    Optional<Ticket> findById(String ticketId);
 }
