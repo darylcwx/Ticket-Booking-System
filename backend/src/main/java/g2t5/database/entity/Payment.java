@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.*;
 
 import org.springframework.data.annotation.Id;
+
 @Document(collection = "payment")
 public class Payment {
 

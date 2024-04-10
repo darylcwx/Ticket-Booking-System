@@ -38,42 +38,58 @@ public class PaymentController {
 
     @Value("${stripe.apiKey}")
     private String key;
+    private final PaymentService paymentService;
+    private final CustomerService customerService;
+
+    @Autowired
+        public PaymentController(PaymentService paymentService, CustomerService customerService) {
+                this.paymentService = paymentService;
+                this.customerService = customerService;
+        }
 
     @PostMapping("/payments/create-checkout-session")
     //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
     //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
     public RedirectView createCheckoutSession() throws StripeException {
+        Payment payment = paymentService.createPayment(15.8, "c");
 
-        //Long amount, String paymentObjID
-        Stripe.apiKey = key;
+        return paymentService.createCheckoutSession("c", 15.8, payment.getId()); 
 
-        // Define the parameters for the checkout session
-        SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
-        builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.PAYNOW);
-        builder.setMode(SessionCreateParams.Mode.PAYMENT);
-        builder.setSuccessUrl("http://localhost:5173/dashboard");
-        builder.setCancelUrl("http://localhost:5173/dashboard");
-        builder.putMetadata("paymentObjID", "paymentObjID");
-        builder.addLineItem(
-                SessionCreateParams.LineItem.builder()
-                        .setQuantity(1L)
-                        .setPriceData(
-                                SessionCreateParams.LineItem.PriceData.builder()
-                                        .setCurrency("sgd")
-                                        .setUnitAmount(1000L) // Amount in cents
-                                        .setProductData(
-                                                SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                        .setName("Top up" + (1000L / 100) + " sgd")
-                                                        .setDescription("objid")
-                                                        .build())
-                                        .build())
-                        .build());
+        
 
-        // Create the checkout session
-        Session session = Session.create(builder.build());
 
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(session.getUrl());
-        return redirectView;
+
+
+        // //Long amount, String paymentObjID
+        // Stripe.apiKey = key;
+
+        // // Define the parameters for the checkout session
+        // SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
+        // builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.PAYNOW);
+        // builder.setMode(SessionCreateParams.Mode.PAYMENT);
+        // builder.setSuccessUrl("http://localhost:5173/dashboard");
+        // builder.setCancelUrl("http://localhost:5173/dashboard");
+        // builder.putMetadata("paymentObjID", "paymentObjID");
+        // builder.addLineItem(
+        //         SessionCreateParams.LineItem.builder()
+        //                 .setQuantity(1L)
+        //                 .setPriceData(
+        //                         SessionCreateParams.LineItem.PriceData.builder()
+        //                                 .setCurrency("sgd")
+        //                                 .setUnitAmount(1000L) // Amount in cents
+        //                                 .setProductData(
+        //                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
+        //                                                 .setName("Top up" + (1000L / 100) + " sgd")
+        //                                                 .setDescription("objid")
+        //                                                 .build())
+        //                                 .build())
+        //                 .build());
+
+        // // Create the checkout session
+        // Session session = Session.create(builder.build());
+
+        // RedirectView redirectView = new RedirectView();
+        // redirectView.setUrl(session.getUrl());
+        // return redirectView;
     }
 }

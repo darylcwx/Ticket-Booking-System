@@ -21,13 +21,15 @@ public class CustomerService {
   private final EventRepository eventRepository;
   private final BookingRepository bookingRepository;
   private final BookingService bookingService;
+  private final PaymentService paymentService;
 
   @Autowired
-  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository, BookingRepository bookingRepository, BookingService bookingService) {
+  public CustomerService(CustomerRepository customerRepository, EventRepository eventRepository, BookingRepository bookingRepository, BookingService bookingService, PaymentService paymentService) {
     this.customerRepository = customerRepository;
     this.eventRepository = eventRepository;
     this.bookingRepository = bookingRepository;
     this.bookingService = bookingService;
+    this.paymentService = paymentService;
   }
 
   public Customer getCustomerByUsername(String username) {
@@ -227,7 +229,9 @@ public class CustomerService {
     }
   }
 
-  public boolean topupAccount(String username, Double amount, Payment payment) throws Exception {
+  public boolean topupAccount(String username, Double amount, String paymentId) throws Exception {
+    Payment payment = paymentService.getPayment(paymentId);
+    
     if (payment.getStatus().equals("paid")){
       Customer customer = customerRepository.findByUsername(username);
       List<Payment> payments = customer.getPaymentHistory();

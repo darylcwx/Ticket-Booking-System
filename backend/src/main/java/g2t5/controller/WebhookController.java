@@ -38,7 +38,14 @@ public class WebhookController {
 
 
     @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
+    private final CustomerService customerService;
+
+    @Autowired
+    public WebhookController(PaymentService paymentService, CustomerService customerService) {
+            this.paymentService = paymentService;
+            this.customerService = customerService;
+    }
 
     @PostMapping(value = "/api/stripe-events")
     public ResponseEntity<String> webhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
@@ -73,11 +80,18 @@ public class WebhookController {
 
             Session charge  = (Session) stripeObject;
 
-            paymentService.updatePayment((charge.getMetadata().get("paymentObjID")));
+            try{
+              paymentService.updatePayment((charge.getMetadata().get("paymentObjID")));
+              customerService.topupAccount(charge.getMetadata().get("customer"), Double.parseDouble(charge.getMetadata().get("amount")), charge.getMetadata().get("paymentObjID"));
+              System.err.println("success");
 
-            System.out.println(charge.getMetadata().get("paymentObjID"));
-            System.err.println("success");
+            }catch(Exception e){
+              System.out.println(e.getMessage());
+
+            }
+
             break;
+
           case "payment_method.attached":
             // ...
             break;

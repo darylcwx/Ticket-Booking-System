@@ -47,7 +47,7 @@ public class PaymentService {
     //@PostMapping("/payments/create-checkout-session")
     //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
     //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
-    public RedirectView createCheckoutSession(Double amount, String paymentObjID) throws StripeException {
+    public RedirectView createCheckoutSession(String username, Double amount, String paymentObjID) throws StripeException {
 
         //Long amount, String paymentObjID
         Stripe.apiKey = key;
@@ -56,20 +56,22 @@ public class PaymentService {
         SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
         builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.PAYNOW);
         builder.setMode(SessionCreateParams.Mode.PAYMENT);
-        builder.setSuccessUrl("http://localhost:5173/dashboard");
-        builder.setCancelUrl("http://localhost:5173/dashboard");
+        builder.setSuccessUrl("http://localhost:5173/profile");
+        builder.setCancelUrl("http://localhost:5173/profile");
         builder.putMetadata("paymentObjID", paymentObjID);
+        builder.putMetadata("amount", amount.toString());
+        builder.putMetadata("customer", username); // change
         builder.addLineItem(
                 SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(
                                 SessionCreateParams.LineItem.PriceData.builder()
                                         .setCurrency("sgd")
-                                        .setUnitAmount(1000L) // Amount in cents
+                                        .setUnitAmount((long) (amount * 100)) // Amount in cents
                                         .setProductData(
                                                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                        .setName("Top up" + (1000L / 100) + " sgd")
-                                                        .setDescription("Ticket" + paymentObjID)
+                                                        .setName("Top up " + amount + " sgd")
+                                                        .setDescription("Ticket " + paymentObjID)
                                                         .build())
                                         .build())
                         .build());

@@ -240,17 +240,12 @@ public class CustomerController {
 
     try {
       Payment payment = paymentService.createPayment(amount, username);
-      RedirectView view = paymentService.createCheckoutSession(amount, payment.getId());
-      boolean check = customerService.topupAccount(username, amount, payment);
-      System.out.println(check);
 
-      if (check) {
-        return view;
-      }
-      return null;
+      return paymentService.createCheckoutSession(username, amount, payment.getId()); 
 
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+        System.out.println(e.getMessage());
+
       return null;
     }
   }
