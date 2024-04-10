@@ -44,7 +44,7 @@ public class CustomerService {
     customer.setCart(new ArrayList<Map<String, Object>>());
     customer.setAccountBalance(1000);
     customer.setBookings(new ArrayList<String>());
-    // customer.setPaymentHistory(new ArrayList<Payment>());
+    customer.setPaymentHistory(new ArrayList<Payment>());
     customerRepository.save(customer);
   }
 
