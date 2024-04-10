@@ -1,4 +1,5 @@
 import emailjs from "@emailjs/browser";
+import formatDatetime from "../utils/formatDatetime";
 export default function SendEmail(
     e,
     user,
@@ -30,8 +31,8 @@ export default function SendEmail(
             break;
         case "e-ticket":
             template_id = import.meta.env.VITE_EMAILJS_OTHER_TEMPLATE_ID;
-            messageSubject = `eTicket for ${event.name}`;
-            messageBody = `Your eTicket for ${event.name} is confirmed 🤩`;
+            messageSubject = `eTicket for ${event.eventName}`;
+            messageBody = `Your eTicket for ${event.eventName} is confirmed 🤩`;
             messageFooter = "We look forward to seeing you soon!";
             break;
         case "cancellation":
@@ -55,12 +56,13 @@ export default function SendEmail(
         messageSubject: messageSubject,
         messageBody: messageBody,
         messageFooter: messageFooter,
-        eventName: event?.name,
+        eventName: event?.eventName,
         eventVenue: event?.venue,
-        eventDateTime: event?.datetime,
-        ticketPrice: event?.ticketPrice,
+        eventDateTime: formatDatetime(event.datetime), // why isit giving datetime now
+        ticketPrice: event?.price,
         ticketsBought: event?.quantity,
         totalAmount: event?.ticketPrice * event?.quantity,
+        ticketId: event.ticketId
     };
 
     emailjs.send(service_id, template_id, template_params)
