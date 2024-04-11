@@ -64,11 +64,21 @@ export default function Dashboard() {
 
     useEffect(() => {
         if (filteredEvents.length) {
+            const sortedEvents = [...filteredEvents];
             if (sort == "date") {
-                filteredEvents.sort((a, b) => a.date - b.date);
+                sortedEvents.sort((a, b) => {
+                    const dateA = Date.parse(a.startDate);
+                    const dateB = Date.parse(b.startDate);
+                    return dateA - dateB;
+                });
             } else if (sort == "price") {
-                filteredEvents.sort((a, b) => a.price - b.price);
+                sortedEvents.sort((a, b) => {
+                    const priceA = parseFloat(a.ticketPrice);
+                    const priceB = parseFloat(b.ticketPrice);
+                    return priceA - priceB;
+                });
             }
+            setFilteredEvents(sortedEvents);
         }
     }, [sort]);
 
@@ -102,7 +112,7 @@ export default function Dashboard() {
                                         Sort by
                                     </MenuItem>
                                 ) : (
-                                    <></>
+                                    <div></div>
                                 )}
                                 <MenuItem value="date">Date</MenuItem>
                                 <MenuItem value="price">Price</MenuItem>
