@@ -256,7 +256,7 @@ public class CustomerController {
 
       customerService.updatePendingPayment(username, payment.getId());
 
-      String url = paymentService.createCheckoutSession(username, amount, payment.getId());
+      String url = paymentService.createCheckoutSession(username, payment.getAmount(), payment.getId());
 
       return ResponseEntity.ok("{\"message\": \"" + url + "\"}");
 
@@ -274,7 +274,7 @@ public class CustomerController {
     try {
       String status = customerService.getPaymentStatus(username);
       customerService.updatePendingPayment(username, null);
-      
+
       if (status == null){
         return ResponseEntity.ok("{\"message\": \"No pending payments\"}");
 

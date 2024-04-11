@@ -9,6 +9,7 @@ import g2t5.database.repository.CustomerRepository;
 import g2t5.database.repository.EventRepository;
 import g2t5.database.repository.BookingRepository;
 import java.util.*;
+import java.math.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -235,7 +236,9 @@ public class CustomerService {
     payments.add(payment);
 
     if (payment.getStatus().equals("paid")) {
-      customer.setAccountBalance(customer.getAccountBalance() + amount);
+      BigDecimal bd = new BigDecimal(amount + customer.getAccountBalance());
+      bd = bd.setScale(2, RoundingMode.HALF_UP);
+      customer.setAccountBalance(bd.doubleValue());
 
       customerRepository.save(customer);
       return true;
