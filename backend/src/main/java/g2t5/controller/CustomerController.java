@@ -247,14 +247,16 @@ public class CustomerController {
   }
 
   @PostMapping("/topup")
-  public RedirectView topupAccount(@RequestBody TopupRequest request) throws StripeException {
+  public ResponseEntity<String> topupAccount(@RequestBody TopupRequest request) throws StripeException {
     String username = request.getUsername();
     Double amount = request.getAmount();
 
     try {
       Payment payment = paymentService.createPayment(amount, username);
 
-      return paymentService.createCheckoutSession(username, amount, payment.getId());
+      String url = paymentService.createCheckoutSession(username, amount, payment.getId());
+
+      return ResponseEntity.ok("{\"message\": \"" + url + "\"}");
 
     } catch (Exception e) {
       System.out.println(e.getMessage());

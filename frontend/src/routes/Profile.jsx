@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
+
 
 export default function Profile() {
     DocumentTitle("Profile");
@@ -40,7 +41,10 @@ export default function Profile() {
     const [oldPasswordError, setOldPasswordError] = useState("");
     const [newPasswordError, setNewPasswordError] = useState("");
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
-
+    
+    const [stripeUrl, setStripeUrl] = useState("");
+    const [showStripeUrl, setShowStripeUrl] = useState(false);
+    
     useEffect(() => {
         const getUser = async () => {
             const username = localStorage.getItem("username");
@@ -74,14 +78,20 @@ export default function Profile() {
         try {
             const response = await fetch(`http://localhost:8080/topup`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Methods": "POST, OPTIONS"},
                 body: JSON.stringify({
                     username: user.username,
                     amount: amount,
                 }),
             });
+    
             const data = await response.json();
-            console.log(data);
+            console.log(data.message);
+            setStripeUrl(data.message);
+            setShowStripeUrl(true);
+            
         } catch (e) {
             console.log(e);
         }
@@ -322,13 +332,21 @@ export default function Profile() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button
+                    {!showStripeUrl && (<Button
                         variant="contained"
                         className=""
                         onClick={handleTopUp}
                     >
                         Confirm
-                    </Button>
+                    </Button>)}
+                    {showStripeUrl && (<Link to = {stripeUrl}>
+                        <Button
+                            variant="contained"
+                            className=""
+                        >
+                            Proceed to payment
+                        </Button>
+                    </Link>)}
                 </DialogActions>
             </Dialog>
             {notification && (

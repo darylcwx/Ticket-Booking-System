@@ -47,7 +47,7 @@ public class PaymentService {
     //@PostMapping("/payments/create-checkout-session")
     //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
     //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
-    public RedirectView createCheckoutSession(String username, Double amount, String paymentObjID) throws StripeException {
+    public String createCheckoutSession(String username, Double amount, String paymentObjID) throws StripeException {
 
         //Long amount, String paymentObjID
         Stripe.apiKey = key;
@@ -81,7 +81,7 @@ public class PaymentService {
 
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(session.getUrl());
-        return redirectView;
+        return redirectView.getUrl();
     }
 
     public Payment createPayment( Double amount, String customer) {

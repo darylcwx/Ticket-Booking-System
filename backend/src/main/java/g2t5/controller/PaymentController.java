@@ -50,7 +50,7 @@ public class PaymentController {
     @PostMapping("/payments/create-checkout-session")
     //public RedirectView createCheckoutSession( Long amount, String paymentObjID) throws StripeException {
     //public RedirectView createCheckoutSession(@RequestParam() String custID, @RequestParam String bookingID, @RequestParam Long amount) throws StripeException {
-    public RedirectView createCheckoutSession() throws StripeException {
+    public String createCheckoutSession() throws StripeException {
         Payment payment = paymentService.createPayment(15.8, "c");
 
         return paymentService.createCheckoutSession("c", 15.8, payment.getId()); 
