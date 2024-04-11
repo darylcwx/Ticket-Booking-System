@@ -63,9 +63,9 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @GetMapping("/verify-ticket")
-    public ResponseEntity<String> verifyTicket(@RequestParam String ticketid) {
-        Ticket ticket_new = ticketService.getTicket(ticketid);
+    @GetMapping("/verify-ticket/{ticketId}")
+    public ResponseEntity<String> verifyTicket(@RequestParam String ticketId) {
+        Ticket ticket_new = ticketService.getTicket(ticketId);
 
         if (ticket_new == null) {
             return new ResponseEntity<>("Ticket not found", HttpStatus.OK);
@@ -76,7 +76,7 @@ public class TicketController {
                 ticketService.updateTicket(ticket_new);
             }catch(Exception e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ticketid + e.getMessage());
+                .body(ticketId + e.getMessage());
             }
             return new ResponseEntity<>("Ticket Successfully Redeemed", HttpStatus.OK);
         }
