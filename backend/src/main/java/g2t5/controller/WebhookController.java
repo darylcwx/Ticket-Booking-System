@@ -98,6 +98,7 @@ public class WebhookController {
             // ... handle other event types
           default:
             // Unexpected event type
+            System.err.println("fail");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return new ResponseEntity<>("Success", HttpStatus.OK);

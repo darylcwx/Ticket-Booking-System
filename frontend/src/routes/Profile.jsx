@@ -69,6 +69,12 @@ export default function Profile() {
     useEffect(() => {
         getUser();
         handlePaymentStatus();
+
+        // if (showPaymentStatus == true) --> user top up account, need to show status of payment 
+        //     if (paymentStatus == true) --> payment successful. show success notif 
+        //     else --> payment failed. show error notif
+        // else --> user navigate to profile normally. do nothing
+        
     }, []);
 
     const handleTopUp = async () => {
@@ -108,7 +114,7 @@ export default function Profile() {
             const data = await response.json();
             console.log(data.message);
             window.location.href = data.message;
-            
+
         } catch (e) {
             console.log(e);
         }
