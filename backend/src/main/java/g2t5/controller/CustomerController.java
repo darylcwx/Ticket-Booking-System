@@ -172,7 +172,17 @@ public class CustomerController {
     String status = queryParams.get("status");
     try {
       List<Booking> bookings = customerService.getBookings(username, status); // created, cancelled, completed
-      return ResponseEntity.ok(bookings);
+      List<Object[]> result = new ArrayList<>();
+      for (Booking booking : bookings) {
+        Object[] arr = new Object[2];
+        List<Ticket> tickets = ticketService.getBookingTickets(booking.getTickets());
+        arr[0] = booking;
+        arr[1] = tickets;
+        result.add(arr);
+
+      }
+
+      return ResponseEntity.ok(result);
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
