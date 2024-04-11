@@ -299,7 +299,7 @@ export default function Profile() {
                 <DialogTitle>Top up account balance</DialogTitle>
                 <IconButton
                     aria-label="close"
-                    onClick={() => setShowPasswordModal(false)}
+                    onClick={() => setShowTopUpModal(false)}
                     sx={{
                         position: "absolute",
                         right: 12,

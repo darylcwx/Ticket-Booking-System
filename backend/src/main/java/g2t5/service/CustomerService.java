@@ -145,7 +145,6 @@ public class CustomerService {
     }
     List<String> bookings = customer.getBookings();
     List<Booking> lst = new ArrayList<>();
-    System.out.println("status: " +status);
     for (String bid : bookings) {
       Booking booking = bookingRepository.findById(bid).get();
       if (status.equals("all")) {

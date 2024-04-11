@@ -251,7 +251,9 @@ export default function Bookings() {
                                         <Button
                                             variant="contained"
                                             onClick={() => {
-                                                handleCancel(booking.bookingId);
+                                                handleCancel(
+                                                    booking.booking.bookingId
+                                                );
                                             }}
                                         >
                                             Cancel booking
