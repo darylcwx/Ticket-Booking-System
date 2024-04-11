@@ -168,14 +168,15 @@ public class CustomerController {
   }
 
   @GetMapping("/bookings/{username}")
-  public ResponseEntity<Object> getBookings(@PathVariable String username, @RequestParam Map<String, String> queryParams) {
+  public ResponseEntity<Object> getBookings(@PathVariable String username,
+      @RequestParam Map<String, String> queryParams) {
     String status = queryParams.get("status");
     try {
       List<Booking> bookings = customerService.getBookings(username, status); // created, cancelled, completed
-      List<Map<String,Object>> result = new ArrayList<>();
+      List<Map<String, Object>> result = new ArrayList<>();
 
       for (Booking booking : bookings) {
-        Map<String,Object> arr = new HashMap<>();
+        Map<String, Object> arr = new HashMap<>();
         List<Ticket> tickets = ticketService.getBookingTickets(booking.getTickets());
         arr.put("booking", booking);
         arr.put("tickets", tickets);
@@ -268,14 +269,14 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/payment-status")
-  public ResponseEntity<String> getPaymentStatus(@RequestParam String username){
+  @GetMapping("/payment-status/{username}")
+  public ResponseEntity<String> getPaymentStatus(@PathVariable String username) {
 
     try {
       String status = customerService.getPaymentStatus(username);
       customerService.updatePendingPayment(username, null);
 
-      if (status == null){
+      if (status == null) {
         return ResponseEntity.ok("{\"message\": \"No pending payments\"}");
 
       } else if (status.equals("success")) {

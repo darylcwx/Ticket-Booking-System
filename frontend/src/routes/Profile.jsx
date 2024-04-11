@@ -60,7 +60,6 @@ export default function Profile() {
                 navigate("/");
             }
             setUser(data);
-            console.log(data);
         } catch (e) {
             console.log(e);
         }
@@ -70,11 +69,10 @@ export default function Profile() {
         getUser();
         handlePaymentStatus();
 
-        // if (showPaymentStatus == true) --> user top up account, need to show status of payment 
-        //     if (paymentStatus == true) --> payment successful. show success notif 
+        // if (showPaymentStatus == true) --> user top up account, need to show status of payment
+        //     if (paymentStatus == true) --> payment successful. show success notif
         //     else --> payment failed. show error notif
         // else --> user navigate to profile normally. do nothing
-        
     }, []);
 
     const handleTopUp = async () => {
@@ -91,7 +89,7 @@ export default function Profile() {
         }
         if (amount.includes(".")) {
             const split = amount.split(".");
-            if (split[1].length != 2) {
+            if (split[1] == "" || split[1].length > 2) {
                 setAmountError("Please enter a valid amount");
                 return;
             }
@@ -114,22 +112,19 @@ export default function Profile() {
             const data = await response.json();
             console.log(data.message);
             window.location.href = data.message;
-
         } catch (e) {
             console.log(e);
         }
     };
 
     const handlePaymentStatus = async () => {
-        setShowPaymentStatus(false);
-        setPaymentStatus(false);
         try {
             const response = await fetch(
                 `http://localhost:8080/payment-status/${encodeURIComponent(
                     username
                 )}`,
                 {
-                    method: "POST",
+                    method: "GET",
                     headers: { "Content-Type": "application/json" },
                 }
             );
@@ -137,10 +132,11 @@ export default function Profile() {
             console.log(data.message);
 
             if (data.message == "Payment Successful") {
-                setShowPaymentStatus(true);
-                setPaymentStatus(true);
+                setNotification("Payment successful!");
             } else if (data.message == "Payment Unsuccessful") {
-                setShowPaymentStatus(true);
+                setNotification(
+                    "Payment did not go through, please try again later."
+                );
             }
         } catch (e) {
             console.log(e);
@@ -391,7 +387,8 @@ export default function Profile() {
             {notification && (
                 <Notification
                     type={
-                        notification === "Successfully changed password!"
+                        notification === "Successfully changed password!" ||
+                        "Payment successful!"
                             ? "success"
                             : "error"
                     }
