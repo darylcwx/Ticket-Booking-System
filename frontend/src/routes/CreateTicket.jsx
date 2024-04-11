@@ -10,7 +10,9 @@ export default function CreateTicket() {
     const navigate = useNavigate();
     const [email, setEmail] = useState();
     const [emailError, setEmailError] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    // const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
     const [event, setEvent] = useState({});
     const [eventId, setEventId] = useState();
     const [eventName, setEventName] = useState();
@@ -43,7 +45,8 @@ export default function CreateTicket() {
                 setEventName(data.name);
                 setEventDesc(data.description);
                 setEventVenue(data.venue);
-                setSelectedDate(dayjs(data.datetime).format('YYYY-MM-DD HH:mm'));
+                setSelectedStartDate(dayjs(data.startDate).format('YYYY-MM-DD HH:mm'));
+                setSelectedEndDate(dayjs(data.endDate).format('YYYY-MM-DD HH:mm'));
                 setTicketsAvailable(data.ticketsAvailable);
                 setTotalTicketNum(data.totalTickets);
                 setMaxGuestNum(data.guestsAllowed);
@@ -88,7 +91,7 @@ export default function CreateTicket() {
             "eventId": eventId,
             "eventName": eventName,
             "venue": eventVenue,
-            "datetime": Date.parse(selectedDate),
+            "datetime": Date.parse(selectedStartDate),
             "price": ticketPrice,
             "customerEmail": email,
             "status": "active"
@@ -139,7 +142,8 @@ export default function CreateTicket() {
             name: eventName,
             venue: eventVenue,
             description: eventDesc,
-            datetime: dayjs(selectedDate).format(),
+            startDate: dayjs(selectedStartDate).format(),
+            endDate: dayjs(selectedEndDate).format(),
             ticketsAvailable: ticketsAvailable - 1,
             totalTickets: totalTicketNum,
             guestsAllowed: maxGuestNum,
@@ -259,7 +263,7 @@ export default function CreateTicket() {
                                     className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="eventDatetime"
                                     type="text"
-                                    value={selectedDate}
+                                    value={selectedStartDate}
                                     sx={{
                                         "& .MuiInputBase-input.Mui-disabled": {
                                             WebkitTextFillColor: "black",
