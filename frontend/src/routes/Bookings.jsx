@@ -8,11 +8,15 @@ import TicketDividerVertical from "../components/TicketDividerVertical";
 import TicketDividerHorizontal from "../components/TicketDividerHorizontal";
 import formatDatetime from "../utils/formatDatetime";
 
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@mui/icons-material/Search";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 export default function Bookings() {
     DocumentTitle("My Bookings");
@@ -20,40 +24,44 @@ export default function Bookings() {
     const [bookings, setBookings] = useState([]);
     const [events, setEvents] = useState([]);
     const [updatedBookings, setUpdatedBookings] = useState([]);
+    const [tab, setTab] = useState("created");
+
     const username = localStorage.getItem("username");
-    useEffect(() => {
-        const getBookings = async () => {
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/bookings/${encodeURIComponent(
-                        username
-                    )}?status=${encodeURIComponent("all")}`,
-                    {
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                    }
-                );
-                const data = await response.json();
-                console.log(data);
-                setBookings(data);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        getBookings();
-        const getAllEvents = async () => {
-            try {
-                const response = await fetch(`http://localhost:8080/events`, {
+
+    const getBookings = async (status) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/bookings/${encodeURIComponent(
+                    username
+                )}?status=${encodeURIComponent(status)}`,
+                {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
-                });
-                const data = await response.json();
-                setEvents(data);
-                console.log(data);
-            } catch (e) {
-                console.log(e);
-            }
-        };
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+            setBookings(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const getAllEvents = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/events`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.json();
+            setEvents(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        getBookings("created");
         getAllEvents();
     }, []);
 
@@ -64,7 +72,6 @@ export default function Bookings() {
                     for (let ticket of booking.tickets) {
                         if (ticket.eventId === event.id) {
                             ticket.image = event.image;
-                            ticket.ticketsAvailable = event.ticketsAvailable;
                         }
                     }
                 }
@@ -72,6 +79,11 @@ export default function Bookings() {
             setUpdatedBookings(bookings);
         }
     }, [bookings]);
+
+    const handleSetTab = (event, tab) => {
+        setTab(tab);
+        getBookings(tab);
+    };
 
     const handleCancel = async (bookingId) => {
         try {
@@ -88,15 +100,28 @@ export default function Bookings() {
             );
             const data = await response.json();
             console.log(data);
+            window.location.reload();
+            // const remove = bookings.filter((booking) => {
+            //     return booking.bookingId !== bookingId;
+            // });
+            // setBookings(remove);
         } catch (e) {
             console.log(e);
         }
     };
     return (
-        <div className="bg-main min-h-screen min-w-max w-screen">
+        <div className="bg-main min-h-screen">
             <Navbar />
             <Container className="pt-[65px] pb-6">
-                <div className="text-white pt-4 md:flex justify-between"></div>
+                <div className="bg-modal mt-4">
+                    <Tabs value={tab} onChange={handleSetTab} centered>
+                        <Tab label="Active" value="created" />
+                        <Tab label="Past" value="completed" />
+                        <Tab label="Cancelled" value="cancelled" />
+                        <Tab label="All Bookings" value="all" />
+                    </Tabs>
+                </div>
+                <div className="text-white md:flex justify-between"></div>
                 {updatedBookings.length == 0 && updatedBookings != null ? (
                     <>
                         <div className="text-white text-center p-8">
@@ -107,17 +132,17 @@ export default function Bookings() {
                 ) : (
                     updatedBookings.map((booking) => (
                         <div key={booking.bookingId}>
-                            <div className="bg-modal p-4 my-4 w-[960px]">
+                            <div className="bg-modal p-4 my-4">
                                 <div>
                                     <div className="flex">
-                                        <div className="w-1/3">
-                                            Booking ID (for your reference):
+                                        <div className="w-1/6 font-bold">
+                                            Booking ID:
                                         </div>
                                         <div>{booking.booking.bookingId}</div>
                                     </div>
                                     <div className="flex">
-                                        <div className="w-1/3">
-                                            Booking Date
+                                        <div className="w-1/6 font-bold">
+                                            Booking Date:
                                         </div>
                                         <div>
                                             {formatDatetime(
@@ -126,8 +151,8 @@ export default function Bookings() {
                                         </div>
                                     </div>
                                     <div className="flex">
-                                        <div className="w-1/3">
-                                            Booking Status
+                                        <div className="w-1/6 font-bold">
+                                            Booking Status:
                                         </div>
                                         <div>
                                             {booking.booking.status
@@ -255,6 +280,12 @@ export default function Bookings() {
                                                     booking.booking.bookingId
                                                 );
                                             }}
+                                            disabled={
+                                                booking.booking.status ===
+                                                "cancelled"
+                                                    ? true
+                                                    : false
+                                            }
                                         >
                                             Cancel booking
                                         </Button>

@@ -5,7 +5,7 @@ export default function SendEmail(
     user,
     purpose,
     event = null,
-    tempPass = null,
+    tempPass = null
 ) {
     e.preventDefault();
     const service_id = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -26,7 +26,8 @@ export default function SendEmail(
         case "booking":
             template_id = import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID;
             messageSubject = `Booking Confirmation for ${event.name}`;
-            messageBody = `We've received your order for ${event.name} 🤩`;
+            messageBody = `We've received your order for ${event.name} 🤩
+                            You may login and go to your bookings to view more details.`;
             messageFooter = "We look forward to seeing you soon!";
             break;
         case "e-ticket":
@@ -62,11 +63,10 @@ export default function SendEmail(
         ticketPrice: event?.price,
         ticketsBought: event?.quantity,
         totalAmount: event?.ticketPrice * event?.quantity,
-        ticketId: event.ticketId
+        ticketId: event.ticketId,
     };
 
-    emailjs.send(service_id, template_id, template_params)
-    .then(
+    emailjs.send(service_id, template_id, template_params).then(
         (response) => {
             console.log("SUCCESS", response);
         },

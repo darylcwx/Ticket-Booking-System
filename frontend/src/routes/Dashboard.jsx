@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
+
 export default function Dashboard() {
     DocumentTitle("Dashboard");
     const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 
 import Container from "@mui/material/Container";
@@ -9,14 +9,18 @@ import Button from "@mui/material/Button";
 import Navbar from "../components/Navbar";
 import CartItem from "../components/CartItem";
 import sendEmail from "../utils/sendEmail";
+import Notification from "../components/Notification";
 
 export default function Checkout() {
     DocumentTitle("Checkout");
+    const navigate = useNavigate();
     const location = useLocation();
     const cart = location.state.updatedCart;
     const checkout = cart.filter((event) => event.checked === true);
     const [total, setTotal] = useState(0);
     const [user, setUser] = useState();
+    const [notification, setNotification] = useState("");
+
     useEffect(() => {
         const totalAmount = checkout.reduce((total, cartItem) => {
             return total + cartItem.ticketPrice * cartItem.quantity;
@@ -46,24 +50,31 @@ export default function Checkout() {
             }
         };
         const user = await getUser();
-        checkout.forEach(async (event) => {
-            const response = await fetch(
-                `http://localhost:8080/booking/create`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        username: user.username,
-                        eventId: event.id,
-                        numberOfTickets: event.quantity,
-                    }),
-                }
-            );
-            const data = await response.json();
-            console.log(data);
-            //TODO -
-            //sendEmail(e, user, "booking", event, null);
-        });
+        try {
+            checkout.forEach(async (event) => {
+                const response = await fetch(
+                    `http://localhost:8080/booking/create`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            username: user.username,
+                            eventId: event.id,
+                            numberOfTickets: event.quantity,
+                        }),
+                    }
+                );
+                const data = await response.json();
+                console.log(data);
+                //sendEmail(e, user, "booking", event, null);
+            });
+            setNotification("Order placed! Redirecting you...");
+            setTimeout(() => {
+                navigate("/bookings");
+            }, 3000);
+        } catch (e) {
+            setNotification("Something went wrong.");
+        }
     };
     return (
         <div className="bg-main min-h-screen min-w-max w-screen">
@@ -117,6 +128,18 @@ export default function Checkout() {
                     </div>
                 </div>
             </Container>
+            {notification && (
+                <Notification
+                    type={
+                        notification === "Order placed! Redirecting you..."
+                            ? "success"
+                            : "error"
+                    }
+                    message={notification}
+                >
+                    Logging out...
+                </Notification>
+            )}
         </div>
     );
 }
