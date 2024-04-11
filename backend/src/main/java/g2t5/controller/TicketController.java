@@ -19,6 +19,7 @@ import g2t5.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -62,14 +63,26 @@ public class TicketController {
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 
-    @PostMapping("/verify-ticket")
-    public ResponseEntity<Boolean> verifyTicket(@RequestBody Ticket ticket) {
-        Ticket ticket_new = ticketService.getTicket(ticket);
-        if (ticket_new != null) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
+    @GetMapping("/verify-ticket")
+    public ResponseEntity<String> verifyTicket(@RequestParam String ticketid) {
+        Ticket ticket_new = ticketService.getTicket(ticketid);
+
+        if (ticket_new == null) {
+            return new ResponseEntity<>("Ticket not found", HttpStatus.OK);
+        }
+
+        if (ticket_new.getStatus().equals("active")){
+            try{
+                ticketService.updateTicket(ticket_new);
+            }catch(Exception e){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ticketid + e.getMessage());
+            }
+            return new ResponseEntity<>("Ticket Successfully Redeemed", HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+            return new ResponseEntity<>("Ticket Already Redeemed", HttpStatus.OK);
         }
     }
 
