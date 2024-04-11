@@ -44,6 +44,9 @@ export default function Profile() {
     
     const [stripeUrl, setStripeUrl] = useState("");
     const [showStripeUrl, setShowStripeUrl] = useState(false);
+    const [PaymentStatus, setPaymentStatus] = useState(false);
+    const [showPaymentStatus, setShowPaymentStatus] = useState(false);
+
     
     useEffect(() => {
         const getUser = async () => {
@@ -91,6 +94,32 @@ export default function Profile() {
             console.log(data.message);
             setStripeUrl(data.message);
             setShowStripeUrl(true);
+            
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handlePaymentStatus = async () => {
+        setShowPaymentStatus(false);
+        setPaymentStatus(false);
+
+        try {
+            const response = await fetch(`http://localhost:8080/payment-status/${encodeURIComponent(username)}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json"},
+            });
+    
+            const data = await response.json();
+            console.log(data.message);
+
+            if (data.message == "Payment Successful"){
+                setShowPaymentStatus(true);
+                setPaymentStatus(true);
+
+            } else if (data.message == "Payment Unsuccessful"){
+                setShowPaymentStatus(true);
+            }
             
         } catch (e) {
             console.log(e);

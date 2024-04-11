@@ -10,6 +10,15 @@ public class Customer extends User {
   private double accountBalance;
   private List<String> bookings; 
   private List<Payment> paymentHistory;
+  private String pendingPayment;
+
+  public Customer(){
+    this.cart = new ArrayList<>();
+    this.accountBalance = 1000;
+    this.bookings = new ArrayList<>();
+    this.paymentHistory = new ArrayList<>();
+    this.pendingPayment = null;
+  }
 
   public double getAccountBalance() {
     return accountBalance;
@@ -41,6 +50,14 @@ public class Customer extends User {
 
   public void setPaymentHistory(List<Payment> paymentHistory) {
     this.paymentHistory = paymentHistory;
+  }
+
+  public String getPendingPayment(){
+    return pendingPayment;
+  }
+
+  public void setPendingPayment(String pendingPayment) {
+    this.pendingPayment = pendingPayment;
   }
 
   public String toString() {

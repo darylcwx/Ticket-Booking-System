@@ -254,14 +254,43 @@ public class CustomerController {
     try {
       Payment payment = paymentService.createPayment(amount, username);
 
+      customerService.updatePendingPayment(username, payment.getId());
+
       String url = paymentService.createCheckoutSession(username, amount, payment.getId());
 
       return ResponseEntity.ok("{\"message\": \"" + url + "\"}");
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
+    }
+  }
 
-      return null;
+  @PostMapping("/payment-status")
+  public ResponseEntity<String> getPaymentStatus(@RequestParam String username){
+
+    try {
+      String status = customerService.getPaymentStatus(username);
+      customerService.updatePendingPayment(username, null);
+      
+      if (status == null){
+        return ResponseEntity.ok("{\"message\": \"No pending payments\"}");
+
+      } else if (status.equals("success")) {
+        return ResponseEntity.ok("{\"message\": \"Payment Successful\"}");
+
+      } else {
+        return ResponseEntity.ok("{\"message\": \"Payment Unsuccessful\"}");
+
+      }
+
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("{\"message\": \"Something went wrong\"}");
     }
   }
 }

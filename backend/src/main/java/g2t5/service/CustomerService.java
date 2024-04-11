@@ -42,10 +42,6 @@ public class CustomerService {
     customer.setUsername(username);
     customer.setPassword(DigestUtils.sha256Hex(username + password));
     customer.setRole("customer");
-    customer.setCart(new ArrayList<Map<String, Object>>());
-    customer.setAccountBalance(1000);
-    customer.setBookings(new ArrayList<String>());
-    customer.setPaymentHistory(new ArrayList<Payment>());
     customerRepository.save(customer);
   }
 
@@ -234,18 +230,44 @@ public class CustomerService {
 
   public boolean topupAccount(String username, Double amount, String paymentId) throws Exception {
     Payment payment = paymentService.getPayment(paymentId);
+    Customer customer = customerRepository.findByUsername(username);
+    List<Payment> payments = customer.getPaymentHistory();
+    payments.add(payment);
 
     if (payment.getStatus().equals("paid")) {
-      Customer customer = customerRepository.findByUsername(username);
-      List<Payment> payments = customer.getPaymentHistory();
-      payments.add(payment);
       customer.setAccountBalance(customer.getAccountBalance() + amount);
 
       customerRepository.save(customer);
       return true;
     }
 
+    customerRepository.save(customer); 
     return false;
   }
+
+  public void updatePendingPayment(String username, String pid){
+    Customer customer = customerRepository.findByUsername(username);
+    customer.setPendingPayment(pid);
+    customerRepository.save(customer);
+  }
+
+  public String getPaymentStatus(String username){
+    Customer customer = customerRepository.findByUsername(username);
+    String pid = customer.getPendingPayment();
+    if (pid == null){
+      return null;
+
+    }else {
+      Payment payment = paymentService.getPayment(pid);
+
+      if (payment.getStatus().equals("paid")){
+        return "success";
+
+      }else{
+        return "fail";
+      }
+    }
+  }
+
 
 }
