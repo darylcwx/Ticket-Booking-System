@@ -37,13 +37,7 @@ export default function Navbar({ handleAddedToCart }) {
                     navigate("/");
                 }
                 setUser(data);
-                let total = 0;
-                if (data.cart.length != 0 && data.cart != null) {
-                    data.cart.forEach((item) => {
-                        total += parseInt(item.quantity);
-                    });
-                }
-                setCartCount(total);
+                setCartCount(data.cart.length);
             } catch (e) {
                 console.log(e);
             }

@@ -58,21 +58,19 @@ export default function Bookings() {
     }, []);
 
     useEffect(() => {
-        //let initialBookings = bookings;
-        // if (initialBookings != [] && initialBookings.length != 0) {
-        for (let booking of bookings) {
-            for (const event of events) {
-                for (let ticket of booking.tickets) {
-                    if (ticket.eventId === event.id) {
-                        ticket.image = event.image;
-                        ticket.ticketsAvailable = event.ticketsAvailable;
+        if (bookings != [] && username != null && events != null) {
+            for (let booking of bookings) {
+                for (const event of events) {
+                    for (let ticket of booking.tickets) {
+                        if (ticket.eventId === event.id) {
+                            ticket.image = event.image;
+                            ticket.ticketsAvailable = event.ticketsAvailable;
+                        }
                     }
                 }
             }
+            setUpdatedBookings(bookings);
         }
-        //}
-        console.log(bookings);
-        setUpdatedBookings(bookings);
     }, [bookings]);
 
     const handleCancel = async (bookingId) => {
@@ -99,7 +97,7 @@ export default function Bookings() {
             <Navbar />
             <Container className="pt-[65px] pb-6">
                 <div className="text-white pt-4 md:flex justify-between"></div>
-                {bookings.length == 0 ? (
+                {updatedBookings.length == 0 && updatedBookings != null ? (
                     <>
                         <div className="pt-4 text-white text-center">
                             No events found.
@@ -139,7 +137,7 @@ export default function Bookings() {
                                     </div>
                                     {booking.tickets.map((ticket) => (
                                         <div key={ticket.ticketId}>
-                                            <div className="bg-[#e5e5e5] m-2 flex">
+                                            <div className="bg-[#e5e5e5] flex mt-4">
                                                 <img
                                                     className="shrink max-w-[80px] md:max-w-[200px]"
                                                     src={`../qr.png`}
@@ -248,7 +246,7 @@ export default function Bookings() {
                                             </div>
                                         </div>
                                     ))}
-                                    <div className="flex justify-end">
+                                    <div className="flex justify-end pt-4">
                                         <Button
                                             variant="contained"
                                             onClick={() => {
