@@ -18,6 +18,7 @@ import g2t5.service.UserService;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,11 +65,11 @@ public class TicketController {
     }
 
     @GetMapping("/verify-ticket/{ticketId}")
-    public ResponseEntity<String> verifyTicket(@RequestParam String ticketId) {
+    public ResponseEntity<String> verifyTicket(@PathVariable("ticketId") String ticketId) {
         Ticket ticket_new = ticketService.getTicket(ticketId);
 
         if (ticket_new == null) {
-            return new ResponseEntity<>("Ticket not found", HttpStatus.OK);
+            return new ResponseEntity<>("Ticket not found", HttpStatus.NOT_FOUND);
         }
 
         if (ticket_new.getStatus().equals("active")){

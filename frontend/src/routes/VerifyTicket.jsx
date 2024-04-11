@@ -8,22 +8,32 @@ import { InputLabel, TextField, Box, Button, Container, Alert } from "@mui/mater
 export default function VerifyTicket() {
     DocumentTitle("Verify Ticket");
     const navigate = useNavigate();
-    const [ticketId, setTicketId] = useState();
+    const [ticketId, setTicketId] = useState("");
+    const [status, setStatus] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    // const [showAlert2, setShowAlert2] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
         // Verify Ticket
         try {
-            console.log(ticketId);
             const response = await fetch(`http://localhost:8080/verify-ticket/${ticketId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 }
             })
-            const data = await response.json();
-            console.log(data);
+            const res = await response.text();
+            setStatus(res);
+            if (res === "Ticket Successfully Redeemed") {
+                setShowAlert(false);
+                setTimeout(() => {
+                    navigate("/ticketingOfficerDashboard");
+                }, 1500);
+            } else {
+                setShowAlert(true);
+            }
         } catch (error) {
             console.error(error.message);
         }
@@ -68,6 +78,19 @@ export default function VerifyTicket() {
                                 Verify Ticket
                             </Button>
                         </div>
+
+                        {/* Show alerts */}
+                        {showAlert && (
+                            <Alert severity="error" className="mt-4">
+                                {status === "Ticket Already Redeemed" ? "Ticket Already Redeemed" : "Ticket Not Found"}
+                            </Alert>
+                        )}
+                        {status === "Ticket Successfully Redeemed" && (
+                            <Alert severity="success" className="mt-4">
+                                {status}
+                            </Alert>
+                        )}
+
                     </Box>
                 </Container>
             </Container>
