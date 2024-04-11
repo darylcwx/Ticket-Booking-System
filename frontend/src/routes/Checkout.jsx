@@ -51,6 +51,8 @@ export default function Checkout() {
         };
         const user = await getUser();
         try {
+            let ok = true;
+            let base = "";
             checkout.forEach(async (event) => {
                 const response = await fetch(
                     `http://localhost:8080/booking/create`,
@@ -66,12 +68,26 @@ export default function Checkout() {
                 );
                 const data = await response.json();
                 console.log(data);
-                //sendEmail(e, user, "booking", event, null);
+                if (data.message !== "Created booking successfully") {
+                    ok = false;
+                    if (data.message === "Insufficient balance") {
+                        base = "Insufficient balance";
+                    } else {
+                        base =
+                            "Events can only be booked 6 months in advance and 24 hours before the event.";
+                    }
+                } else {
+                    sendEmail(e, user, "booking", event, null);
+                }
             });
-            setNotification("Order placed! Redirecting you...");
-            setTimeout(() => {
-                navigate("/bookings");
-            }, 3000);
+            if (ok) {
+                setNotification("Order placed! Redirecting you...");
+                setTimeout(() => {
+                    navigate("/bookings");
+                }, 3000);
+            } else {
+                setNotification(base);
+            }
         } catch (e) {
             setNotification("Something went wrong.");
         }

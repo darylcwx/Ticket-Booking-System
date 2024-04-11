@@ -17,7 +17,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
 
-
 export default function Profile() {
     DocumentTitle("Profile");
     const [user, setUser] = useState();
@@ -41,35 +40,35 @@ export default function Profile() {
     const [oldPasswordError, setOldPasswordError] = useState("");
     const [newPasswordError, setNewPasswordError] = useState("");
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState("");
-    
-    const [stripeUrl, setStripeUrl] = useState("");
-    const [showStripeUrl, setShowStripeUrl] = useState(false);
+
     const [PaymentStatus, setPaymentStatus] = useState(false);
     const [showPaymentStatus, setShowPaymentStatus] = useState(false);
 
-    
-    useEffect(() => {
-        const getUser = async () => {
-            const username = localStorage.getItem("username");
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/user/${username}`,
-                    {
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                    }
-                );
-                const data = await response.json();
-                if (!response.ok) {
-                    navigate("/");
+    const username = localStorage.getItem("username");
+
+    const getUser = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/user/${username}`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
                 }
-                setUser(data);
-                console.log(data);
-            } catch (e) {
-                console.log(e);
+            );
+            const data = await response.json();
+            if (!response.ok) {
+                navigate("/");
             }
-        };
+            setUser(data);
+            console.log(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
         getUser();
+        handlePaymentStatus();
     }, []);
 
     const handleTopUp = async () => {
@@ -81,20 +80,20 @@ export default function Profile() {
         try {
             const response = await fetch(`http://localhost:8080/topup`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                            "Access-Control-Allow-Methods": "POST, OPTIONS"},
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "POST, OPTIONS",
+                },
                 body: JSON.stringify({
                     username: user.username,
                     amount: amount,
                 }),
             });
-    
+
             const data = await response.json();
             console.log(data.message);
-            setStripeUrl(data.message);
-            setShowStripeUrl(true);
-            
+            window.location(data.message);
         } catch (e) {
             console.log(e);
         }
@@ -103,24 +102,25 @@ export default function Profile() {
     const handlePaymentStatus = async () => {
         setShowPaymentStatus(false);
         setPaymentStatus(false);
-
         try {
-            const response = await fetch(`http://localhost:8080/payment-status/${encodeURIComponent(username)}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json"},
-            });
-    
+            const response = await fetch(
+                `http://localhost:8080/payment-status/${encodeURIComponent(
+                    username
+                )}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
             const data = await response.json();
             console.log(data.message);
 
-            if (data.message == "Payment Successful"){
+            if (data.message == "Payment Successful") {
                 setShowPaymentStatus(true);
                 setPaymentStatus(true);
-
-            } else if (data.message == "Payment Unsuccessful"){
+            } else if (data.message == "Payment Unsuccessful") {
                 setShowPaymentStatus(true);
             }
-            
         } catch (e) {
             console.log(e);
         }
@@ -361,21 +361,13 @@ export default function Profile() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    {!showStripeUrl && (<Button
+                    <Button
                         variant="contained"
                         className=""
                         onClick={handleTopUp}
                     >
-                        Confirm
-                    </Button>)}
-                    {showStripeUrl && (<Link to = {stripeUrl}>
-                        <Button
-                            variant="contained"
-                            className=""
-                        >
-                            Proceed to payment
-                        </Button>
-                    </Link>)}
+                        Proceed to payment
+                    </Button>
                 </DialogActions>
             </Dialog>
             {notification && (
