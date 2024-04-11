@@ -74,9 +74,23 @@ export default function Profile() {
     const handleTopUp = async () => {
         setAmountError(null);
         if (amount <= 0) {
-            setAmountError("Amount cannot be 0 or negative.");
+            setAmountError("Amount cannot be 0 or negative");
             return;
         }
+        if (
+            amount.includes("e" || amount.includes("+") || amount.includes("-"))
+        ) {
+            setAmountError("Please enter a valid amount");
+            return;
+        }
+        if (amount.includes(".")) {
+            const split = amount.split(".");
+            if (split[1].length != 2) {
+                setAmountError("Please enter a valid amount");
+                return;
+            }
+        }
+
         try {
             const response = await fetch(`http://localhost:8080/topup`, {
                 method: "POST",
@@ -335,18 +349,15 @@ export default function Profile() {
                 open={showTopUpModal}
                 onClose={() => setShowTopUpModal(false)}
             >
-                <DialogTitle>Top up account balance</DialogTitle>
-                <IconButton
-                    aria-label="close"
-                    onClick={() => setShowTopUpModal(false)}
-                    sx={{
-                        position: "absolute",
-                        right: 12,
-                        top: 12,
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
+                <div className="flex">
+                    <DialogTitle>Top up account balance</DialogTitle>
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setShowTopUpModal(false)}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </div>
                 <DialogContent className="pt-8">
                     <TextField
                         className="w-full"
