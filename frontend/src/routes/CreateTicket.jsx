@@ -8,16 +8,16 @@ import dayjs from "dayjs";
 export default function CreateTicket() {
     DocumentTitle("Create Ticket");
     const navigate = useNavigate();
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
     // const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedStartDate, setSelectedStartDate] = useState(new Date());
     const [selectedEndDate, setSelectedEndDate] = useState(new Date());
     const [event, setEvent] = useState({});
-    const [eventId, setEventId] = useState();
-    const [eventName, setEventName] = useState();
-    const [eventVenue, setEventVenue] = useState();
-    const [eventDesc, setEventDesc] = useState();
+    const [eventId, setEventId] = useState("");
+    const [eventName, setEventName] = useState("");
+    const [eventVenue, setEventVenue] = useState("");
+    const [eventDesc, setEventDesc] = useState("");
     const [ticketsAvailable, setTicketsAvailable] = useState();
     const [totalTicketNum, setTotalTicketNum] = useState();
     const [maxGuestNum, setMaxGuestNum] = useState();
@@ -62,9 +62,9 @@ export default function CreateTicket() {
     const handleEmailChange = e => {
         setEmail(e.target.value);
         if (!e.target.value.trim()) {
-            setEmailError("Email address is required");
+            setEmailError(true);
         } else if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(e.target.value)) {
-            setEmailError("Invalid email address");
+            setEmailError(true);
         } else {
             setEmailError(false);
         }
