@@ -93,7 +93,7 @@ export default function Profile() {
 
             const data = await response.json();
             console.log(data.message);
-            window.location(data.message);
+            window.location.href = data.message;
         } catch (e) {
             console.log(e);
         }
