@@ -118,6 +118,7 @@ export default function Profile() {
     };
 
     const handlePaymentStatus = async () => {
+        setNotification("");
         try {
             const response = await fetch(
                 `http://localhost:8080/payment-status/${encodeURIComponent(
@@ -144,13 +145,11 @@ export default function Profile() {
     };
 
     const handleChangePassword = async () => {
-        setNotification(false);
+        setNotification("");
         setOldPasswordError(false);
         setNewPasswordError(false);
         setConfirmNewPasswordError(false);
         if (newPassword == confirmNewPassword) {
-            console.log(oldPassword);
-            console.log(newPassword);
             try {
                 const response = await fetch(
                     `http://localhost:8080/changePassword`,

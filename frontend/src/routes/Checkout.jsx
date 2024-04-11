@@ -28,32 +28,33 @@ export default function Checkout() {
         setTotal(totalAmount);
     }, []);
 
-    const handlePlaceOrder = async (e) => {
-        const getUser = async () => {
-            const username = localStorage.getItem("username");
-            try {
-                const response = await fetch(
-                    `http://localhost:8080/user/${username}`,
-                    {
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                    }
-                );
-                const data = await response.json();
-                if (!response.ok) {
-                    navigate("/");
+    const getUser = async () => {
+        const username = localStorage.getItem("username");
+        try {
+            const response = await fetch(
+                `http://localhost:8080/user/${username}`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
                 }
-                setUser(data);
-                return data;
-            } catch (e) {
-                console.log(e);
+            );
+            const data = await response.json();
+            if (!response.ok) {
+                navigate("/");
             }
-        };
+            setUser(data);
+            return data;
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    const handlePlaceOrder = async (e) => {
         const user = await getUser();
+        setNotification("");
         try {
             let ok = true;
             let base = "";
-            checkout.forEach(async (event) => {
+            for (let event of checkout) {
                 const response = await fetch(
                     `http://localhost:8080/booking/create`,
                     {
@@ -79,7 +80,7 @@ export default function Checkout() {
                 } else {
                     sendEmail(e, user, "booking", event, null);
                 }
-            });
+            }
             if (ok) {
                 setNotification("Order placed! Redirecting you...");
                 setTimeout(() => {
@@ -113,17 +114,15 @@ export default function Checkout() {
                         Item Subtotal
                     </div>
                 </div>
-                {checkout.map((event) => {
-                    return (
-                        <CartItem
-                            key={event.id}
-                            event={event}
-                            onToggleCheck={null}
-                            onChangeQuantity={null}
-                            page="checkout"
-                        ></CartItem>
-                    );
-                })}
+                {checkout.map((event) => (
+                    <CartItem
+                        key={event.id}
+                        event={event}
+                        onToggleCheck={null}
+                        onChangeQuantity={null}
+                        page="checkout"
+                    ></CartItem>
+                ))}
                 <div className="flex text-modal pt-4 items-center">
                     <div className="w-[826px] text-end shrink-0">
                         Total:&nbsp;
