@@ -246,7 +246,7 @@ public class CustomerController {
     }
   }
 
-  @PostMapping("/profile/topup")
+  @PostMapping("/topup")
   public RedirectView topupAccount(@RequestBody TopupRequest request) throws StripeException {
     String username = request.getUsername();
     Double amount = request.getAmount();

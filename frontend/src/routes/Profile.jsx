@@ -61,6 +61,23 @@ export default function Profile() {
         getUser();
     }, []);
 
+    const handleTopUp = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/topup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: user.username,
+                    amount: amount,
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const handleChangePassword = async () => {
         setNotification(false);
         setOldPasswordError(false);
@@ -137,9 +154,7 @@ export default function Profile() {
                                         <Button
                                             variant="contained"
                                             className=""
-                                            onClick={() => {
-                                                alert("top up stripe?");
-                                            }}
+                                            onClick={handleTopUp}
                                         >
                                             Top up balance
                                         </Button>

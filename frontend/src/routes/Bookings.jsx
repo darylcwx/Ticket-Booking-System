@@ -99,8 +99,9 @@ export default function Bookings() {
                 <div className="text-white pt-4 md:flex justify-between"></div>
                 {updatedBookings.length == 0 && updatedBookings != null ? (
                     <>
-                        <div className="pt-4 text-white text-center">
-                            No events found.
+                        <div className="text-white text-center p-8">
+                            <div>No bookings found. 😔</div>
+                            <Link to="/dashboard">Make one now?</Link>
                         </div>
                     </>
                 ) : (
@@ -112,7 +113,7 @@ export default function Bookings() {
                                         <div className="w-1/3">
                                             Booking ID (for your reference):
                                         </div>
-                                        <div>{booking.bookingId}</div>
+                                        <div>{booking.booking.bookingId}</div>
                                     </div>
                                     <div className="flex">
                                         <div className="w-1/3">
@@ -120,7 +121,7 @@ export default function Bookings() {
                                         </div>
                                         <div>
                                             {formatDatetime(
-                                                booking.dateCreated
+                                                booking.booking.dateCreated
                                             )}
                                         </div>
                                     </div>
@@ -129,10 +130,10 @@ export default function Bookings() {
                                             Booking Status
                                         </div>
                                         <div>
-                                            {booking.status
+                                            {booking.booking.status
                                                 .slice(0, 1)
                                                 .toUpperCase() +
-                                                booking.status.slice(1)}
+                                                booking.booking.status.slice(1)}
                                         </div>
                                     </div>
                                     {booking.tickets.map((ticket) => (
@@ -145,7 +146,7 @@ export default function Bookings() {
 
                                                 <TicketDividerVertical
                                                     className="hidden md:flex"
-                                                    tabColor="bg-[#f2f2f2]"
+                                                    tabColor="[#f2f2f2]"
                                                 />
                                                 <div className="flex w-full justify-between relative">
                                                     <div className=" p-4 pl-0 flex flex-col justify-between w-full">
