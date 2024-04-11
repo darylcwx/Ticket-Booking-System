@@ -23,7 +23,11 @@ export default function Profile() {
     const navigate = useNavigate();
     const [notification, setNotification] = useState("");
 
-    const [showModal, setShowModal] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showTopUpModal, setShowTopUpModal] = useState(false);
+
+    const [amount, setAmount] = useState(0);
+    const [amountError, setAmountError] = useState(null);
 
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -62,6 +66,11 @@ export default function Profile() {
     }, []);
 
     const handleTopUp = async () => {
+        setAmountError(null);
+        if (amount <= 0) {
+            setAmountError("Amount cannot be 0 or negative.");
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/topup`, {
                 method: "POST",
@@ -103,7 +112,7 @@ export default function Profile() {
                 console.log(data);
                 if (data.message == "Password changed") {
                     setNotification("Successfully changed password!");
-                    setShowModal(false);
+                    setShowPasswordModal(false);
                 } else if (data.message == "Old password incorrect") {
                     setOldPasswordError(true);
                     setNotification("Old password does not match our records.");
@@ -147,30 +156,29 @@ export default function Profile() {
                                         Account Balance
                                     </div>
                                     <div className="flex items-center text-xl">
-                                        $ {user?.accountBalance}
-                                    </div>
-                                    <div></div>
-                                    <div className="flex items-center text-xl">
-                                        <Button
-                                            variant="contained"
-                                            className=""
-                                            onClick={handleTopUp}
-                                        >
-                                            Top up balance
-                                        </Button>
+                                        <div>$ {user?.accountBalance}</div>
+                                        <div className="pl-6">
+                                            <Button
+                                                variant="contained"
+                                                className=""
+                                                onClick={() => {
+                                                    setShowTopUpModal(true);
+                                                }}
+                                            >
+                                                Top up balance
+                                            </Button>
+                                        </div>
                                     </div>
                                 </>
                             ) : (
                                 <></>
                             )}
                             <div></div>
-                            <div></div>
-                            <div></div>
                             <Button
                                 variant="contained"
                                 className=""
                                 onClick={() => {
-                                    setShowModal(true);
+                                    setShowPasswordModal(true);
                                 }}
                             >
                                 Change password
@@ -179,11 +187,14 @@ export default function Profile() {
                     </div>
                 </div>
             </Container>
-            <Dialog open={showModal} onClose={() => setShowModal(false)}>
+            <Dialog
+                open={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+            >
                 <DialogTitle>Change password</DialogTitle>
                 <IconButton
                     aria-label="close"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setShowPasswordModal(false)}
                     sx={{
                         position: "absolute",
                         right: 12,
@@ -278,6 +289,45 @@ export default function Profile() {
                         onClick={handleChangePassword}
                     >
                         Save changes
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={showTopUpModal}
+                onClose={() => setShowTopUpModal(false)}
+            >
+                <DialogTitle>Top up account balance</DialogTitle>
+                <IconButton
+                    aria-label="close"
+                    onClick={() => setShowPasswordModal(false)}
+                    sx={{
+                        position: "absolute",
+                        right: 12,
+                        top: 12,
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <DialogContent className="pt-8">
+                    <TextField
+                        className="w-full"
+                        label="Amount"
+                        error={amountError ? true : false}
+                        helperText={
+                            amountError ??
+                            "Clicking confirm will redirect you to Stripe"
+                        }
+                        onChange={(e) => setAmount(e.target.value)}
+                        type="number"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        className=""
+                        onClick={handleTopUp}
+                    >
+                        Confirm
                     </Button>
                 </DialogActions>
             </Dialog>
