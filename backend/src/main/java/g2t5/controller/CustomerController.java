@@ -172,12 +172,13 @@ public class CustomerController {
     String status = queryParams.get("status");
     try {
       List<Booking> bookings = customerService.getBookings(username, status); // created, cancelled, completed
-      List<Object[]> result = new ArrayList<>();
+      List<Map<String,Object>> result = new ArrayList<>();
+
       for (Booking booking : bookings) {
-        Object[] arr = new Object[2];
+        Map<String,Object> arr = new HashMap<>();
         List<Ticket> tickets = ticketService.getBookingTickets(booking.getTickets());
-        arr[0] = booking;
-        arr[1] = tickets;
+        arr.put("booking", booking);
+        arr.put("tickets", tickets);
         result.add(arr);
 
       }
