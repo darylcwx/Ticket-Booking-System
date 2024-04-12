@@ -93,12 +93,18 @@ export default function Event() {
                                     {event.ticketsAvailable}
                                 </span>
                             </div>
+                            <div className="flex items-center">
+                                Max guests allowed:
+                                <span className="font-semibold text-lg pl-2">
+                                    {event.guestsAllowed}
+                                </span>
+                            </div>
                         </div>
                         <div className="flex justify-between">
                             <div className="">
                                 Price:
                                 <span className="text-green-600 font-semibold text-lg pl-2">
-                                    {event.ticketPrice}
+                                    ${parseFloat(event.ticketPrice).toFixed(2)}
                                 </span>
                             </div>
                         </div>

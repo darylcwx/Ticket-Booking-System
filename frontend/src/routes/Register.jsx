@@ -28,9 +28,15 @@ export default function Register() {
         if (username === "") {
             setUsernameError("Username is required");
         }
-        // if (username.includes("@") === false) {
-        //     setUsernameError("Please enter your email");
-        // }
+        if (
+            username
+                .toLowerCase()
+                .match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                ) == false
+        ) {
+            setUsernameError("Please enter your email");
+        }
         if (password === "") {
             setPasswordError("Password is required");
         }
