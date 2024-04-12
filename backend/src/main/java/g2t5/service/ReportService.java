@@ -64,12 +64,17 @@ public class ReportService {
 
     public Map<String, Double> generateReportRevenue() {
         Map<String, Double> reportRevenue = new HashMap<>();
+        Map<String, Integer> cancelledReport = generateTicketsCancelled();
         List<Event> events = eventRepository.findAll();
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
             String name = event.getName();
             int ticketsSold = generateReportTicketsSales().get(name);
             double total = ticketsSold * event.getTicketPrice();
+            if(cancelledReport.get(name) != 0){
+                int cancelledNum = cancelledReport.get(name);
+                total = total - (cancelledNum * (event.getTicketPrice() - event.getCancellationFee()));
+            }
             reportRevenue.put(name, total);
         }
         return reportRevenue;
