@@ -36,7 +36,6 @@ public class ReportService {
     // @Autowired
     // private TicketingManagerRepository ticketingManagerRepository;
 
-
     @Autowired
     private BookingService bookingService;
 
@@ -70,8 +69,8 @@ public class ReportService {
             Event event = events.get(i);
             String name = event.getName();
             int ticketsSold = generateReportTicketsSales().get(name);
-            double ticketPrice = ticketsSold * event.getTicketPrice();
-            reportRevenue.put(name, ticketsSold * ticketPrice);
+            double total = ticketsSold * event.getTicketPrice();
+            reportRevenue.put(name, total);
         }
         return reportRevenue;
     }
@@ -160,29 +159,35 @@ public class ReportService {
             headerRow.createCell(0).setCellValue("Event Name");
             headerRow.getCell(0).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(1).setCellValue("Date");
+            headerRow.createCell(1).setCellValue("Start Date");
             headerRow.getCell(1).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(2).setCellValue("Total Tickets");
+            headerRow.createCell(2).setCellValue("End Date");
             headerRow.getCell(2).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(3).setCellValue("Tickets Sold");
+            headerRow.createCell(3).setCellValue("Total Tickets");
             headerRow.getCell(3).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(4).setCellValue("Tickets Cancelled");
+            headerRow.createCell(4).setCellValue("Tickets Sold");
             headerRow.getCell(4).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(5).setCellValue("Revenue");
+            headerRow.createCell(5).setCellValue("Tickets Cancelled");
             headerRow.getCell(5).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(6).setCellValue("Number of Attendees");
+            headerRow.createCell(6).setCellValue("Ticket Price");
             headerRow.getCell(6).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(7).setCellValue("Type");
+            headerRow.createCell(7).setCellValue("Revenue");
             headerRow.getCell(7).setCellStyle(headerCellStyle);
 
-            headerRow.createCell(8).setCellValue("Event Status");
+            headerRow.createCell(8).setCellValue("Number of Attendees");
             headerRow.getCell(8).setCellStyle(headerCellStyle);
+
+            headerRow.createCell(9).setCellValue("Type");
+            headerRow.getCell(9).setCellStyle(headerCellStyle);
+
+            headerRow.createCell(10).setCellValue("Event Status");
+            headerRow.getCell(10).setCellStyle(headerCellStyle);
 
             int rowNum = 1;
             List<Event> events = eventRepository.findAll();
@@ -200,18 +205,28 @@ public class ReportService {
                 LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
 
                 // Format LocalDateTime to String
-                String formattedDate = localDateTime.format(formatter);
+                String startDate = localDateTime.format(formatter);
+
+                // Convert Date to LocalDateTime
+                Date dateE = event.getEndDate();
+                Instant endInstant = dateE.toInstant();
+                LocalDateTime localDateTimeEnd = endInstant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+                // Format LocalDateTime to String
+                String endDate = localDateTimeEnd.format(formatter);
 
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(eventName);
-                row.createCell(1).setCellValue(formattedDate);
-                row.createCell(2).setCellValue(event.getTotalTickets());
-                row.createCell(3).setCellValue(ticketsSales.get(eventName));
-                row.createCell(4).setCellValue(ticketsCancelled.get(eventName));
-                row.createCell(5).setCellValue(revenue.get(eventName));
-                row.createCell(6).setCellValue(customerAttendees.get(eventName));
-                row.createCell(7).setCellValue(type);
-                row.createCell(8).setCellValue(event.getStatus());
+                row.createCell(1).setCellValue(startDate);
+                row.createCell(2).setCellValue(endDate);
+                row.createCell(3).setCellValue(event.getTotalTickets());
+                row.createCell(4).setCellValue(ticketsSales.get(eventName));
+                row.createCell(5).setCellValue(ticketsCancelled.get(eventName));
+                row.createCell(6).setCellValue(event.getTicketPrice());
+                row.createCell(7).setCellValue(revenue.get(eventName));
+                row.createCell(8).setCellValue(customerAttendees.get(eventName));
+                row.createCell(9).setCellValue(type);
+                row.createCell(10).setCellValue(event.getStatus());
             }
 
             // Autosize columns
