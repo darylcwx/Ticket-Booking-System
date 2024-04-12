@@ -30,6 +30,8 @@ To develop a system that manages the booking of tickets for various events, such
 - [Node.js](https://nodejs.org/en/) (v18.x)
 - [npm](https://www.npmjs.com/get-npm) (v9.6.x)
 - [Apache Maven](https://maven.apache.org/download.cgi) (v3.9.x)
+- [Stripe CLI](https://github.com/stripe/stripe-cli/releases/tag/v1.19.4) (v1.19.4)
+
 
 ### Frontend
 
@@ -53,13 +55,15 @@ npm install
 
 ### Backend
 
-In backend/src/main/resources, add a file called application.properties with the following:
+1. In backend/src/main/resources, add a file called application.properties with the following:
 
 ```properties
 spring.data.mongodb.uri=<mongodb uri>
 spring.data.mongodb.database=<mongodb database name>
-
+stripe.apiKey=<stripe api key>
+stripe.secretkey=<stripe secret key>
 ```
+
 
 ## Development
 
@@ -70,6 +74,25 @@ npm run dev
 
 cd ../backend
 mvn spring-boot:run
+
+cd ../your_stripe_folder
+stripe login --interactive
+(enter stripe api key)
+
+```
+
+1. Extract stripe.exe into a folder.
+2. Open command prompt
+
+```bash
+
+cd C:/your_stripe_folder
+stripe.exe
+stripe login --interactive
+(enter stripe api key)
+(enter device identifier)
+stripe listen --forward-to localhost:8080/api/stripe-events
+
 ```
 
 If you face a java.lang.IllegalStateException, insert the code commented out into your backend/pom.xml
