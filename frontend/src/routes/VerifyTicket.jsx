@@ -28,9 +28,6 @@ export default function VerifyTicket() {
             setStatus(res);
             if (res === "Ticket successfully redeemed") {
                 setShowAlert(false);
-                setTimeout(() => {
-                    navigate("/ticketingOfficerDashboard");
-                }, 1500);
             } else {
                 setShowAlert(true);
             }
@@ -87,7 +84,7 @@ export default function VerifyTicket() {
                         )}
                         {status === "Ticket successfully redeemed" && (
                             <Alert severity="success" className="mt-4">
-                                {status}. Redirecting...
+                                {status}
                             </Alert>
                         )}
 
