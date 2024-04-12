@@ -18,7 +18,6 @@ export default function Cart() {
     const [cart, setCart] = useState([]);
     const [events, setEvents] = useState([]);
     const [notification, setNotification] = useState(false);
-    const [change, setChange] = useState("");
     const [updatedCart, setUpdatedCart] = useState([]);
     const [total, setTotal] = useState(0);
 
@@ -82,22 +81,28 @@ export default function Cart() {
         setUpdatedCart(updated);
     };
 
-    const handleQuantityChange = (eventId, change, quantity, code) => {
-        setChange("");
-        setNotification(false);
+    const handleQuantityChange = (eventId, change, quantity, message) => {
+        setNotification("");
         const updated = updatedCart.map((cartItem) =>
             cartItem.id === eventId
                 ? { ...cartItem, quantity: quantity }
                 : cartItem
         );
 
-        setChange(change);
-        if (code === 200) {
-            setNotification("success");
+        if (change == "add" && message === "Added to cart successfully") {
+            setNotification("Added to cart successfully!");
+        } else if (
+            change == "minus" &&
+            message === "Removed from cart successfully"
+        ) {
+            setNotification("Removed from cart successfully!");
         } else {
-            setNotification("error");
+            setNotification("Something went wrong");
         }
         setUpdatedCart(updated);
+        setTimeout(() => {
+            setNotification("");
+        }, 3000);
     };
 
     // Update total amount
@@ -183,21 +188,21 @@ export default function Cart() {
                                 </Button>
                             </div>
                         </div>
+                        {notification && (
+                            <Notification
+                                type={
+                                    notification ===
+                                        "Added to cart successfully!" ||
+                                    "Removed from cart successfully!"
+                                        ? "success"
+                                        : "error"
+                                }
+                                message={notification}
+                            />
+                        )}
                     </div>
                 )}
             </Container>
-            {notification && (
-                <Notification
-                    type={notification === "success" ? "success" : "error"}
-                    message={
-                        notification === "success"
-                            ? change === "add"
-                                ? "Added to cart successfully"
-                                : "Removed from cart successfully"
-                            : "Something went wrong"
-                    }
-                />
-            )}
         </div>
     );
 }

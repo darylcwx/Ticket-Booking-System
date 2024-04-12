@@ -24,18 +24,17 @@ export default function CartItem({
             const response = await addToCart(username, event.id, 1);
             console.log(response);
             if (response.message === "Added to cart successfully") {
-                onChangeQuantity(event.id, change, quantity, 200);
+                onChangeQuantity(event.id, change, quantity, response.message);
                 return;
             }
         } else {
             const response = await removeFromCart(username, event.id);
             console.log(response);
             if (response.message === "Removed from cart successfully") {
-                onChangeQuantity(event.id, change, quantity, 200);
+                onChangeQuantity(event.id, change, quantity, response.message);
                 return;
             }
         }
-        onChangeQuantity(event.id, change, quantity, 500);
     };
 
     const handleCheck = (checked) => {
