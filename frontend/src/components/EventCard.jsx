@@ -19,7 +19,7 @@ export default function EventCard({ event, page }) {
             className="flex-col md:flex md:flex-row bg-modal mt-4 flex mx-auto max-w-[400px] md:max-w-none"
         >
             <div className="flex m-auto">
-                <Link to={`/event/${event.id}`}>
+                <Link to={`/event/${event.id}?page=${page}`}>
                     <img
                         className="shrink maw-w-[400px] md:max-w-[300px]"
                         src={`../events/${event.image}`}

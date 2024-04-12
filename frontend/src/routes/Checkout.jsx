@@ -75,7 +75,7 @@ export default function Checkout() {
                         base = "Insufficient balance";
                     } else {
                         base =
-                            "Events can only be booked 6 months in advance and 24 hours before the event.";
+                            "Events can only be booked up to 6 months in advance and no later than 24 hours before the event.";
                     }
                 } else {
                     sendEmail(e, user, "booking", event, null);
