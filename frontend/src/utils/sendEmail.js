@@ -56,11 +56,13 @@ export default function SendEmail(
         messageFooter: messageFooter,
         eventName: event?.eventName,
         eventVenue: event?.venue,
-        eventDateTime: formatDatetime(event?.datetime), // why isit giving datetime now
+        eventStartDate: formatDatetime(event?.startDate),
+        eventEndDate: formatDatetime(event?.endDate),
+        eventCancellationFee: event?.cancellationFee,
+        ticketId: event?.ticketId,
         ticketPrice: event?.price,
         ticketsBought: event?.quantity,
         totalAmount: event?.ticketPrice * event?.quantity,
-        ticketId: event?.ticketId,
     };
 
     emailjs.send(service_id, template_id, template_params).then(

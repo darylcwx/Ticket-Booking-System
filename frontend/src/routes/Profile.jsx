@@ -122,7 +122,6 @@ export default function Profile() {
     };
 
     const handlePaymentStatus = async () => {
-        setNotification("");
         try {
             const response = await fetch(
                 `http://localhost:8080/payment-status/${encodeURIComponent(
@@ -136,13 +135,16 @@ export default function Profile() {
             const data = await response.json();
             console.log(data.message);
 
-            if (data.message == "Payment Successful") {
+            if (data.message === "Payment Successful") {
                 setNotification("Payment successful!");
-            } else if (data.message == "Payment Unsuccessful") {
+            } else if (data.message === "Payment Unsuccessful") {
                 setNotification(
                     "Payment did not go through, please try again later."
                 );
             }
+            setTimeout(() => {
+                setNotification("");
+            }, 3000);
         } catch (e) {
             console.log(e);
         }
@@ -191,6 +193,9 @@ export default function Profile() {
                 "Confirmation password not the same as new password"
             );
         }
+        setTimeout(() => {
+            setNotification("");
+        }, 3000);
     };
 
     return (
