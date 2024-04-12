@@ -233,7 +233,7 @@ public class CustomerService {
     Payment payment = paymentService.getPayment(paymentId);
     Customer customer = customerRepository.findByUsername(username);
     List<Payment> payments = customer.getPaymentHistory();
-    payments.add(payment);
+    payments.add(0, payment);
 
     if (payment.getStatus().equals("paid")) {
       BigDecimal bd = new BigDecimal(amount + customer.getAccountBalance());
