@@ -45,7 +45,7 @@ export default function SendEmail(
             messageSubject = `Event cancellation for ${event?.name}`;
             messageBody = "We've received your request to cancel an event 😔";
             messageFooter = `We have refunded $${(
-                event?.cancellationFee * event.quantity
+                (event?.ticketPrice - event?.cancellationFee) * event.quantity
             ).toFixed(2)} to your account balance. 
                         You may verify this in your profile.
                         We hope to see you some other time!`;
