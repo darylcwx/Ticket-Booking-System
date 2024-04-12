@@ -79,11 +79,11 @@ public class TicketController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ticketId + e.getMessage());
             }
-            return new ResponseEntity<>("Ticket Successfully Redeemed", HttpStatus.OK);
+            return new ResponseEntity<>("Ticket successfully redeemed", HttpStatus.OK);
         }
         else{
 
-            return new ResponseEntity<>("Ticket Already Redeemed", HttpStatus.OK);
+            return new ResponseEntity<>("Ticket already redeemed", HttpStatus.OK);
         }
     }
 

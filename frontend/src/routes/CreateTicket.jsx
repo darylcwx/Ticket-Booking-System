@@ -316,7 +316,7 @@ export default function CreateTicket() {
 
                         {showAlert2 && (
                             <Alert severity="success" className="mt-4">
-                                Ticket created successfully!
+                                Ticket created successfully! Redirecting...
                             </Alert>
                         )}
 
