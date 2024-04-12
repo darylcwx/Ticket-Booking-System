@@ -141,7 +141,7 @@ public class EventManagerService {
                 if (customer != null) {
                     customerList.add(customer);
                 } else {
-                    throw new Exception("Customer with id " + customerId + " does not exist");
+                    return customerList;
                 }
             }
             return customerList;

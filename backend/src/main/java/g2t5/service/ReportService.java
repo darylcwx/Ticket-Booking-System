@@ -91,8 +91,12 @@ public class ReportService {
             try {
                 List<Booking> bookingList = bookingService.getByEventId(eventId);
                 for (Booking booking : bookingList) {
-                    if (booking.getStatus().equals("cancelled")) {
-                        ticketsCancelled += booking.getTickets().size();
+                    List<String> ticketList = booking.getTickets();
+                    for (String ticketId : ticketList) {
+                        Ticket ticket = ticketService.getTicket(ticketId);
+                        if (ticket.getStatus().equals("cancelled")) {
+                            ticketsCancelled++;
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -109,7 +113,7 @@ public class ReportService {
         for (int i = 0; i < events.size(); i++) {
             int cancelled = 0;
             Event event = events.get(i);
-            int attendees = event.getTotalTickets();
+            int attendees = event.getTotalTickets() - event.getTicketsAvailable();
             String name = event.getName();
             String eventId = event.getId();
             try {
