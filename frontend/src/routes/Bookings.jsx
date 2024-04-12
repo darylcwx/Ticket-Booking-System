@@ -6,7 +6,10 @@ import Navbar from "../components/Navbar";
 import EventCard from "../components/EventCard";
 import TicketDividerVertical from "../components/TicketDividerVertical";
 import TicketDividerHorizontal from "../components/TicketDividerHorizontal";
+import Notification from "../components/Notification";
+
 import formatDatetime from "../utils/formatDatetime";
+import sendEmail from "../utils/sendEmail";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -25,7 +28,7 @@ export default function Bookings() {
     const [events, setEvents] = useState([]);
     const [updatedBookings, setUpdatedBookings] = useState([]);
     const [tab, setTab] = useState("created");
-
+    const [notification, setNotification] = useState("");
     const username = localStorage.getItem("username");
 
     const getBookings = async (status) => {
@@ -40,7 +43,6 @@ export default function Bookings() {
                 }
             );
             const data = await response.json();
-            console.log(data);
             setBookings(data);
         } catch (e) {
             console.log(e);
@@ -85,28 +87,54 @@ export default function Bookings() {
         getBookings(tab);
     };
 
-    const handleCancel = async (bookingId) => {
+    const handleCancel = async (e, booking) => {
         try {
-            const response = await fetch(
+            const response1 = await fetch(
+                `http://localhost:8080/user/${username}`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+            const data1 = await response1.json();
+            console.log(data1);
+            let user = data1;
+            const response2 = await fetch(
+                `http://localhost:8080/event/${booking.booking.eventId}`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+            const data2 = await response2.json();
+            console.log(data2);
+            let event = data2;
+            const response3 = await fetch(
                 `http://localhost:8080/booking/cancel`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         username: username,
-                        bookingId: bookingId,
+                        bookingId: booking.booking.bookingId,
                     }),
                 }
             );
-            const data = await response.json();
-            console.log(data);
-            window.location.reload();
+            const data3 = await response3.json();
+            console.log(data3);
+            console.log(booking);
+            event.quantity = booking.tickets.length;
+            sendEmail(e, user, "cancellationByUser", event, null);
+            setNotification("Booking cancelled!");
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
         } catch (e) {
             console.log(e);
         }
     };
     return (
-        <div className="bg-main min-h-screen">
+        <div className="bg-main min-h-screen min-w-max w-screen">
             <Navbar />
             <Container className="pt-[65px] pb-6">
                 <div className="bg-modal mt-4">
@@ -127,17 +155,17 @@ export default function Bookings() {
                     </>
                 ) : (
                     updatedBookings.map((booking) => (
-                        <div key={booking.bookingId}>
+                        <div key={booking.booking.bookingId}>
                             <div className="bg-modal p-4 my-4">
                                 <div>
                                     <div className="flex">
-                                        <div className="w-1/6 font-bold">
+                                        <div className="w-[150px] font-bold">
                                             Booking ID:
                                         </div>
                                         <div>{booking.booking.bookingId}</div>
                                     </div>
                                     <div className="flex">
-                                        <div className="w-1/6 font-bold">
+                                        <div className="w-[150px] font-bold">
                                             Booking Date:
                                         </div>
                                         <div>
@@ -147,7 +175,7 @@ export default function Bookings() {
                                         </div>
                                     </div>
                                     <div className="flex">
-                                        <div className="w-1/6 font-bold">
+                                        <div className="w-[150px]  font-bold">
                                             Booking Status:
                                         </div>
                                         <div>
@@ -161,19 +189,19 @@ export default function Bookings() {
                                         <div key={ticket.ticketId}>
                                             <div className="bg-[#e5e5e5] flex mt-4">
                                                 <img
-                                                    className="shrink max-w-[80px] md:max-w-[200px]"
+                                                    className="w-[200px]"
                                                     src={`../qr.png`}
                                                 />
 
                                                 <TicketDividerVertical
-                                                    className="hidden md:flex"
+                                                    className=""
                                                     tabColor="[#f2f2f2]"
                                                 />
                                                 <div className="flex w-full justify-between relative">
-                                                    <div className=" p-4 pl-0 flex flex-col justify-between w-full">
+                                                    <div className=" p-4 pl-0 flex flex-col justify-between w-full min-w-[450px]">
                                                         <div>
                                                             <div className="flex">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Event Name:
                                                                 </div>
                                                                 <div className="">
@@ -183,7 +211,7 @@ export default function Bookings() {
                                                                 </div>
                                                             </div>
                                                             <div className="flex">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Event Venue:
                                                                 </div>
                                                                 <div>
@@ -193,7 +221,7 @@ export default function Bookings() {
                                                                 </div>
                                                             </div>
                                                             <div className="flex">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Event Date:
                                                                 </div>
                                                                 <div>
@@ -205,7 +233,7 @@ export default function Bookings() {
                                                         </div>
                                                         <div>
                                                             <div className="flex">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Ticket ID:
                                                                 </div>
                                                                 <div className="">
@@ -216,7 +244,7 @@ export default function Bookings() {
                                                             </div>
 
                                                             <div className="flex">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Ticket
                                                                     Owner:
                                                                 </div>
@@ -227,7 +255,7 @@ export default function Bookings() {
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center">
-                                                                <div className="font-bold w-1/4">
+                                                                <div className="font-bold w-[120px]">
                                                                     Ticket
                                                                     price:
                                                                 </div>
@@ -259,7 +287,7 @@ export default function Bookings() {
                                                             to={`/event/${ticket.eventId}`}
                                                         >
                                                             <img
-                                                                className="shrink max-w-[80px] md:max-w-[200px]"
+                                                                className="max-w-[200px]"
                                                                 src={`../events/${ticket.image}`}
                                                             />
                                                         </Link>
@@ -271,10 +299,8 @@ export default function Bookings() {
                                     <div className="flex justify-end pt-4">
                                         <Button
                                             variant="contained"
-                                            onClick={() => {
-                                                handleCancel(
-                                                    booking.booking.bookingId
-                                                );
+                                            onClick={(e) => {
+                                                handleCancel(e, booking);
                                             }}
                                             disabled={
                                                 booking.booking.status ===
@@ -290,6 +316,18 @@ export default function Bookings() {
                             </div>
                         </div>
                     ))
+                )}
+                {notification && (
+                    <Notification
+                        type={
+                            notification === "Booking cancelled!"
+                                ? "success"
+                                : "error"
+                        }
+                        message={notification}
+                    >
+                        Logging out...
+                    </Notification>
                 )}
             </Container>
         </div>
