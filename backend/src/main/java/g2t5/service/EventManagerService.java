@@ -137,12 +137,8 @@ public class EventManagerService {
         try {
             for (Booking booking : bookingList) {
                 String customerId = booking.getCustomerId();
-                System.out.println(customerId);
-                Optional<Customer> customerOptional = customerRepository.findById(customerId);
-                System.out.println(customerOptional);
-                if (customerOptional.isPresent()) {
-                    Customer customer = customerOptional.get();
-                    System.out.println(customer);
+                Customer customer = customerService.getCustomerByUsername(customerId);
+                if (customer != null) {
                     customerList.add(customer);
                 } else {
                     throw new Exception("Customer with id " + customerId + " does not exist");

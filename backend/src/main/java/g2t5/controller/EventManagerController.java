@@ -157,7 +157,9 @@ public class EventManagerController {
             ArrayList<String> customerEmails = new ArrayList<>();
             List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
             for(Customer customer : userList){
-                customerEmails.add(customer.getUsername());
+                if(!customerEmails.contains(customer.getUsername())){
+                    customerEmails.add(customer.getUsername());
+                }
             }
             return ResponseEntity.ok(customerEmails);
         } catch(Exception e){
