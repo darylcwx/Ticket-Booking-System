@@ -101,10 +101,6 @@ export default function Bookings() {
             const data = await response.json();
             console.log(data);
             window.location.reload();
-            // const remove = bookings.filter((booking) => {
-            //     return booking.bookingId !== bookingId;
-            // });
-            // setBookings(remove);
         } catch (e) {
             console.log(e);
         }

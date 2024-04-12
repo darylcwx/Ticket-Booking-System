@@ -49,6 +49,7 @@ export default function SendEmail(
             messageBody = `You may reset your password via this link: http://localhost:5173/forgot
                             Your new temporary password is: ${tempPass}`;
             messageFooter = `Happy event hunting! 🤩`;
+            break;
     }
 
     const template_params = {

@@ -20,7 +20,6 @@ export default function Navbar({ handleAddedToCart }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [notification, setNotification] = useState("");
 
-    //TODO - re-render on add to cart
     useEffect(() => {
         const getUser = async () => {
             const username = localStorage.getItem("username");
