@@ -12,19 +12,44 @@ export default function Ticket() {
     const navigate = useNavigate();
     const location = useLocation();
     const { ticket } = location.state || {};
+    const [event, setEvent] = useState({});
     const [alertOpen, setAlertOpen] = useState(false);
 
-    if (!ticket) {
-        return <div>No ticket found</div>;
-    }
+    const { 
+        customerEmail,
+        ticketId,
+        eventName,
+        venue,
+        datetime,
+        price,
+        eventId
+    } = ticket;
 
-    // Extract ticket details
-    const { customerEmail, ticketId, eventName, venue, datetime, price } = ticket;
+    useEffect(() => {
+        const fetchEvent = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/event/${eventId}`,
+                    {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                const data = await response.json();
+                setEvent(data);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        fetchEvent(eventId);
+    }, [eventId]);
+
+    const user = {username: customerEmail};
 
     // Send Email
     const handleEticketIssue = (e) => {
         e.preventDefault();
-        sendEmail(e, customerEmail, "e-ticket", ticket, null);
+        sendEmail(e, user, "e-ticket", event, null);
         setAlertOpen(true);
         setTimeout(() => {
             setAlertOpen(false);
@@ -46,7 +71,7 @@ export default function Ticket() {
         setAlertOpen(false);
     };
 
-    const generatePDF = (savePDF) => {
+    const generatePDF = () => {
         const doc = new jsPDF({
             orientation: 'landscape'
         });

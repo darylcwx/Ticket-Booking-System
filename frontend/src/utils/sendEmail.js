@@ -28,9 +28,10 @@ export default function SendEmail(
             break;
         case "e-ticket":
             template_id = import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID;
-            messageSubject = `eTicket for ${event?.eventName}`;
-            messageBody = `Your eTicket for ${event?.eventName} is confirmed 🤩`;
+            messageSubject = `eTicket for ${event?.name}`;
+            messageBody = `Your eTicket for ${event?.name} is confirmed 🤩`;
             messageFooter = "We look forward to seeing you soon!";
+
             break;
         case "cancellation":
             template_id = import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID;
@@ -72,8 +73,8 @@ export default function SendEmail(
         eventCancellationFee: event?.cancellationFee,
         ticketId: event?.ticketId,
         ticketPrice: event?.ticketPrice,
-        ticketsBought: event?.quantity,
-        totalAmount: event?.ticketPrice * event?.quantity,
+        ticketsBought: event?.quantity || 1,
+        totalAmount: (event?.ticketPrice * (event?.quantity || 1)),
     };
 
     emailjs.send(service_id, template_id, template_params).then(
