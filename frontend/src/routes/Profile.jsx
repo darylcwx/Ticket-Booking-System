@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import DocumentTitle from "../components/DocumentTitle";
 import Navbar from "../components/Navbar";
 import Notification from "../components/Notification";
+import formatDatetime from "../utils/formatDatetime";
 
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -16,6 +17,13 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 export default function Profile() {
     DocumentTitle("Profile");
@@ -59,6 +67,7 @@ export default function Profile() {
             if (!response.ok) {
                 navigate("/");
             }
+            console.log(data);
             setUser(data);
         } catch (e) {
             console.log(e);
@@ -68,11 +77,6 @@ export default function Profile() {
     useEffect(() => {
         getUser();
         handlePaymentStatus();
-
-        // if (showPaymentStatus == true) --> user top up account, need to show status of payment
-        //     if (paymentStatus == true) --> payment successful. show success notif
-        //     else --> payment failed. show error notif
-        // else --> user navigate to profile normally. do nothing
     }, []);
 
     const handleTopUp = async () => {
@@ -190,7 +194,7 @@ export default function Profile() {
     };
 
     return (
-        <div className="bg-main w-screen h-screen">
+        <div className="bg-main w-screen min-h-screen">
             <Navbar />
             <Container className="">
                 <div className="text-white pt-[65px]">
@@ -238,6 +242,55 @@ export default function Profile() {
                             >
                                 Change password
                             </Button>
+                        </div>
+                    </div>
+                    <div className="flex justify-center">
+                        <div className="text-3xl pt-10 w-2/3">
+                            Payment History
+                        </div>
+                    </div>
+                    <div className="flex justify-center pt-4">
+                        <div className="">
+                            <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 700 }}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Payment ID</TableCell>
+                                            <TableCell>Date</TableCell>
+                                            <TableCell>Amount</TableCell>
+                                            <TableCell>
+                                                Payment Status
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+
+                                    <TableBody>
+                                        {user?.paymentHistory.map((payment) => (
+                                            <TableRow key={payment.id}>
+                                                <TableCell component="th">
+                                                    {payment.id}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    {formatDatetime(
+                                                        payment.date
+                                                    )}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    ${payment.amount.toFixed(2)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {payment.status
+                                                        .slice(0, 1)
+                                                        .toUpperCase() +
+                                                        payment.status.slice(1)}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </div>
                     </div>
                 </div>
