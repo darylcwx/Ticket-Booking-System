@@ -83,12 +83,19 @@ export default function Cart() {
 
     const handleQuantityChange = (eventId, change, quantity, message) => {
         setNotification("");
-        const updated = updatedCart.map((cartItem) =>
-            cartItem.id === eventId
-                ? { ...cartItem, quantity: quantity }
-                : cartItem
-        );
-
+        if (quantity === 0) {
+            const updated = updatedCart.filter(
+                (cartItem) => cartItem.id !== eventId
+            );
+            setUpdatedCart(updated);
+        } else {
+            const updated = updatedCart.map((cartItem) =>
+                cartItem.id === eventId
+                    ? { ...cartItem, quantity: quantity }
+                    : cartItem
+            );
+            setUpdatedCart(updated);
+        }
         if (change == "add" && message === "Added to cart successfully") {
             setNotification("Added to cart successfully!");
         } else if (
@@ -99,7 +106,7 @@ export default function Cart() {
         } else {
             setNotification("Something went wrong");
         }
-        setUpdatedCart(updated);
+
         setTimeout(() => {
             setNotification("");
         }, 3000);

@@ -94,7 +94,11 @@ export default function Register() {
                     }
                 );
                 const data = await response.json();
+                console.log(data);
                 setNotification("Email sent successfully!");
+                setTimeout(() => {
+                    setNotification(false);
+                }, 3000);
             } catch (e) {
                 console.log(e);
             }
@@ -282,8 +286,8 @@ export default function Register() {
                     <Notification
                         type={
                             notification ===
-                                ("Successfully reset password! Redirecting you to login..." ||
-                            "Email sent successfully!")
+                                "Successfully reset password! Redirecting you to login..." ||
+                            "Email sent successfully!"
                                 ? "success"
                                 : "error"
                         }

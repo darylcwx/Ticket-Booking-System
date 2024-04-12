@@ -16,10 +16,6 @@ export default function SendEmail(
 
     // email here for testing
     let toEmail = user.username;
-    console.log(user);
-
-    // toEmail = "darylchua@hotmail.sg";
-    toEmail = "is442g2t5@gmail.com";
     const toName = " " + toEmail.split("@")[0];
 
     switch (purpose) {
@@ -31,7 +27,7 @@ export default function SendEmail(
             messageFooter = "We look forward to seeing you soon!";
             break;
         case "e-ticket":
-            template_id = import.meta.env.VITE_EMAILJS_OTHER_TEMPLATE_ID;
+            template_id = import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID;
             messageSubject = `eTicket for ${event.eventName}`;
             messageBody = `Your eTicket for ${event.eventName} is confirmed 🤩`;
             messageFooter = "We look forward to seeing you soon!";
@@ -60,11 +56,11 @@ export default function SendEmail(
         messageFooter: messageFooter,
         eventName: event?.eventName,
         eventVenue: event?.venue,
-        eventDateTime: formatDatetime(event.datetime), // why isit giving datetime now
+        eventDateTime: formatDatetime(event?.datetime), // why isit giving datetime now
         ticketPrice: event?.price,
         ticketsBought: event?.quantity,
         totalAmount: event?.ticketPrice * event?.quantity,
-        ticketId: event.ticketId,
+        ticketId: event?.ticketId,
     };
 
     emailjs.send(service_id, template_id, template_params).then(
