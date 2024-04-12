@@ -38,13 +38,14 @@ export default function Ticket() {
                     }
                 );
                 const data = await response.json();
+                data.ticketId = ticketId;
                 setEvent(data);
             } catch (e) {
                 console.log(e);
             }
         };
         fetchEvent(eventId);
-    }, [eventId]);
+    }, [eventId, ticketId]);
 
     const user = {username: customerEmail};
 
@@ -189,7 +190,7 @@ export default function Ticket() {
             </Container>
             <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity="success">
-                    Ticket action completed successfully.
+                    Ticket action completed successfully. Redirecting...
                 </Alert>
             </Snackbar>
         </div>
