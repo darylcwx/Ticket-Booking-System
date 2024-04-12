@@ -95,7 +95,7 @@ export default function Checkout() {
         }
     };
     return (
-        <div className="bg-main min-h-screen min-w-max w-screen">
+        <div className="bg-main min-h-screen min-w-max">
             <Navbar />
             <Container className="pt-[65px]">
                 <div className="flex text-modal text-lg font-semibold mt-4 py-2 items-center">
@@ -152,9 +152,7 @@ export default function Checkout() {
                             : "error"
                     }
                     message={notification}
-                >
-                    Logging out...
-                </Notification>
+                ></Notification>
             )}
         </div>
     );

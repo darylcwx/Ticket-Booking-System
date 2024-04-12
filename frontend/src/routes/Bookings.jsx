@@ -122,11 +122,17 @@ export default function Bookings() {
             );
             const data3 = await response3.json();
             console.log(data3);
-            console.log(booking);
-            event.quantity = booking.tickets.length;
-            sendEmail(e, user, "cancellationByUser", event, null);
-            setNotification("Booking cancelled!");
+            if (data3.message === "Unable to cancel booking") {
+                setNotification(
+                    "Booking can only be cancelled up to 48 hours before the event"
+                );
+            } else {
+                event.quantity = booking.tickets.length;
+                sendEmail(e, user, "cancellationByUser", event, null);
+                setNotification("Booking cancelled!");
+            }
             setTimeout(() => {
+                setNotification("");
                 window.location.reload();
             }, 3000);
         } catch (e) {
@@ -134,7 +140,7 @@ export default function Bookings() {
         }
     };
     return (
-        <div className="bg-main min-h-screen min-w-max w-screen">
+        <div className="bg-main min-h-screen min-w-max">
             <Navbar />
             <Container className="pt-[65px] pb-6">
                 <div className="bg-modal mt-4">
@@ -325,9 +331,7 @@ export default function Bookings() {
                                 : "error"
                         }
                         message={notification}
-                    >
-                        Logging out...
-                    </Notification>
+                    ></Notification>
                 )}
             </Container>
         </div>
