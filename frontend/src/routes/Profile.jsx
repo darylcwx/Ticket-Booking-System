@@ -67,7 +67,6 @@ export default function Profile() {
             if (!response.ok) {
                 navigate("/");
             }
-            console.log(data);
             setUser(data);
         } catch (e) {
             console.log(e);

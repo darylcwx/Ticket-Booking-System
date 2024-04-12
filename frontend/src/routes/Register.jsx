@@ -27,24 +27,18 @@ export default function Register() {
         setPasswordError(false);
         if (username === "") {
             setUsernameError("Username is required");
+            return;
         }
-        if (
-            username
-                .toLowerCase()
-                .match(
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                ) == false
-        ) {
-            setUsernameError("Please enter your email");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(username.toLowerCase())) {
+            setUsernameError("Please enter a valid email");
+            return;
         }
+        // assuming password validation is disabled
         if (password === "") {
             setPasswordError("Password is required");
+            return;
         }
-        // if (password.length < 8){
-        //     setPasswordError("Password must be at least 8 characters");
-        // }
-
-        // skip email,
 
         const registerUser = async (username, password) => {
             // check if user exists
