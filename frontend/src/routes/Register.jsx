@@ -27,6 +27,7 @@ export default function Register() {
         setPasswordError(false);
         if (username === "") {
             setUsernameError("Username is required");
+            return;
         }
         if (
             username
@@ -36,15 +37,14 @@ export default function Register() {
                 ) == false
         ) {
             setUsernameError("Please enter your email");
+            return;
         }
+        // assuming password validation is disabled
         if (password === "") {
             setPasswordError("Password is required");
+            return;
         }
-        // if (password.length < 8){
-        //     setPasswordError("Password must be at least 8 characters");
-        // }
 
-        // skip email,
 
         const registerUser = async (username, password) => {
             // check if user exists
