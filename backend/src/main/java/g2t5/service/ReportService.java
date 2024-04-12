@@ -36,11 +36,6 @@ public class ReportService {
     // @Autowired
     // private TicketingManagerRepository ticketingManagerRepository;
 
-    @Autowired
-    private ReportRepository reportRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private BookingService bookingService;
@@ -136,7 +131,7 @@ public class ReportService {
             if (nowDateTime.isAfter(endLocalDateTime)) {
                 reportCustomer.put(name, attendees - cancelled);
             } else {
-                reportCustomer.put(name, 0);
+                reportCustomer.put(name, -1);
             }
         }
         return reportCustomer;

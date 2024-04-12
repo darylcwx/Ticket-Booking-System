@@ -30,9 +30,6 @@ public class EventManagerService {
     private ReportService reportService;
 
     @Autowired
-    private EventService eventService;
-
-    @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired

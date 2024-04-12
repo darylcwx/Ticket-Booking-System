@@ -35,15 +35,11 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 public class EventManagerController {
-    private final UserService userService;
-    private final EventService eventService;
     private final EventManagerService eventManagerService;
 
     @Autowired
     public EventManagerController(UserService userService, EventService eventService,
             EventManagerService eventManagerService) {
-        this.userService = userService;
-        this.eventService = eventService;
         this.eventManagerService = eventManagerService;
     }
 
