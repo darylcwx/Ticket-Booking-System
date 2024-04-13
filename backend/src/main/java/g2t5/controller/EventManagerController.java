@@ -152,7 +152,7 @@ public class EventManagerController {
     }
 
     @GetMapping("/get-customers-email-by-event-id/{eventId}")
-    public ResponseEntity<List<String>> getCustomersByEventId(@PathVariable("eventId") String eventId) {
+    public ResponseEntity<List<String>> getCustomerEmailssByEventId(@PathVariable("eventId") String eventId) {
         try{
             ArrayList<String> customerEmails = new ArrayList<>();
             List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
@@ -162,6 +162,17 @@ public class EventManagerController {
                 }
             }
             return ResponseEntity.ok(customerEmails);
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+    }
+
+
+    @GetMapping("/get-customers-by-event-id/{eventId}")
+    public ResponseEntity<List<Customer>> getCustomersByEventId(@PathVariable("eventId") String eventId) {
+        try{
+            List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
+            return ResponseEntity.ok(userList);
         } catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
