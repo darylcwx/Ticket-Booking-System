@@ -26,11 +26,8 @@ export default function VerifyTicket() {
             })
             const res = await response.text();
             setStatus(res);
-            if (res === "Ticket Successfully Redeemed") {
+            if (res === "Ticket successfully redeemed") {
                 setShowAlert(false);
-                setTimeout(() => {
-                    navigate("/ticketingOfficerDashboard");
-                }, 1500);
             } else {
                 setShowAlert(true);
             }
@@ -82,10 +79,10 @@ export default function VerifyTicket() {
                         {/* Show alerts */}
                         {showAlert && (
                             <Alert severity="error" className="mt-4">
-                                {status === "Ticket Already Redeemed" ? "Ticket Already Redeemed" : "Ticket Not Found"}
+                                {status === "Ticket already redeemed" ? "Ticket already redeemed" : "Ticket not found"}
                             </Alert>
                         )}
-                        {status === "Ticket Successfully Redeemed" && (
+                        {status === "Ticket successfully redeemed" && (
                             <Alert severity="success" className="mt-4">
                                 {status}
                             </Alert>

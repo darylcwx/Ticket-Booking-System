@@ -62,9 +62,9 @@ export default function CreateTicket() {
     const handleEmailChange = e => {
         setEmail(e.target.value);
         if (!e.target.value.trim()) {
-            setEmailError(true);
+            setEmailError("Email address is required");
         } else if (!/^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$/.test(e.target.value)) {
-            setEmailError(true);
+            setEmailError("Invalid email address");
         } else {
             setEmailError(false);
         }
@@ -316,7 +316,7 @@ export default function CreateTicket() {
 
                         {showAlert2 && (
                             <Alert severity="success" className="mt-4">
-                                Ticket created successfully!
+                                Ticket created successfully! Redirecting...
                             </Alert>
                         )}
 

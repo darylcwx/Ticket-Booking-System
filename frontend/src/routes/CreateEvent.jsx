@@ -394,7 +394,7 @@ export default function CreateEvent() {
 
             {showAlert && (
                 <Alert severity="success" className="fixed top-16 right-0 m-5">
-                    Event create successfully! Redirecting...
+                    Event created successfully! Redirecting...
                 </Alert>
             )}
         </div>

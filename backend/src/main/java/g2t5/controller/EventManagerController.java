@@ -35,15 +35,11 @@ import org.springframework.web.bind.annotation.RestController;
 })
 
 public class EventManagerController {
-    private final UserService userService;
-    private final EventService eventService;
     private final EventManagerService eventManagerService;
 
     @Autowired
     public EventManagerController(UserService userService, EventService eventService,
             EventManagerService eventManagerService) {
-        this.userService = userService;
-        this.eventService = eventService;
         this.eventManagerService = eventManagerService;
     }
 
@@ -156,14 +152,27 @@ public class EventManagerController {
     }
 
     @GetMapping("/get-customers-email-by-event-id/{eventId}")
-    public ResponseEntity<List<String>> getCustomersByEventId(@PathVariable("eventId") String eventId) {
+    public ResponseEntity<List<String>> getCustomerEmailssByEventId(@PathVariable("eventId") String eventId) {
         try{
             ArrayList<String> customerEmails = new ArrayList<>();
             List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
             for(Customer customer : userList){
-                customerEmails.add(customer.getUsername());
+                if(!customerEmails.contains(customer.getUsername())){
+                    customerEmails.add(customer.getUsername());
+                }
             }
             return ResponseEntity.ok(customerEmails);
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+    }
+
+
+    @GetMapping("/get-customers-by-event-id/{eventId}")
+    public ResponseEntity<List<Customer>> getCustomersByEventId(@PathVariable("eventId") String eventId) {
+        try{
+            List<Customer> userList = eventManagerService.getCustomersByEventId(eventId);
+            return ResponseEntity.ok(userList);
         } catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }

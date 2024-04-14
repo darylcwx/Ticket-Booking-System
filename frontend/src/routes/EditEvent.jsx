@@ -66,7 +66,7 @@ export default function EditEvent() {
     };
 
     const handleEndDateChange = (date) => {
-        setSelectedStartDate(date);
+        setSelectedEndDate(date);
     };
 
     const handleCancel = async (e) => {
@@ -76,12 +76,13 @@ export default function EditEvent() {
         // Get Users from Booking List
         try {
             const response = await fetch(
-                `http://localhost:8080/get-users-by-event-id/${eventId}`, 
+                `http://localhost:8080/get-customers-by-event-id/${eventId}`, 
                 {
                     method: "GET",
                     headers: {"Content-Type": "application/json"}
                 });
             const userData = await response.json();
+            console.log(userData);
             setUsers(userData);
         } catch (error) {
             console.error("Error retrieving booking list emails:", error.message);
@@ -89,7 +90,13 @@ export default function EditEvent() {
 
         // Send Email
         for (const user of users) {
-            sendEmail(e, user, "cancellation", event, null);
+            if (user != null) {
+                try {
+                    sendEmail(e, user, "cancellation", event, null);
+                } catch (error) {
+                    console.error("Error sending emails:", error.message);
+                }
+            }
         }
 
         // Cancel Event
@@ -118,7 +125,7 @@ export default function EditEvent() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const eventId = location.pathname.split("/")[2];
-        const imagePath = eventName.toLowerCase().replace(/[^a-zA-Z0-9]/g, "") + ".png";
+        const imagePath = eventName.replace(/[^a-zA-Z0-9]/g, "") + ".png";
         // Construct the event object
         const event = {
             id: eventId,
