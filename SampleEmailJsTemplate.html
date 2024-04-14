@@ -1,0 +1,66 @@
+<p>Hello{{toName}}!</p>
+<p>This auto-reply is just to let you know&hellip;</p>
+<p>{{messageBody}}</p>
+<p>================================</p>
+<h3>Here are the event details:</h3>
+<table style="border-collapse: collapse">
+  <tbody>
+    <tr>
+      <td style="padding: 8px"><strong>Ticket ID:</strong></td>
+      <td style="padding: 8px">{{ticketId}}</td>
+    </tr>
+    <tr
+      style="background-color: #eeeeee; --darkreader-inline-bgcolor: #222426"
+      data-darkreader-inline-bgcolor=""
+    >
+      <td style="padding: 8px"><strong>Event name:</strong></td>
+      <td style="padding: 8px">{{eventName}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px"><strong>Event start:</strong></td>
+      <td style="padding: 8px">{{eventStartDate}}</td>
+    </tr>
+    <tr
+      style="background-color: #eeeeee; --darkreader-inline-bgcolor: #222426"
+      data-darkreader-inline-bgcolor=""
+    >
+      <td style="padding: 8px"><strong>Event end:</strong></td>
+      <td style="padding: 8px">{{eventEndDate}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px"><strong>Event venue:</strong></td>
+      <td style="padding: 8px">{{eventVenue}}</td>
+    </tr>
+    <tr
+      style="background-color: #eeeeee; --darkreader-inline-bgcolor: #222426"
+      data-darkreader-inline-bgcolor=""
+    >
+      <td style="padding: 8px"><strong>Price per ticket:</strong></td>
+      <td style="padding: 8px">${{ticketPrice}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px"><strong>Tickets bought:</strong></td>
+      <td style="padding: 8px">{{ticketsBought}}</td>
+    </tr>
+    <tr
+      style="background-color: #eeeeee; --darkreader-inline-bgcolor: #222426"
+      data-darkreader-inline-bgcolor=""
+    >
+      <td style="padding: 8px"><strong>Total amount:</strong></td>
+      <td style="padding: 8px">${{totalAmount}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px"><strong>Cancellation Fee:</strong></td>
+      <td style="padding: 8px">${{eventCancellationFee}}</td>
+    </tr>
+  </tbody>
+</table>
+<p>===============================</p>
+<p>{{messageFooter}}</p>
+<p>Cheers,<br />Ticket Booking System Team</p>
+<p>
+  <em
+    >This email was auto-generated, but if you have any additional information
+    that you think will help us to assist you, please feel free to reply.</em
+  >
+</p>

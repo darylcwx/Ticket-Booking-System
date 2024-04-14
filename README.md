@@ -12,7 +12,7 @@
 
 ## Description
 
-To develop a system that manages the booking of tickets for various events, such as music concerts, theatre shows, and seminars.
+To develop a comprehensive ticket booking system that allows users to easily browse, book & manage tickets for various types of events
 
 ### Built with
 
@@ -23,6 +23,10 @@ To develop a system that manages the booking of tickets for various events, such
 - [MongoDB](https://www.mongodb.com/)
 - [EmailJS](https://www.emailjs.com/)
 
+### For Project Purposes
+
+Refer to Supporting Documents for sample files such as MongoDB schema, .env, and application.properties.
+
 ## Getting Started
 
 ### Prerequisites
@@ -31,6 +35,8 @@ To develop a system that manages the booking of tickets for various events, such
 - [npm](https://www.npmjs.com/get-npm) (v9.6.x)
 - [Apache Maven](https://maven.apache.org/download.cgi) (v3.9.x)
 - [Stripe CLI](https://github.com/stripe/stripe-cli/releases/tag/v1.19.4) (v1.19.4)
+- [EmailJS](https://www.emailjs.com/) (Configure Service and Templates)
+  - [Sample template](SampleEmailJsTemplate.html) 
 
 
 ### Frontend
@@ -38,9 +44,11 @@ To develop a system that manages the booking of tickets for various events, such
 In frontend directory, add a file called .env with the following:
 
 ```properties
-EMAILJS_PUBLIC_KEY=<EmailJS public key>
-EMAILJS_PRIVATE_KEY=<EmailJS private key>
-EMAILJS_SERVICE_ID=<EmailJS service id>
+VITE_EMAILJS_PUBLIC_KEY=<EmailJS public key>
+VITE_EMAILJS_PRIVATE_KEY=<EmailJS private key>
+VITE_EMAILJS_SERVICE_ID=<EmailJS service id>
+VITE_EMAILJS_EVENT_TEMPLATE_ID=<EmailJS template id>
+VITE_EMAILJS_OTHER_TEMPLATE_ID=<EmailJS template id>
 
 ```
 
@@ -58,10 +66,11 @@ npm install
 1. In backend/src/main/resources, add a file called application.properties with the following:
 
 ```properties
-spring.data.mongodb.uri=<mongodb uri>
-spring.data.mongodb.database=<mongodb database name>
-stripe.apiKey=<stripe api key>
-stripe.secretkey=<stripe secret key>
+spring.data.mongodb.uri=<MongoDB URI>
+spring.data.mongodb.database=<MongoDB database name>
+stripe.apiKey=<Stripe API key>
+stripe.secretkey=<Stripe secret key>
+
 ```
 
 
