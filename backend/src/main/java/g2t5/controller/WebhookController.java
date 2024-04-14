@@ -46,7 +46,7 @@ public class WebhookController {
             this.paymentService = paymentService;
             this.customerService = customerService;
     }
-
+    //Payment webhook: recieve stripe events 
     @PostMapping(value = "/api/stripe-events")
     public ResponseEntity<String> webhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event = null;
@@ -64,13 +64,11 @@ public class WebhookController {
         if (dataObjectDeserializer.getObject().isPresent()) {
           stripeObject = dataObjectDeserializer.getObject().get();
         } else {
-          // Deserialization failed, probably due to an API version mismatch.
-          // Refer to the Javadoc documentation on `EventDataObjectDeserializer` for
-          // instructions on how to handle this case, or return an error here.
+
         }
 
-        Gson gson = new Gson();
-        JsonObject jsonData = stripeObject.getRawJsonObject(); // Assuming event.getData() returns Event.Data
+        //Gson gson = new Gson();
+        //JsonObject jsonData = stripeObject.getRawJsonObject(); // Assuming event.getData() returns Event.Data
         //PaymentIntent paymentIntent  = (PaymentIntent) stripeObject;
         
         //System.out.println(paymentIntent.getMetadata());

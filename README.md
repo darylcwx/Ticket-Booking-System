@@ -75,10 +75,6 @@ npm run dev
 cd ../backend
 mvn spring-boot:run
 
-cd ../your_stripe_folder
-stripe login --interactive
-(enter stripe api key)
-
 ```
 
 1. Extract stripe.exe into a folder.
