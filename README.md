@@ -36,12 +36,11 @@ Refer to Supporting Documents for sample files such as MongoDB schema, .env, and
 - [Apache Maven](https://maven.apache.org/download.cgi) (v3.9.x)
 - [Stripe CLI](https://github.com/stripe/stripe-cli/releases/tag/v1.19.4) (v1.19.4)
 - [EmailJS](https://www.emailjs.com/) (Configure Service and Templates)
-  - [Sample template](SampleEmailJsTemplate.html) 
-
+  - [Sample template](SampleEmailJsTemplate.html)
 
 ### Frontend
 
-In frontend directory, add a file called .env with the following:
+In /frontend, add a file called .env with the following:
 
 ```properties
 VITE_EMAILJS_PUBLIC_KEY=<EmailJS public key>
@@ -63,7 +62,7 @@ npm install
 
 ### Backend
 
-1. In backend/src/main/resources, add a file called application.properties with the following:
+1. In /backend/src/main/resources, add a file called application.properties with the following:
 
 ```properties
 spring.data.mongodb.uri=<MongoDB URI>
@@ -72,7 +71,6 @@ stripe.apiKey=<Stripe API key>
 stripe.secretkey=<Stripe secret key>
 
 ```
-
 
 ## Development
 
@@ -90,8 +88,7 @@ mvn spring-boot:run
 2. Open command prompt
 
 ```bash
-
-cd C:/your_stripe_folder
+cd ~/your_stripe_folder
 stripe.exe
 stripe login --interactive
 (enter stripe api key)
@@ -100,7 +97,7 @@ stripe listen --forward-to localhost:8080/api/stripe-events
 
 ```
 
-If you face a java.lang.IllegalStateException, insert the code commented out into your backend/pom.xml
+Note: If you face a java.lang.IllegalStateException, insert the code commented out into your backend/pom.xml
 
 ```xml
 <build>
